@@ -118,6 +118,7 @@ export default function BidModal({ bid, onClose, addToast }) {
                         <td style={{ textAlign: 'center', padding: '8px 10px' }}>
                           <span style={{ fontWeight: 700, color: '#2980b9' }}>{item['Nhóm thuốc'] || '—'}</span>
                         </td>
+                        <td style={{ textAlign: 'right', color: '#27ae60', fontWeight: 600, padding: '8px 10px' }}>
                           {(() => {
                             const val = String(item['Giá trần (VND)'] || '').trim();
                             if (!val || val === 'NA') return '—';
