@@ -73,15 +73,15 @@ export default function BidModal({ bid, products = [], onClose, addToast }) {
 
   // Định nghĩa các trường thông tin chính
   const infoFields = [
-    { label: 'CHỦ ĐẦU TƯ', value: bid.chu_dau_tu, span: 2 },
-    { label: 'MÃ GÓI THẦU', value: bid.ma_goi_thau },
+    { label: 'CHỦ ĐẦU TƯ', value: bid.chu_dau_tu || 'Chưa cập nhật' },
+    { label: 'MÃ GÓI THẦU', value: bid.ma_goi_thau || '—' },
     { label: 'GIÁ GÓI THẦU', value: totalCalculatedPrice > 0 ? formatPrice(totalCalculatedPrice) : (bid.gia_goi_thau !== 'NA' ? formatPrice(parseVND(bid.gia_goi_thau)) : 'Chưa có') },
     { label: 'DOANH THU DỰ KIẾN', value: expectedRevenue > 0 ? formatPrice(expectedRevenue) : '0 VNĐ' },
-    { label: 'NGÀY ĐĂNG TẢI', value: bid.ngay_dang_tai },
-    { label: 'ĐÓNG THẦU', value: bid.thoi_diem_dong_thau },
-    { label: 'CHÀO GIÁ ĐẾN', value: bid.chao_gia_den },
     { label: 'HÌNH THỨC', value: bid.bidForm || 'Qua mạng' },
-  ].filter(f => f.value && f.value !== 'NA' && f.value !== '');
+    { label: 'NGÀY ĐĂNG TẢI', value: bid.ngay_dang_tai || '—' },
+    { label: 'ĐÓNG THẦU', value: bid.thoi_diem_dong_thau || '—' },
+    { label: 'CHÀO GIÁ ĐẾN', value: bid.chao_gia_den || '—' },
+  ];
 
   return (
     <div className="modal-overlay" onClick={onClose}>
