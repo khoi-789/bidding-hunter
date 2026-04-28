@@ -1,6 +1,6 @@
 import { formatPrice, formatDeadline, getDaysLeft } from '../utils';
 
-export default function BidModal({ bid, onClose, addToast }) {
+export default function BidModal({ bid, products = [], onClose, addToast }) {
   const TARGET_EMAIL = 'leminhkhoi279@gmail.com';
 
   const flag = bid.flag || 'GRAY';
@@ -43,6 +43,16 @@ export default function BidModal({ bid, onClose, addToast }) {
 
   // Tính tổng giá trị gói thầu từ danh mục (nếu có)
   const totalCalculatedPrice = items.reduce((sum, item) => sum + parseVND(item['Giá trần (VND)']), 0);
+
+  // Helper tìm sản phẩm tương ứng trong kho dựa trên Hoạt chất
+  const findProduct = (item) => {
+    const itemName = String(item['Hoạt chất'] || '').toLowerCase().trim();
+    if (!itemName) return null;
+    return products.find(p => {
+      const prodName = String(p.Hoat_Chat || '').toLowerCase().trim();
+      return itemName.includes(prodName) || prodName.includes(itemName);
+    });
+  };
 
   // Định nghĩa các trường thông tin chính
   const infoFields = [
@@ -113,6 +123,8 @@ export default function BidModal({ bid, onClose, addToast }) {
                       <th style={{ padding: '10px' }}>Dạng bào chế</th>
                       <th style={{ padding: '10px', textAlign: 'center' }}>ĐVT</th>
                       <th style={{ padding: '10px', textAlign: 'center' }}>Nhóm</th>
+                      <th style={{ padding: '10px', textAlign: 'right', color: '#8e44ad' }}>Giá NY HD</th>
+                      <th style={{ padding: '10px', textAlign: 'right', color: '#d35400' }}>SL tồn</th>
                       <th style={{ padding: '10px', textAlign: 'right' }}>Giá trần theo ĐVT</th>
                       <th style={{ padding: '10px', textAlign: 'right' }}>Giá trần tổng</th>
                       <th style={{ padding: '10px', textAlign: 'center' }}>S.Lượng</th>
@@ -130,6 +142,20 @@ export default function BidModal({ bid, onClose, addToast }) {
                         <td style={{ textAlign: 'center', padding: '8px 10px' }}>{item['Đơn vị tính'] || '—'}</td>
                         <td style={{ textAlign: 'center', padding: '8px 10px' }}>
                           <span style={{ fontWeight: 700, color: '#2980b9' }}>{item['Nhóm thuốc'] || '—'}</span>
+                        </td>
+                        {/* Cột mới: Giá niêm yết HD (Lookup từ products) */}
+                        <td style={{ textAlign: 'right', color: '#8e44ad', fontWeight: 600, padding: '8px 10px' }}>
+                          {(() => {
+                            const p = findProduct(item);
+                            return p ? p.Gia_Niem_Yet?.toLocaleString('vi-VN') : '—';
+                          })()}
+                        </td>
+                        {/* Cột mới: SL tồn (Lookup từ products) */}
+                        <td style={{ textAlign: 'right', color: '#d35400', fontWeight: 600, padding: '8px 10px' }}>
+                          {(() => {
+                            const p = findProduct(item);
+                            return p ? p.SL_Ton?.toLocaleString('vi-VN') : '—';
+                          })()}
                         </td>
                         {/* Cột mới: Giá trần theo ĐVT */}
                         <td style={{ textAlign: 'right', color: '#e67e22', fontWeight: 600, padding: '8px 10px' }}>
