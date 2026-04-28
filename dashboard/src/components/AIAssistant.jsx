@@ -250,14 +250,15 @@ function speak(text, onEnd) {
   }
   try {
     const cleanText = text
-      .replace(/\*(.*?)\*/g, '$1') // Bỏ dấu sao nhưng giữ lại chữ bên trong
+      .replace(/\n+/g, '. ') // Biến xuống dòng thành dấu chấm để tạo khoảng nghỉ
+      .replace(/\*(.*?)\*/g, '$1')
       .replace(/#{1,3}/g, '')
       .replace(/[^\w\s\dàáảãạăắằẳẵặâấầẩẫậèéẻẽẹêếềểễệđìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳýỷỹỵ.,!?:\-]/gi, ' ')
       .replace(/\s+/g, ' ')
       .trim();
 
-    // Tách văn bản thành các đoạn ngắn (khoảng 150-180 ký tự) dựa trên dấu câu để Google TTS không bị lỗi
-    const sentences = cleanText.match(/[^.!?]+[.!?]+/g) || [cleanText];
+    // Tách văn bản thành các đoạn dựa trên dấu câu, bao gồm cả đoạn cuối không có dấu câu
+    const sentences = cleanText.match(/.*?[.!?]+|.+$/g) || [cleanText];
     speakQueue = [];
     let current = '';
     for (let s of sentences) {
