@@ -34,7 +34,9 @@ export function getDaysLeft(str) {
   if (!str || str === 'NA') return 999;
   const d = parseDateTime(str);
   if (!d) return 999;
-  return Math.ceil((d - Date.now()) / 86400000);
+  const diff = d - Date.now();
+  const days = Math.ceil(diff / 86400000);
+  return days < 0 ? 0 : days;
 }
 
 // CSS class theo deadline

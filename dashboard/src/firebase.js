@@ -58,15 +58,25 @@ export function computeBPS(bid) {
 // Ví dụ: "10:00 15-05-2025" hoặc "2025-05-15T10:00:00"
 export function parseDateTime(str) {
   if (!str || str === 'NA') return null;
-  // Try ISO first
+  
+  // 1. Try "HH:mm DD/MM/YYYY" hoặc "HH:mm DD-MM-YYYY"
+  const m1 = str.match(/(\d{1,2}):(\d{2})\s+(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
+  if (m1) {
+    const [, hh, mm, dd, mo, yyyy] = m1;
+    return new Date(yyyy, mo - 1, dd, hh, mm);
+  }
+
+  // 2. Try "DD/MM/YYYY HH:mm" hoặc "DD-MM-YYYY HH:mm"
+  const m2 = str.match(/(\d{1,2})[/-](\d{1,2})[/-](\d{4})\s+(\d{1,2}):(\d{2})/);
+  if (m2) {
+    const [, dd, mo, yyyy, hh, mm] = m2;
+    return new Date(yyyy, mo - 1, dd, hh, mm);
+  }
+
+  // 3. Try ISO fallback
   const iso = new Date(str);
   if (!isNaN(iso.getTime())) return iso;
-  // Try "HH:mm dd-MM-yyyy"
-  const m = str.match(/(\d{1,2}):(\d{2})\s+(\d{1,2})-(\d{1,2})-(\d{4})/);
-  if (m) {
-    const [, hh, mm, dd, mo, yyyy] = m;
-    return new Date(`${yyyy}-${mo.padStart(2,'0')}-${dd.padStart(2,'0')}T${hh.padStart(2,'0')}:${mm}:00`);
-  }
+
   return null;
 }
 
