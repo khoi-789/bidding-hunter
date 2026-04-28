@@ -49,7 +49,7 @@ export default function BidModal({ bid, onClose, addToast }) {
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={e => e.stopPropagation()} style={{maxWidth: 720, width: '95vw'}}>
+      <div className="modal" onClick={e => e.stopPropagation()} style={{ width: '95vw' }}>
         <div className="modal-header">
           <div className="modal-title">Chi tiết gói thầu: {bid.ma_goi_thau}</div>
           <button className="modal-close" onClick={onClose}>✕</button>
@@ -119,7 +119,11 @@ export default function BidModal({ bid, onClose, addToast }) {
                           <span style={{ fontWeight: 700, color: '#2980b9' }}>{item['Nhóm thuốc'] || '—'}</span>
                         </td>
                         <td style={{ textAlign: 'right', color: '#27ae60', fontWeight: 600, padding: '8px 10px' }}>
-                          {item['Giá trần (VND)'] ? Number(String(item['Giá trần (VND)']).replace(/,/g, '')).toLocaleString('vi-VN') : '—'}
+                          {(() => {
+                            const val = String(item['Giá trần (VND)'] || '').replace(/,/g, '');
+                            const num = parseFloat(val);
+                            return isNaN(num) ? '—' : num.toLocaleString('vi-VN');
+                          })()}
                         </td>
                         <td style={{ textAlign: 'center', padding: '8px 10px' }}>{item['Số lượng'] || '—'}</td>
                       </tr>
