@@ -43,7 +43,7 @@ body {
 ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 
 /* ── Layout ─────────────────────────────── */
-.app-wrapper { display: flex; min-height: 100vh; }
+.app-wrapper { display: flex; height: 100vh; overflow: hidden; }
 
 .sidebar {
   width: 230px; flex-shrink: 0;
@@ -103,7 +103,7 @@ body {
 }
 
 /* ── Main ───────────────────────────────── */
-.main-content { flex: 1; overflow-x: hidden; display: flex; flex-direction: column; }
+.main-content { flex: 1; overflow: hidden; display: flex; flex-direction: column; height: 100vh; }
 
 /* ── Top Bar ───────────────────────────── */
 .top-bar {
@@ -114,10 +114,9 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  position: sticky;
-  top: 0;
   z-index: 100;
   box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+  flex-shrink: 0;
 }
 
 .top-bar-left { flex: 1; max-width: 500px; }
@@ -176,7 +175,7 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Page Content ───────────────────────── */
-.page { padding: 24px; flex: 1; }
+.page-content { padding: 24px; flex: 1; overflow-y: auto; }
 
 /* ── Stats Bar ─────────────────────────── */
 .stats-grid {
@@ -406,7 +405,7 @@ input[type="checkbox"] {
 @media (max-width: 900px) {
   .sidebar { display: none; }
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .page { padding: 16px; }
+  .page-content { padding: 16px; }
 }
 
 /* ── Filter & Action Buttons ──────────────── */
