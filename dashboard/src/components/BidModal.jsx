@@ -34,11 +34,21 @@ export default function BidModal({ bid, onClose, addToast }) {
     }
   };
 
+  // Helper để parse giá tiền VNĐ
+  const parseVND = (valStr) => {
+    const clean = String(valStr || '').replace(/[.,\s]/g, '');
+    const num = parseFloat(clean);
+    return isNaN(num) ? 0 : num;
+  };
+
+  // Tính tổng giá trị gói thầu từ danh mục (nếu có)
+  const totalCalculatedPrice = items.reduce((sum, item) => sum + parseVND(item['Giá trần (VND)']), 0);
+
   // Định nghĩa các trường thông tin chính
   const infoFields = [
     { label: 'CHỦ ĐẦU TƯ', value: bid.chu_dau_tu },
     { label: 'MÃ GÓI THẦU', value: bid.ma_goi_thau },
-    { label: 'GIÁ GÓI THẦU', value: bid.gia_goi_thau !== 'NA' ? formatPrice(Number(String(bid.gia_goi_thau || '').replace(/,/g,''))) : 'Chưa có' },
+    { label: 'GIÁ GÓI THẦU', value: totalCalculatedPrice > 0 ? formatPrice(totalCalculatedPrice) : (bid.gia_goi_thau !== 'NA' ? formatPrice(parseVND(bid.gia_goi_thau)) : 'Chưa có') },
     { label: 'NGÀY ĐĂNG TẢI', value: bid.ngay_dang_tai },
     { label: 'ĐÓNG THẦU', value: bid.thoi_diem_dong_thau },
     { label: 'MỞ THẦU', value: bid.thoi_diem_mo_thau },
@@ -103,7 +113,8 @@ export default function BidModal({ bid, onClose, addToast }) {
                       <th style={{ padding: '10px' }}>Dạng bào chế</th>
                       <th style={{ padding: '10px', textAlign: 'center' }}>ĐVT</th>
                       <th style={{ padding: '10px', textAlign: 'center' }}>Nhóm</th>
-                      <th style={{ padding: '10px', textAlign: 'right' }}>Giá trần</th>
+                      <th style={{ padding: '10px', textAlign: 'right' }}>Giá trần theo ĐVT</th>
+                      <th style={{ padding: '10px', textAlign: 'right' }}>Giá trần tổng</th>
                       <th style={{ padding: '10px', textAlign: 'center' }}>S.Lượng</th>
                     </tr>
                   </thead>
@@ -120,15 +131,21 @@ export default function BidModal({ bid, onClose, addToast }) {
                         <td style={{ textAlign: 'center', padding: '8px 10px' }}>
                           <span style={{ fontWeight: 700, color: '#2980b9' }}>{item['Nhóm thuốc'] || '—'}</span>
                         </td>
+                        {/* Cột mới: Giá trần theo ĐVT */}
+                        <td style={{ textAlign: 'right', color: '#e67e22', fontWeight: 600, padding: '8px 10px' }}>
+                          {(() => {
+                            const price = parseVND(item['Giá trần (VND)']);
+                            const qty = parseVND(item['Số lượng']);
+                            if (price > 0 && qty > 0) {
+                              return Math.round(price / qty).toLocaleString('vi-VN');
+                            }
+                            return '—';
+                          })()}
+                        </td>
                         <td style={{ textAlign: 'right', color: '#27ae60', fontWeight: 600, padding: '8px 10px' }}>
                           {(() => {
-                            const val = String(item['Giá trần (VND)'] || '').trim();
-                            if (!val || val === 'NA') return '—';
-                            // Xử lý dấu phân cách: Xóa tất cả dấu chấm và phẩy nếu chúng đóng vai trò phân cách hàng nghìn
-                            // Đối với giá VNĐ, đa số là số nguyên. Ta xóa hết . và , rồi parse.
-                            const cleanVal = val.replace(/[.,]/g, '');
-                            const num = parseFloat(cleanVal);
-                            return isNaN(num) ? '—' : num.toLocaleString('vi-VN');
+                            const num = parseVND(item['Giá trần (VND)']);
+                            return num > 0 ? num.toLocaleString('vi-VN') : '—';
                           })()}
                         </td>
                         <td style={{ textAlign: 'center', padding: '8px 10px' }}>{item['Số lượng'] || '—'}</td>
