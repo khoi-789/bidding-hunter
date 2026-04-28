@@ -316,7 +316,7 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
               <th>Tên gói thầu</th><th>Chủ đầu tư</th><th>Danh mục thuốc</th>
               <th style={{textAlign:'right'}}>Giá thầu</th>
               <th style={{textAlign:'right'}}>Dự kiến DT</th>
-              <th>Đóng thầu</th><th>BPS</th>
+              <th>Đóng thầu</th><th style={{textAlign:'center'}}>Tỷ lệ trúng</th><th>BPS</th>
             </tr>
           </thead>
           <tbody>
@@ -326,6 +326,18 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
               const isSel   = selectedIds.includes(bid.id);
               const bps     = bid.bps_score ?? 0;
               const flag    = bid.flag || 'GRAY';
+              const items   = bid.items || [];
+
+              // Tính tỷ lệ trúng thầu (Win Ratio)
+              const matchedCount = items.reduce((count, item) => {
+                const p = findProduct(item);
+                if (!p) return count;
+                const bidQty = parseVND(item['Số lượng']);
+                if (bidQty <= 0) return count;
+                const bidUnitPrice = parseVND(item['Giá trần (VND)']) / bidQty;
+                return (p.Gia_Niem_Yet || 0) < bidUnitPrice ? count + 1 : count;
+              }, 0);
+              const winRatio = items.length > 0 ? (matchedCount / items.length) * 100 : 0;
 
               return (
                 <tr key={bid.id} onClick={() => setSelected(bid)} className={isSel ? 'selected-row' : ''}>
@@ -345,14 +357,12 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
                   </td>
                   <td style={{textAlign:'right', fontWeight:700, color:'#2c3e50'}}>
                     {(() => {
-                      const items = bid.items || [];
                       const total = items.reduce((sum, item) => sum + parseVND(item['Giá trần (VND)']), 0);
                       return total > 0 ? formatPrice(total) : (bid.gia_goi_thau !== 'NA' ? formatPrice(parseVND(bid.gia_goi_thau)) : '—');
                     })()}
                   </td>
                   <td style={{textAlign:'right', fontWeight:700, color:'#27ae60'}}>
                     {(() => {
-                      const items = bid.items || [];
                       const rev = items.reduce((sum, item) => {
                         const p = findProduct(item);
                         if (!p) return sum;
@@ -371,6 +381,18 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
                   <td className={`cell-deadline ${dlClass}`}>
                     <div style={{fontWeight:600}}>{formatDeadline(bid.thoi_diem_dong_thau)}</div>
                     <span className="days-badge" style={{marginTop:4}}>{days > 0 ? `${days}d` : 'Hết hạn'}</span>
+                  </td>
+                  <td style={{textAlign:'center'}}>
+                    {items.length > 0 ? (
+                      <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+                        <div style={{fontSize:13, fontWeight:700, color: winRatio >= 50 ? '#27ae60' : (winRatio >= 20 ? '#f39c12' : '#e74c3c')}}>
+                          {winRatio.toFixed(0)}%
+                        </div>
+                        <div style={{fontSize:9, color:'#999'}}>{matchedCount}/{items.length} mặt hàng</div>
+                      </div>
+                    ) : (
+                      <span style={{color:'#ccc'}}>—</span>
+                    )}
                   </td>
                   <td><span className={`bps-badge ${flag}`}>{bps}</span></td>
                 </tr>
