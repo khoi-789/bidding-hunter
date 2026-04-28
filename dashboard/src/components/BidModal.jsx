@@ -54,7 +54,8 @@ export default function BidModal({ bid, onClose, addToast }) {
           <div className="modal-title">Chi tiết gói thầu: {bid.ma_goi_thau}</div>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
-        <div className="modal-body" style={{maxHeight: '75vh', overflowY: 'auto'}}>
+        <div className="modal-body">
+          <div style={{ padding: '24px 28px', flexShrink: 0 }}>
 
           {/* BPS Meter */}
           <div className="bps-meter">
@@ -82,43 +83,45 @@ export default function BidModal({ bid, onClose, addToast }) {
             ))}
           </div>
 
-          {/* Bảng danh mục thuốc */}
+          </div>
+
+          {/* Bảng danh mục thuốc (Scroll độc lập) */}
           {items.length > 0 && (
-            <div style={{marginTop: 20}}>
-              <div style={{fontWeight: 700, fontSize: 13, color: 'var(--text-primary)', marginBottom: 8}}>
-                📋 Danh mục thuốc ({items.length} mặt hàng)
+            <div style={{ flex: 1, overflowY: 'hidden', display: 'flex', flexDirection: 'column', padding: '0 28px' }}>
+              <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--text-primary)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                📋 Danh mục thuốc <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>({items.length} mặt hàng)</span>
               </div>
-              <div style={{overflowX: 'auto', maxHeight: 280, overflowY: 'auto', border: '1px solid #e0e0e0', borderRadius: 6}}>
-                <table className="data-table" style={{fontSize: 11}}>
-                  <thead style={{position: 'sticky', top: 0, background: '#fff', zIndex: 1}}>
+              <div style={{ flex: 1, overflow: 'auto', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff' }}>
+                <table className="data-table" style={{ fontSize: 11, width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
+                  <thead style={{ position: 'sticky', top: 0, background: '#f8fafc', zIndex: 1, boxShadow: '0 1px 0 #e0e0e0' }}>
                     <tr>
-                      <th style={{width:30}}>#</th>
-                      <th>Tên hàng hóa</th>
-                      <th>Hoạt chất</th>
-                      <th>Hàm lượng/Nồng độ</th>
-                      <th>Đường dùng</th>
-                      <th>Dạng bào chế</th>
-                      <th>Nhóm</th>
-                      <th>Giá trần</th>
-                      <th>Số lượng</th>
+                      <th style={{ width: 30, padding: '10px' }}>#</th>
+                      <th style={{ padding: '10px' }}>Tên hàng hóa</th>
+                      <th style={{ padding: '10px' }}>Hoạt chất</th>
+                      <th style={{ padding: '10px' }}>Hàm lượng</th>
+                      <th style={{ padding: '10px' }}>Đường dùng</th>
+                      <th style={{ padding: '10px' }}>Dạng bào chế</th>
+                      <th style={{ padding: '10px', textAlign: 'center' }}>Nhóm</th>
+                      <th style={{ padding: '10px', textAlign: 'right' }}>Giá trần</th>
+                      <th style={{ padding: '10px', textAlign: 'center' }}>S.Lượng</th>
                     </tr>
                   </thead>
                   <tbody>
                     {items.map((item, idx) => (
-                      <tr key={idx}>
-                        <td style={{textAlign:'center', color:'#999'}}>{idx+1}</td>
-                        <td style={{fontWeight:500}}>{item['Tên hàng hóa'] || '—'}</td>
-                        <td>{item['Hoạt chất'] || '—'}</td>
-                        <td>{item['Nồng độ/Hàm lượng'] || item['Hàm lượng'] || '—'}</td>
-                        <td>{item['Đường dùng'] || '—'}</td>
-                        <td>{item['Dạng bào chế'] || '—'}</td>
-                        <td style={{textAlign:'center'}}>
-                          <span style={{fontWeight:700, color:'#2980b9'}}>{item['Nhóm thuốc'] || '—'}</span>
+                      <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                        <td style={{ textAlign: 'center', color: '#999', padding: '8px 10px' }}>{idx + 1}</td>
+                        <td style={{ fontWeight: 500, padding: '8px 10px', color: 'var(--accent)' }}>{item['Tên hàng hóa'] || '—'}</td>
+                        <td style={{ padding: '8px 10px' }}>{item['Hoạt chất'] || '—'}</td>
+                        <td style={{ padding: '8px 10px' }}>{item['Nồng độ/Hàm lượng'] || item['Hàm lượng'] || '—'}</td>
+                        <td style={{ padding: '8px 10px' }}>{item['Đường dùng'] || '—'}</td>
+                        <td style={{ padding: '8px 10px' }}>{item['Dạng bào chế'] || '—'}</td>
+                        <td style={{ textAlign: 'center', padding: '8px 10px' }}>
+                          <span style={{ fontWeight: 700, color: '#2980b9' }}>{item['Nhóm thuốc'] || '—'}</span>
                         </td>
-                        <td style={{textAlign:'right', color:'#27ae60', fontWeight:600}}>
-                          {item['Giá trần (VND)'] ? Number(String(item['Giá trần (VND)']).replace(/,/g,'')).toLocaleString('vi-VN') : '—'}
+                        <td style={{ textAlign: 'right', color: '#27ae60', fontWeight: 600, padding: '8px 10px' }}>
+                          {item['Giá trần (VND)'] ? Number(String(item['Giá trần (VND)']).replace(/,/g, '')).toLocaleString('vi-VN') : '—'}
                         </td>
-                        <td style={{textAlign:'center'}}>{item['Số lượng'] || '—'}</td>
+                        <td style={{ textAlign: 'center', padding: '8px 10px' }}>{item['Số lượng'] || '—'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -128,7 +131,7 @@ export default function BidModal({ bid, onClose, addToast }) {
           )}
 
           {/* Actions */}
-          <div style={{marginTop: 24, display: 'flex', gap: 12}}>
+          <div style={{ padding: '24px 28px', display: 'flex', gap: 12, flexShrink: 0, borderTop: '1px solid #f1f5f9', background: '#fff' }}>
             <button className="refresh-btn primary" style={{flex:1, padding:12, justifyContent:'center'}} onClick={handleSendEmail}>
               🚀 Gửi Email chào thầu
             </button>
