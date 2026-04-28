@@ -118,10 +118,13 @@ export default function BidModal({ bid, onClose, addToast }) {
                         <td style={{ textAlign: 'center', padding: '8px 10px' }}>
                           <span style={{ fontWeight: 700, color: '#2980b9' }}>{item['Nhóm thuốc'] || '—'}</span>
                         </td>
-                        <td style={{ textAlign: 'right', color: '#27ae60', fontWeight: 600, padding: '8px 10px' }}>
                           {(() => {
-                            const val = String(item['Giá trần (VND)'] || '').replace(/,/g, '');
-                            const num = parseFloat(val);
+                            const val = String(item['Giá trần (VND)'] || '').trim();
+                            if (!val || val === 'NA') return '—';
+                            // Xử lý dấu phân cách: Xóa tất cả dấu chấm và phẩy nếu chúng đóng vai trò phân cách hàng nghìn
+                            // Đối với giá VNĐ, đa số là số nguyên. Ta xóa hết . và , rồi parse.
+                            const cleanVal = val.replace(/[.,]/g, '');
+                            const num = parseFloat(cleanVal);
                             return isNaN(num) ? '—' : num.toLocaleString('vi-VN');
                           })()}
                         </td>
