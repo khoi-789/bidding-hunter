@@ -207,6 +207,10 @@ body {
   padding: 16px 20px;
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
+  position: sticky;
+  top: -24px; /* Trừ đi padding của .page-content */
+  background: #fff;
+  z-index: 40;
 }
 .card-title { font-size: 16px; font-weight: 500; color: var(--text-primary); margin: 0; }
 .card-body { padding: 0; overflow-x: auto; }
@@ -216,6 +220,9 @@ body {
   background: #fcfcfc;
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; gap: 12px;
+  position: sticky;
+  top: 29px; /* Vị trí dưới card-header (53px - 24px) */
+  z-index: 39;
 }
 
 table { width: 100%; border-collapse: collapse; }
@@ -225,6 +232,12 @@ thead th {
   font-size: 12px; font-weight: 600; color: var(--text-secondary);
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
+  position: sticky;
+  top: 29px; /* Mặc định nếu không có controls */
+  z-index: 38;
+}
+.table-controls + .card-body thead th {
+  top: 73px; /* Nếu có controls phía trên (29px + 44px) */
 }
 tbody tr {
   border-bottom: 1px solid var(--border);
