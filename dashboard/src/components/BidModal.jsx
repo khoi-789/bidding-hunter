@@ -1,4 +1,4 @@
-import { formatPrice, formatDeadline, getDaysLeft } from '../utils';
+import { formatPrice, formatDeadline, getDaysLeft, parseVND } from '../utils';
 
 export default function BidModal({ bid, products = [], onClose, addToast }) {
   const TARGET_EMAIL = 'leminhkhoi279@gmail.com';
@@ -34,12 +34,7 @@ export default function BidModal({ bid, products = [], onClose, addToast }) {
     }
   };
 
-  // Helper để parse giá tiền VNĐ
-  const parseVND = (valStr) => {
-    const clean = String(valStr || '').replace(/[.,\s]/g, '');
-    const num = parseFloat(clean);
-    return isNaN(num) ? 0 : num;
-  };
+
 
   // Tính tổng giá trị gói thầu từ danh mục (nếu có)
   const totalCalculatedPrice = items.reduce((sum, item) => sum + parseVND(item['Giá trần (VND)']), 0);

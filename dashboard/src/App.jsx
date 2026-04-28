@@ -5,7 +5,7 @@ import BidModal from './components/BidModal';
 import BulkEmailModal from './components/BulkEmailModal';
 import ChartsView from './components/ChartsView';
 import AIAssistant from './components/AIAssistant';
-import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft } from './utils';
+import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND } from './utils';
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
   IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconCircle
@@ -187,7 +187,7 @@ function App() {
                   <h3 className="card-title">Gói thầu dược phẩm mới cập nhật</h3>
                   <button className="action-btn" onClick={() => setActiveNav('bids')}>Xem tất cả →</button>
                 </div>
-                {renderTable(getFilteredBids(bids.slice(0, 10)), selectedIds, toggleSelect, handleSelectAll, setSelected, () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter)}
+                {renderTable(getFilteredBids(bids.slice(0, 10)), selectedIds, toggleSelect, handleSelectAll, setSelected, () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products)}
               </div>
             </>
           )}
@@ -200,7 +200,7 @@ function App() {
                 <h3 className="card-title">Danh sách toàn bộ gói thầu</h3>
                 <div className="section-meta">{allFilteredBids.length} bản ghi</div>
               </div>
-              {renderTable(allFilteredBids, selectedIds, toggleSelect, handleSelectAll, setSelected, () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter)}
+              {renderTable(allFilteredBids, selectedIds, toggleSelect, handleSelectAll, setSelected, () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products)}
             </div>
           )}
 
@@ -276,7 +276,16 @@ function App() {
   );
 }
 
-function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelected, onBulkEmail, deadlineFilter, setDeadlineFilter) {
+function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelected, onBulkEmail, deadlineFilter, setDeadlineFilter, products = []) {
+  // Helper tìm sản phẩm (copy từ BidModal)
+  const findProduct = (item) => {
+    const itemName = String(item['Hoạt chất'] || '').toLowerCase().trim();
+    if (!itemName) return null;
+    return products.find(p => {
+      const prodName = String(p.Hoat_Chat || '').toLowerCase().trim();
+      return itemName.includes(prodName) || prodName.includes(itemName);
+    });
+  };
   return (
     <>
       <div className="table-controls" style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'15px 20px', borderBottom:'1px solid #eee'}}>
@@ -304,7 +313,10 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
           <thead>
             <tr>
               <th style={{width:40, textAlign:'center'}}><input type="checkbox" onChange={() => handleSelectAll(data)} checked={data.length > 0 && selectedIds.length === data.length} /></th>
-              <th>Tên gói thầu</th><th>Chủ đầu tư</th><th>Danh mục thuốc</th><th>Đóng thầu</th><th>BPS</th>
+              <th>Tên gói thầu</th><th>Chủ đầu tư</th><th>Danh mục thuốc</th>
+              <th style={{textAlign:'right'}}>Giá thầu</th>
+              <th style={{textAlign:'right'}}>Dự kiến DT</th>
+              <th>Đóng thầu</th><th>BPS</th>
             </tr>
           </thead>
           <tbody>
@@ -330,6 +342,31 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
                   <td>
                     <div style={{fontSize:12, fontWeight:600, color:'#2980b9'}}>{bid.so_danh_muc} danh mục</div>
                     <div style={{fontSize:10, color:'#999'}}>{(bid.thuoc_tieu_bieu || '').slice(0, 35)}{bid.thuoc_tieu_bieu?.length > 35 ? '…' : ''}</div>
+                  </td>
+                  <td style={{textAlign:'right', fontWeight:700, color:'#2c3e50'}}>
+                    {(() => {
+                      const items = bid.items || [];
+                      const total = items.reduce((sum, item) => sum + parseVND(item['Giá trần (VND)']), 0);
+                      return total > 0 ? formatPrice(total) : (bid.gia_goi_thau !== 'NA' ? formatPrice(parseVND(bid.gia_goi_thau)) : '—');
+                    })()}
+                  </td>
+                  <td style={{textAlign:'right', fontWeight:700, color:'#27ae60'}}>
+                    {(() => {
+                      const items = bid.items || [];
+                      const rev = items.reduce((sum, item) => {
+                        const p = findProduct(item);
+                        if (!p) return sum;
+                        const bidQty = parseVND(item['Số lượng']);
+                        if (bidQty <= 0) return sum;
+                        const bidUnitPrice = parseVND(item['Giá trần (VND)']) / bidQty;
+                        if (p.SL_Ton > 0 && (p.Gia_Niem_Yet || 0) < bidUnitPrice) {
+                          const effQty = Math.min(bidQty, p.SL_Ton);
+                          return sum + (bidUnitPrice * effQty * 0.8);
+                        }
+                        return sum;
+                      }, 0);
+                      return rev > 0 ? formatPrice(rev) : '—';
+                    })()}
                   </td>
                   <td className={`cell-deadline ${dlClass}`}>
                     <div style={{fontWeight:600}}>{formatDeadline(bid.thoi_diem_dong_thau)}</div>

@@ -10,6 +10,15 @@ export function formatPrice(val) {
   return `${num.toLocaleString('vi-VN')} đ`;
 }
 
+// Chuyển đổi chuỗi tiền VNĐ (có thể có dấu . hoặc ,) thành số
+export function parseVND(val) {
+  if (!val || val === 'NA') return 0;
+  // Loại bỏ tất cả ký tự không phải số
+  const clean = String(val).replace(/[^\d]/g, '');
+  const num = parseFloat(clean);
+  return isNaN(num) ? 0 : num;
+}
+
 // Format datetime từ string
 export function formatDeadline(str) {
   if (!str || str === 'NA') return 'N/A';
