@@ -101,6 +101,7 @@ export default function BidModal({ bid, onClose, addToast }) {
                       <th style={{ padding: '10px' }}>Hàm lượng</th>
                       <th style={{ padding: '10px' }}>Đường dùng</th>
                       <th style={{ padding: '10px' }}>Dạng bào chế</th>
+                      <th style={{ padding: '10px', textAlign: 'center' }}>ĐVT</th>
                       <th style={{ padding: '10px', textAlign: 'center' }}>Nhóm</th>
                       <th style={{ padding: '10px', textAlign: 'right' }}>Giá trần</th>
                       <th style={{ padding: '10px', textAlign: 'center' }}>S.Lượng</th>
@@ -115,6 +116,7 @@ export default function BidModal({ bid, onClose, addToast }) {
                         <td style={{ padding: '8px 10px' }}>{item['Nồng độ/Hàm lượng'] || item['Hàm lượng'] || '—'}</td>
                         <td style={{ padding: '8px 10px' }}>{item['Đường dùng'] || '—'}</td>
                         <td style={{ padding: '8px 10px' }}>{item['Dạng bào chế'] || '—'}</td>
+                        <td style={{ textAlign: 'center', padding: '8px 10px' }}>{item['Đơn vị tính'] || '—'}</td>
                         <td style={{ textAlign: 'center', padding: '8px 10px' }}>
                           <span style={{ fontWeight: 700, color: '#2980b9' }}>{item['Nhóm thuốc'] || '—'}</span>
                         </td>
