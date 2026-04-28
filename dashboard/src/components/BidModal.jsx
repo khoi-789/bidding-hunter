@@ -54,11 +54,34 @@ export default function BidModal({ bid, products = [], onClose, addToast }) {
     });
   };
 
+  // Tính doanh thu dự kiến (Expected Revenue)
+  // Chỉ tính các thuốc có tồn kho và giá niêm yết < giá trần
+  // Công thức: Giá trần đơn vị * min(SL thầu, SL tồn) * 80%
+  const expectedRevenue = items.reduce((sum, item) => {
+    const p = findProduct(item);
+    if (!p) return sum;
+
+    const bidQty = parseVND(item['Số lượng']);
+    if (bidQty <= 0) return sum;
+
+    const bidUnitPrice = parseVND(item['Giá trần (VND)']) / bidQty;
+    const listedPrice = p.Gia_Niem_Yet || 0;
+    const stock = p.SL_Ton || 0;
+
+    if (stock > 0 && listedPrice < bidUnitPrice) {
+      const effectiveQty = Math.min(bidQty, stock);
+      const itemRev = bidUnitPrice * effectiveQty * 0.8;
+      return sum + itemRev;
+    }
+    return sum;
+  }, 0);
+
   // Định nghĩa các trường thông tin chính
   const infoFields = [
     { label: 'CHỦ ĐẦU TƯ', value: bid.chu_dau_tu },
     { label: 'MÃ GÓI THẦU', value: bid.ma_goi_thau },
     { label: 'GIÁ GÓI THẦU', value: totalCalculatedPrice > 0 ? formatPrice(totalCalculatedPrice) : (bid.gia_goi_thau !== 'NA' ? formatPrice(parseVND(bid.gia_goi_thau)) : 'Chưa có') },
+    { label: 'DOANH THU DỰ KIẾN', value: expectedRevenue > 0 ? formatPrice(expectedRevenue) : '0 VNĐ' },
     { label: 'NGÀY ĐĂNG TẢI', value: bid.ngay_dang_tai },
     { label: 'ĐÓNG THẦU', value: bid.thoi_diem_dong_thau },
     { label: 'MỞ THẦU', value: bid.thoi_diem_mo_thau },
