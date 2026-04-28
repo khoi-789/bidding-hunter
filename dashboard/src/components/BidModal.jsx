@@ -73,16 +73,14 @@ export default function BidModal({ bid, products = [], onClose, addToast }) {
 
   // Định nghĩa các trường thông tin chính
   const infoFields = [
-    { label: 'CHỦ ĐẦU TƯ', value: bid.chu_dau_tu },
+    { label: 'CHỦ ĐẦU TƯ', value: bid.chu_dau_tu, span: 2 },
     { label: 'MÃ GÓI THẦU', value: bid.ma_goi_thau },
     { label: 'GIÁ GÓI THẦU', value: totalCalculatedPrice > 0 ? formatPrice(totalCalculatedPrice) : (bid.gia_goi_thau !== 'NA' ? formatPrice(parseVND(bid.gia_goi_thau)) : 'Chưa có') },
     { label: 'DOANH THU DỰ KIẾN', value: expectedRevenue > 0 ? formatPrice(expectedRevenue) : '0 VNĐ' },
     { label: 'NGÀY ĐĂNG TẢI', value: bid.ngay_dang_tai },
     { label: 'ĐÓNG THẦU', value: bid.thoi_diem_dong_thau },
-    { label: 'MỞ THẦU', value: bid.thoi_diem_mo_thau },
-    { label: 'THỜI GIAN THỰC HIỆN', value: bid.thoi_gian_thuc_hien },
-    { label: 'CHÀO GIÁ TỪ', value: bid.chao_gia_tu },
     { label: 'CHÀO GIÁ ĐẾN', value: bid.chao_gia_den },
+    { label: 'HÌNH THỨC', value: bid.bidForm || 'Qua mạng' },
   ].filter(f => f.value && f.value !== 'NA' && f.value !== '');
 
   return (
@@ -93,7 +91,7 @@ export default function BidModal({ bid, products = [], onClose, addToast }) {
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
         <div className="modal-body">
-          <div style={{ padding: '24px 28px', flexShrink: 0 }}>
+          <div style={{ padding: '12px 28px', flexShrink: 0 }}>
 
           {/* BPS Meter */}
           <div className="bps-meter">
@@ -114,7 +112,7 @@ export default function BidModal({ bid, products = [], onClose, addToast }) {
           {/* Thông tin chính */}
           <div className="modal-grid">
             {infoFields.map((f, i) => (
-              <div key={i} className={`modal-field ${f.label === 'CHỦ ĐẦU TƯ' ? 'full' : ''}`}>
+              <div key={i} className="modal-field" style={f.span ? { gridColumn: `span ${f.span}` } : {}}>
                 <div className="field-label">{f.label}</div>
                 <div className="field-value">{f.value}</div>
               </div>
