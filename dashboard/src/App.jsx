@@ -523,7 +523,7 @@ function App() {
                                   <table className="inner-table">
                                     <thead>
                                       <tr>
-                                        <th>Mã số</th>
+                                        <th>Trạng thái & Mã số</th>
                                         <th>Tên gói thầu</th>
                                         <th>Chủ đầu tư</th>
                                         <th style={{textAlign:'right'}}>Giá dự toán</th>
@@ -533,7 +533,18 @@ function App() {
                                     <tbody>
                                       {h.bids?.map(b => (
                                         <tr key={b.id}>
-                                          <td style={{fontSize:11}}><b>{b.id}</b></td>
+                                          <td style={{fontSize:11}}>
+                                            <span style={{
+                                              fontSize: 9, 
+                                              padding: '1px 4px', 
+                                              borderRadius: 4, 
+                                              background: b.status === 'Mới' ? '#dcfce7' : '#eff6ff',
+                                              color: b.status === 'Mới' ? '#166534' : '#1e40af',
+                                              marginRight: 6,
+                                              fontWeight: 700
+                                            }}>{b.status || 'Cập nhật'}</span>
+                                            <b>{b.id}</b>
+                                          </td>
                                           <td style={{fontSize:11}}>{b.name}</td>
                                           <td style={{fontSize:11}}>{b.chu_dau_tu}</td>
                                           <td style={{fontSize:11, textAlign:'right'}}>{b.gia}</td>
