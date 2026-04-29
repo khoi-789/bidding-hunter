@@ -74,7 +74,10 @@ function App() {
     try {
       const saved = localStorage.getItem('bh_orders');
       const parsed = saved ? JSON.parse(saved) : null;
-      return Array.isArray(parsed) ? parsed : (MOCK_ORDERS || []);
+      if (Array.isArray(parsed) && parsed.length >= (MOCK_ORDERS?.length || 0)) {
+        return parsed;
+      }
+      return MOCK_ORDERS || [];
     } catch (e) { return MOCK_ORDERS || []; }
   });
 
