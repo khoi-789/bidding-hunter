@@ -3,6 +3,8 @@ import { getBids, subscribeToBids, subscribeToHistory, parseDateTime } from './f
 import { MOCK_CUSTOMERS, MOCK_PRODUCTS } from './mockData';
 import BidModal from './components/BidModal';
 import BulkEmailModal from './components/BulkEmailModal';
+import ImportExportModal from './components/ImportExportModal';
+import * as XLSX from 'xlsx';
 import ChartsView from './components/ChartsView';
 import AIAssistant from './components/AIAssistant';
 import PotentialAnalysis from './components/PotentialAnalysis';
@@ -38,9 +40,16 @@ function App() {
   const [expandedHistoryId, setExpandedHistoryId] = useState(null);
   const addToastRef = useRef(null);
 
-  // Mock data cho Khách hàng & Sản phẩm (test)
-  const customers = MOCK_CUSTOMERS;
-  const products = MOCK_PRODUCTS;
+  const [customers, setCustomers] = useState(() => {
+    const saved = localStorage.getItem('bh_customers');
+    return saved ? JSON.parse(saved) : MOCK_CUSTOMERS;
+  });
+  const [products, setProducts] = useState(() => {
+    const saved = localStorage.getItem('bh_products');
+    return saved ? JSON.parse(saved) : MOCK_PRODUCTS;
+  });
+
+  const [showImportExport, setShowImportExport] = useState(null); // 'customers' | 'products' | null
 
   const [customerConfigs, setCustomerConfigs] = useState(() => {
     try {
@@ -48,7 +57,7 @@ function App() {
       const parsed = saved ? JSON.parse(saved) : {};
       
       const initial = {};
-      MOCK_CUSTOMERS.forEach(c => {
+      customers.forEach(c => {
         initial[c.id] = {
           to: parsed[c.id]?.to || 'leminhkhoi279@gmail.com',
           cc: parsed[c.id]?.cc || 'nguyenthuc12@gmail.com, hungnpv95@gmail.com'
@@ -57,6 +66,9 @@ function App() {
       return initial;
     } catch (e) { return {}; }
   });
+
+  useEffect(() => { localStorage.setItem('bh_customers', JSON.stringify(customers)); }, [customers]);
+  useEffect(() => { localStorage.setItem('bh_products', JSON.stringify(products)); }, [products]);
 
   useEffect(() => {
     localStorage.setItem('bh_customer_configs', JSON.stringify(customerConfigs));
@@ -94,6 +106,74 @@ function App() {
     const duration = type === 'info' ? 6000 : 3000;
     setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), duration);
   }, []);
+
+  const handleExport = (type) => {
+    const dataToExport = type === 'customers' ? customers : products;
+    const exportData = dataToExport.map(item => {
+      if (type === 'customers') {
+        const config = customerConfigs[item.id] || {};
+        return {
+          'Mã KH': item.Ma_KH,
+          'Tên Bệnh Viện': item.Ten_Benh_Vien,
+          'Phân Tuyến': item.Phan_Tuyen,
+          'Dư nợ hiện tại': item.Du_No_Hien_Tai,
+          'Hạn mức': item.Han_Muc_No,
+          'Người nhận (To)': config.to || '',
+          'Đồng gửi (Cc)': config.cc || ''
+        };
+      } else {
+        return {
+          'Mã SP': item.id,
+          'Tên Biệt Dược': item.Ten_Biet_Duoc,
+          'Hoạt chất': item.Hoat_Chat,
+          'Dạng bào chế': item.Dang_Bao_Che,
+          'Giá niêm yết': item.Gia_Niem_Yet
+        };
+      }
+    });
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Data");
+    XLSX.writeFile(wb, `BiddingHunter_${type}_${new Date().getTime()}.xlsx`);
+    addToast(`Đã xuất ${exportData.length} bản ghi ${type}`, 'success');
+  };
+
+  const handleImport = (newData, type) => {
+    if (type === 'customers') {
+      const merged = [...customers];
+      const newConfigs = { ...customerConfigs };
+      newData.forEach(item => {
+        const idx = merged.findIndex(c => c.Ma_KH === item.Ma_KH);
+        if (idx >= 0) {
+          merged[idx] = { ...merged[idx], ...item };
+        } else {
+          merged.push(item);
+        }
+        // Update configs if email provided
+        if (item.to || item.cc) {
+          newConfigs[item.id] = { 
+            to: item.to || newConfigs[item.id]?.to || 'leminhkhoi279@gmail.com',
+            cc: item.cc || newConfigs[item.id]?.cc || 'nguyenthuc12@gmail.com, hungnpv95@gmail.com'
+          };
+        }
+      });
+      setCustomers(merged);
+      setCustomerConfigs(newConfigs);
+    } else {
+      const merged = [...products];
+      newData.forEach(item => {
+        const idx = merged.findIndex(p => p.id === item.id);
+        if (idx >= 0) {
+          merged[idx] = { ...merged[idx], ...item };
+        } else {
+          merged.push(item);
+        }
+      });
+      setProducts(merged);
+    }
+    addToast(`Đã nhập ${newData.length} bản ghi ${type}`, 'success');
+  };
 
   useEffect(() => { addToastRef.current = addToast; }, [addToast]);
   
@@ -403,9 +483,15 @@ function App() {
 
           {activeNav === 'customers' && (
             <div className="card">
-              <div className="card-header">
-                <h3 className="card-title">Danh mục Khách hàng</h3>
-                <div className="section-meta" style={{fontSize:11, color:'#f39c12', fontWeight:600}}>⚠️ Dữ liệu demo — sẽ cập nhật thật sau</div>
+              <div className="card-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                <div>
+                  <h3 className="card-title">Danh mục Khách hàng</h3>
+                  <div className="section-meta" style={{fontSize:11, color:'#f39c12', fontWeight:600}}>Quản lý dữ liệu bệnh viện và cấu hình email</div>
+                </div>
+                <div style={{display:'flex', gap: 10}}>
+                  <button className="action-btn" onClick={() => handleExport('customers')} style={{background:'#f8fafc', border:'1px solid #e2e8f0', color:'#475569'}}>Export 📤</button>
+                  <button className="action-btn" onClick={() => setShowImportExport('customers')} style={{background:'var(--accent)', color:'#fff', border:'none'}}>Import 📥</button>
+                </div>
               </div>
               <div className="card-body">
                 <table className="data-table">
@@ -458,8 +544,12 @@ function App() {
 
           {activeNav === 'products' && (
             <div className="card">
-              <div className="card-header">
+              <div className="card-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                 <h3 className="card-title">Danh mục Sản phẩm ({products.length})</h3>
+                <div style={{display:'flex', gap: 10}}>
+                  <button className="action-btn" onClick={() => handleExport('products')} style={{background:'#f8fafc', border:'1px solid #e2e8f0', color:'#475569'}}>Export 📤</button>
+                  <button className="action-btn" onClick={() => setShowImportExport('products')} style={{background:'var(--accent)', color:'#fff', border:'none'}}>Import 📥</button>
+                </div>
               </div>
               <div className="card-body" style={{padding: 0}}>
                 <table className="data-table">
@@ -599,6 +689,15 @@ function App() {
       )}
       <div className="toast-container">{toasts.map(t => <Toast key={t.id} msg={t.msg} type={t.type} />)}</div>
       <AIAssistant bids={bids} customers={customers} products={products} />
+
+      {showImportExport && (
+        <ImportExportModal 
+          type={showImportExport}
+          data={showImportExport === 'customers' ? customers : products}
+          onImport={(data) => handleImport(data, showImportExport)}
+          onClose={() => setShowImportExport(null)}
+        />
+      )}
     </div>
   );
 }
