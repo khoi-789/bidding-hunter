@@ -47,8 +47,9 @@ const GEMINI_SVG = (
 );
 
 // ─── CONTEXT BUILDER (Token-efficient summary) ───────────────────────────────
-function buildContext(bids, customers, products) {
-  const topBids = [...bids]
+function buildContext(bids = [], customers = [], products = []) {
+  const topBids = Array.isArray(bids) ? [...bids]
+    .filter(Boolean)
     .sort((a, b) => (b.bps_score || 0) - (a.bps_score || 0))
     .slice(0, 10)
     .map(b => ({
@@ -61,13 +62,13 @@ function buildContext(bids, customers, products) {
       flag: b.flag,
       gia: b.gia_goi_thau,
       con_lai: getDaysLeft(b.thoi_diem_dong_thau) + 'd',
-    }));
+    })) : [];
 
-  const customerSummary = customers.slice(0, 15).map(c => ({
-    ten: c.Ten_Benh_Vien?.slice(0, 30),
+  const customerSummary = Array.isArray(customers) ? customers.filter(Boolean).slice(0, 15).map(c => ({
+    ten: (c.Ten_Ben_Vien || c.Ten_Benh_Vien || '').slice(0, 30),
     no: c.Du_No_Hien_Tai, hm: c.Han_Muc_No,
-    status: c.Du_No_Hien_Tai > c.Han_Muc_No ? 'Vượt' : 'OK'
-  }));
+    status: (c.Du_No_Hien_Tai || 0) > (c.Han_Muc_No || 0) ? 'Vượt' : 'OK'
+  })) : [];
 
   // Tổng hợp top hoạt chất từ items[]
   const hcMap = {};
@@ -95,11 +96,11 @@ const FALLBACK_SCENARIOS = [
   {
     id: 'bps_high',
     keywords: ['bps', 'cao nhất', 'ưu tiên', 'tiềm năng', 'thắng', 'trúng thầu', 'ngon', 'tốt nhất'],
-    generate: (bids) => {
-      const topBids = [...bids].sort((a,b) => (b.bps_score||0) - (a.bps_score||0));
+    generate: (bids = []) => {
+      const topBids = Array.isArray(bids) ? [...bids].filter(Boolean).sort((a,b) => (b.bps_score||0) - (a.bps_score||0)) : [];
       const top = topBids[0];
       if (!top) return "Hiện tại hệ thống chưa có dữ liệu gói thầu nào để phân tích BPS.";
-      const countOver8 = bids.filter(b => b.bps_score >= 8.0).length;
+      const countOver8 = bids.filter(b => b && b.bps_score >= 8.0).length;
       return `Dạ thưa Sếp, dựa trên các chỉ số đấu thầu hiện tại, em thấy chúng ta đang theo dõi ${bids.length} gói thầu. Trong đó, có ${countOver8} gói đạt điểm BPS trên 8.0, tức là nằm trong vùng an toàn và rất tiềm năng.\nGói thầu sáng giá nhất hiện nay theo đánh giá của em là **${top.ten_goi_thau}** của đơn vị ${top.chu_dau_tu}. Mã hệ thống ghi nhận gói thầu này đạt điểm BPS tuyệt đối là **${top.bps_score}/10**, với ${top.so_danh_muc} danh mục thuốc — sản phẩm tiêu biểu là ${top.thuoc_tieu_bieu || 'các biệt dược nhóm chuyên khoa'}. Em kính đề nghị Sếp chỉ đạo bộ phận đấu thầu ngay lập tức chuẩn bị hồ sơ pháp lý, xin thư bảo lãnh và rà soát lại mức chiết khấu cạnh tranh nhất để chốt hạ gói thầu này ạ.`;
     }
   },
@@ -117,8 +118,8 @@ const FALLBACK_SCENARIOS = [
   {
     id: 'urgent_bids',
     keywords: ['gấp', 'sắp đóng', 'đóng thầu', 'thời hạn', 'deadline', 'hết hạn', 'hôm nay', 'chót'],
-    generate: (bids) => {
-      const urgent = bids.filter(b => b.flag === 'RED' || getDaysLeft(b.thoi_diem_dong_thau) <= 3);
+    generate: (bids = []) => {
+      const urgent = Array.isArray(bids) ? bids.filter(b => b && (b.flag === 'RED' || getDaysLeft(b.thoi_diem_dong_thau) <= 3)) : [];
       if (urgent.length === 0) return "Dạ thưa Sếp, em vừa rà soát xong toàn bộ lịch đóng thầu. Hiện tất cả các gói thầu đều còn dư dả thời gian nộp hồ sơ. Không có gói thầu nào trong tình trạng báo động đỏ đóng thầu gấp dưới 3 ngày. Sếp có thể yên tâm ạ.";
       const closest = urgent[0];
       return `Dạ thưa Sếp, tình trạng khẩn cấp! Có ${urgent.length} gói thầu đang đếm ngược thời gian và sẽ đóng thầu trong vòng chưa tới 72 giờ nữa.\nTrọng tâm lớn nhất em thấy là gói **${closest.ten_goi_thau}** của đơn vị ${closest.chu_dau_tu}. Nếu chậm trễ nộp hồ sơ, công ty sẽ mất đi toàn bộ cơ hội doanh thu từ gói này trong suốt 1 năm tới. Em kính đề nghị Sếp đôn đốc toàn bộ team đấu thầu ưu tiên 100% thời gian, rà soát lại hiệu lực thư bảo lãnh ngân hàng và các ủy quyền bán hàng từ hãng. Tuyệt đối không để xảy ra sai sót kỹ thuật nào vào phút chót Sếp nhé.`;

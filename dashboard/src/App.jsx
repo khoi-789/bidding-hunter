@@ -42,30 +42,40 @@ function App() {
   const addToastRef = useRef(null);
 
   const [customers, setCustomers] = useState(() => {
-    const saved = localStorage.getItem('bh_customers');
-    if (!saved) return MOCK_CUSTOMERS;
     try {
-      const parsed = JSON.parse(saved);
-      // Migration: Backfill new fields from MOCK if missing
+      const saved = localStorage.getItem('bh_customers');
+      const parsed = saved ? JSON.parse(saved) : null;
+      if (!Array.isArray(parsed)) return (MOCK_CUSTOMERS || []);
+      
       return parsed.map(c => {
-        const mock = MOCK_CUSTOMERS.find(m => m.Ma_KH === c.Ma_KH);
+        if (!c) return null;
+        const mock = (MOCK_CUSTOMERS || []).find(m => m && m.Ma_KH === c.Ma_KH);
         return {
           ...c,
           Ten_Lien_He: c.Ten_Lien_He || mock?.Ten_Lien_He || '',
           SDT: c.SDT || mock?.SDT || '',
           Thoi_Gian_No: c.Thoi_Gian_No || mock?.Thoi_Gian_No || '0 ngày'
         };
-      });
-    } catch (e) { return MOCK_CUSTOMERS; }
+      }).filter(Boolean);
+    } catch (e) { 
+      console.error("Failed to load customers:", e);
+      return (MOCK_CUSTOMERS || []); 
+    }
   });
   const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('bh_products');
-    return saved ? JSON.parse(saved) : MOCK_PRODUCTS;
+    try {
+      const saved = localStorage.getItem('bh_products');
+      const parsed = saved ? JSON.parse(saved) : null;
+      return Array.isArray(parsed) ? parsed : (MOCK_PRODUCTS || []);
+    } catch (e) { return MOCK_PRODUCTS || []; }
   });
 
   const [orders, setOrders] = useState(() => {
-    const saved = localStorage.getItem('bh_orders');
-    return saved ? JSON.parse(saved) : MOCK_ORDERS;
+    try {
+      const saved = localStorage.getItem('bh_orders');
+      const parsed = saved ? JSON.parse(saved) : null;
+      return Array.isArray(parsed) ? parsed : (MOCK_ORDERS || []);
+    } catch (e) { return MOCK_ORDERS || []; }
   });
 
   const [showImportExport, setShowImportExport] = useState(null); // 'customers' | 'products' | null
@@ -202,10 +212,13 @@ function App() {
   
   // Helper tìm sản phẩm cho bid stats
   const findProduct = useCallback((item) => {
+    if (!item || !products) return null;
     const itemName = String(item['Hoạt chất'] || item['Tên thuốc'] || '').toLowerCase().trim();
     if (!itemName) return null;
     return products.find(p => {
+      if (!p) return false;
       const prodName = String(p.Hoat_Chat || '').toLowerCase().trim();
+      if (!prodName) return false;
       return itemName.includes(prodName) || prodName.includes(itemName);
     });
   }, [products]);
@@ -263,9 +276,11 @@ function App() {
   };
 
   const getSortedData = (data, type) => {
-    if (!sortConfig.key) return data;
+    if (!Array.isArray(data)) return [];
+    if (!sortConfig || !sortConfig.key) return data;
 
     return [...data].sort((a, b) => {
+      if (!a || !b) return 0;
       let valA, valB;
 
       if (type === 'bids') {
@@ -334,23 +349,26 @@ function App() {
   );
 
   const getFilteredBids = (dataList) => {
+    if (!Array.isArray(dataList)) return [];
+    const searchStr = (searchTerm || '').toLowerCase();
+    const ingSearchStr = (ingredientSearch || '').toLowerCase();
+
     return dataList.filter(b => {
+      if (!b) return false;
       const name     = (b.ten_goi_thau || '').toLowerCase();
       const code     = (b.ma_goi_thau  || '').toLowerCase();
       const hospital = (b.chu_dau_tu   || '').toLowerCase();
       const meds     = (b.thuoc_tieu_bieu || '').toLowerCase();
       
-      const search   = searchTerm.toLowerCase();
-      const ingSearch = ingredientSearch.toLowerCase();
-
-      const matchesSearch   = name.includes(search) || code.includes(search) || hospital.includes(search);
+      const matchesSearch   = name.includes(searchStr) || code.includes(searchStr) || hospital.includes(searchStr);
       
-      const matchesIng      = !ingSearch || 
-                              meds.includes(ingSearch) || 
+      const matchesIng      = !ingSearchStr || 
+                              meds.includes(ingSearchStr) || 
                               (b.items || []).some(item => {
+                                if (!item) return false;
                                 const hChat = String(item['Hoạt chất'] || '').toLowerCase();
                                 const tThuoc = String(item['Tên thuốc'] || '').toLowerCase();
-                                return hChat.includes(ingSearch) || tThuoc.includes(ingSearch);
+                                return hChat.includes(ingSearchStr) || tThuoc.includes(ingSearchStr);
                               });
       
       const daysLeft        = getDaysLeft(b.thoi_diem_dong_thau);
