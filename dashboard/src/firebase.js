@@ -28,8 +28,6 @@ export function computeBPS(bid) {
   const items = bid.items || [];
   if (items.length === 0) return { bps_score: 0, flag: 'GRAY' };
 
-  let score = 1.0; // 10% Base Score
-
   // 1. Tính toán Revenue & Match Count trước (Sử dụng logic giống UI)
   let matchedCount = 0;
   let revenue = 0;
