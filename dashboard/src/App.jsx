@@ -294,6 +294,33 @@ function App() {
     }
   }, [loading, orders.length]);
 
+  // Migration: x2 Price, x10 Quantity (User Request - Scale up)
+  useEffect(() => {
+    if (loading || orders.length === 0) return;
+    const migrationKey = 'bh_orders_x2_sl10_v106_final_v2';
+    if (!localStorage.getItem(migrationKey)) {
+      setOrders(prev => {
+        const next = prev.map(order => {
+          let newTotal = 0;
+          const newItems = order.Items.map(item => {
+            const newPrice = Math.round(item.Don_Gia * 2);
+            const newQty = Math.round(item.SL * 10);
+            const newSubtotal = Math.round(newPrice * newQty);
+            newTotal += newSubtotal;
+            return { ...item, Don_Gia: newPrice, SL: newQty, Thanh_Tien: newSubtotal };
+          });
+          return { ...order, Items: newItems, Tong_Tien: newTotal };
+        });
+        localStorage.setItem('bh_orders', JSON.stringify(next));
+        return next;
+      });
+      localStorage.setItem(migrationKey, 'true');
+      setTimeout(() => {
+        addToastRef.current?.('💎 Đã x2 Đơn giá & x10 Số lượng (Quy mô nghìn tỷ)', 'success');
+      }, 3500);
+    }
+  }, [loading, orders.length]);
+
   const addToast = useCallback((msg, type = 'success') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, msg, type }]);
