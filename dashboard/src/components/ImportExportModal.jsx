@@ -6,11 +6,11 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
   const fileInputRef = useRef(null);
 
   const schema = type === 'customers' 
-    ? ['Ma_KH', 'Ten_Benh_Vien', 'Ten_Lien_He', 'SDT', 'Phan_Tuyen', 'Du_No_Hien_Tai', 'Han_Muc_No', 'To_Emails', 'Cc_Emails']
+    ? ['Ma_KH', 'Ten_Benh_Vien', 'Ten_Lien_He', 'SDT', 'Phan_Tuyen', 'Du_No_Hien_Tai', 'Thoi_Gian_No', 'Han_Muc_No', 'To_Emails', 'Cc_Emails']
     : ['Ma_SP', 'Ten_Biet_Duoc', 'Hoat_Chat', 'Dang_Bao_Che', 'Gia_Niem_Yet'];
 
   const labels = type === 'customers'
-    ? ['Mã KH', 'Tên Bệnh Viện', 'Người liên hệ', 'Số điện thoại', 'Phân Tuyến', 'Dư nợ hiện tại', 'Hạn mức', 'Người nhận (To)', 'Đồng gửi (Cc)']
+    ? ['Mã KH', 'Tên Bệnh Viện', 'Người liên hệ', 'Số điện thoại', 'Phân Tuyến', 'Dư nợ hiện tại', 'Thời gian nợ', 'Hạn mức', 'Người nhận (To)', 'Đồng gửi (Cc)']
     : ['Mã SP', 'Tên Biệt Dược', 'Hoạt chất', 'Dạng bào chế', 'Giá niêm yết'];
 
   const handleExport = () => {
@@ -23,6 +23,7 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
           'Số điện thoại': item.SDT || '',
           'Phân Tuyến': item.Phan_Tuyen,
           'Dư nợ hiện tại': item.Du_No_Hien_Tai,
+          'Thời gian nợ': item.Thoi_Gian_No || '0 ngày',
           'Hạn mức': item.Han_Muc_No,
           'Người nhận (To)': item.to || '',
           'Đồng gửi (Cc)': item.cc || ''
@@ -57,6 +58,7 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
         'Số điện thoại': '0901234567',
         'Phân Tuyến': 'TW',
         'Dư nợ hiện tại': 520000000,
+        'Thời gian nợ': '12 tháng - 5 ngày',
         'Hạn mức': 400000000,
         'Người nhận (To)': 'admin@example.com',
         'Đồng gửi (Cc)': 'cc1@example.com, cc2@example.com'
@@ -116,6 +118,7 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
             SDT: cleanPhone(row['Số điện thoại']),
             Phan_Tuyen: row['Phân Tuyến'],
             Du_No_Hien_Tai: parseNum(row['Dư nợ hiện tại']),
+            Thoi_Gian_No: row['Thời gian nợ'] || '0 ngày',
             Han_Muc_No: parseNum(row['Hạn mức']),
             to: row['Người nhận (To)'] || '',
             cc: row['Đồng gửi (Cc)'] || ''

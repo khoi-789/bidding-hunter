@@ -51,7 +51,8 @@ function App() {
         return {
           ...c,
           Ten_Lien_He: c.Ten_Lien_He || mock?.Ten_Lien_He || '',
-          SDT: c.SDT || mock?.SDT || ''
+          SDT: c.SDT || mock?.SDT || '',
+          Thoi_Gian_No: c.Thoi_Gian_No || mock?.Thoi_Gian_No || '0 ngày'
         };
       });
     } catch (e) { return MOCK_CUSTOMERS; }
@@ -515,6 +516,7 @@ function App() {
                       <th>SĐT</th>
                       <SortHeader label="Phân Tuyến" columnKey="Phan_Tuyen" />
                       <SortHeader label="Dư nợ hiện tại" columnKey="Du_No_Hien_Tai" align="right" />
+                      <th style={{textAlign: 'center'}}>Thời gian nợ</th>
                       <SortHeader label="Hạn mức" columnKey="Han_Muc_No" align="right" />
                       <th>Người nhận (To)</th>
                       <th>Đồng gửi (Cc)</th>
@@ -527,11 +529,12 @@ function App() {
                     return (
                       <tr key={c.id}>
                         <td><b>{c.Ma_KH}</b></td>
-                        <td>{c.Ten_Benh_Vien}</td>
+                        <td>{c.Ten_Ben_Vien}</td>
                         <td style={{fontSize: 12, fontWeight: 500}}>{c.Ten_Lien_He || '—'}</td>
                         <td style={{fontSize: 12, color: '#64748b'}}>{formatPhone(c.SDT)}</td>
                         <td><span style={{fontSize:10, background:'#e8f4fd', color:'#2980b9', padding:'2px 6px', borderRadius:4}}>{c.Phan_Tuyen?.replace('TUYEN_','')}</span></td>
                         <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Du_No_Hien_Tai)}</td>
+                        <td style={{fontSize: 11, color: '#e67e22', fontWeight: 600, textAlign: 'center'}}>{c.Thoi_Gian_No || '0 ngày'}</td>
                         <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Han_Muc_No)}</td>
                         <td style={{width: 180}}>
                           <input 
