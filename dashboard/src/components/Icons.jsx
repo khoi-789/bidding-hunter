@@ -156,3 +156,29 @@ export const IconTrendingUp = (props) => (
   </IconBase>
 );
 
+export const IconUpload = (props) => (
+  <IconBase {...props}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="17 8 12 3 7 8" />
+    <line x1="12" y1="3" x2="12" y2="15" />
+  </IconBase>
+);
+
+export const IconDownload = (props) => (
+  <IconBase {...props}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" y1="15" x2="12" y2="3" />
+  </IconBase>
+);
+
+export const IconTable = (props) => (
+  <IconBase {...props}>
+    <path d="M3 3h18v18H3z" />
+    <path d="M3 9h18" />
+    <path d="M3 15h18" />
+    <path d="M9 3v18" />
+    <path d="M15 3v18" />
+  </IconBase>
+);
+

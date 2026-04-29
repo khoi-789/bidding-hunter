@@ -15,7 +15,8 @@ import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND, f
 const APP_VERSION = '1.0.4'; // Increment this to force update mock data if needed
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
-  IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle, IconPackage
+  IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle, IconPackage,
+  IconUpload, IconDownload, IconTable
 } from './components/Icons';
 import './index.css';
 
@@ -704,10 +705,14 @@ function App() {
                     }} 
                     style={{background:'#fff', border:'1px solid var(--accent)', color:'var(--accent)', display:'flex', alignItems:'center', gap:6}}
                   >
-                    📧 Email Nhắc nợ ({selectedCustomerIds.length})
+                    <IconEmail size={14} /> Email Nhắc nợ ({selectedCustomerIds.length})
                   </button>
-                  <button className="action-btn" onClick={() => handleExport('customers')} style={{background:'#f8fafc', border:'1px solid #e2e8f0', color:'#475569'}}>Export 📤</button>
-                  <button className="action-btn" onClick={() => setShowImportExport('customers')} style={{background:'var(--accent)', color:'#fff', border:'none'}}>Import 📥</button>
+                  <button className="action-btn" onClick={() => handleExport('customers')} style={{background:'#f8fafc', border:'1px solid #e2e8f0', color:'#475569', display:'flex', alignItems:'center', gap:6}}>
+                    <IconUpload size={14} /> Export
+                  </button>
+                  <button className="action-btn" onClick={() => setShowImportExport('customers')} style={{background:'var(--accent)', color:'#fff', border:'none', display:'flex', alignItems:'center', gap:6}}>
+                    <IconDownload size={14} /> Import
+                  </button>
                 </div>
               </div>
               <div className="card-body">
@@ -784,8 +789,12 @@ function App() {
               <div className="card-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                 <h3 className="card-title">Danh mục Sản phẩm ({products.length})</h3>
                 <div style={{display:'flex', gap: 10}}>
-                  <button className="action-btn" onClick={() => handleExport('products')} style={{background:'#f8fafc', border:'1px solid #e2e8f0', color:'#475569'}}>Export 📤</button>
-                  <button className="action-btn" onClick={() => setShowImportExport('products')} style={{background:'var(--accent)', color:'#fff', border:'none'}}>Import 📥</button>
+                  <button className="action-btn" onClick={() => handleExport('products')} style={{background:'#f8fafc', border:'1px solid #e2e8f0', color:'#475569', display:'flex', alignItems:'center', gap:6}}>
+                    <IconUpload size={14} /> Export
+                  </button>
+                  <button className="action-btn" onClick={() => setShowImportExport('products')} style={{background:'var(--accent)', color:'#fff', border:'none', display:'flex', alignItems:'center', gap:6}}>
+                    <IconDownload size={14} /> Import
+                  </button>
                 </div>
               </div>
               <div className="card-body" style={{padding: 0}}>
@@ -839,7 +848,7 @@ function App() {
                   onClick={handleExportMasterData} 
                   style={{background:'linear-gradient(135deg, #27ae60, #2ecc71)', color:'#fff', border:'none', fontWeight:600, display:'flex', alignItems:'center', gap:8}}
                 >
-                  Xuất Master Data 📊
+                  <IconTable size={16} /> Xuất Master Data
                 </button>
               </div>
               <div className="card-body" style={{padding: 0}}>
