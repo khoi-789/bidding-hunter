@@ -128,8 +128,11 @@ function App() {
         return {
           'Mã KH': item.Ma_KH,
           'Tên Bệnh Viện': item.Ten_Benh_Vien,
+          'Người liên hệ': item.Ten_Lien_He || '',
+          'Số điện thoại': item.SDT || '',
           'Phân Tuyến': item.Phan_Tuyen,
           'Dư nợ hiện tại': item.Du_No_Hien_Tai,
+          'Thời gian nợ': item.Thoi_Gian_No || '0 ngày',
           'Hạn mức': item.Han_Muc_No,
           'Người nhận (To)': config.to || '',
           'Đồng gửi (Cc)': config.cc || ''
