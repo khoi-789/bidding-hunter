@@ -178,6 +178,8 @@ export default function PotentialAnalysis({ bids, products }) {
             </div>
           </div>
         )}
+
+        {activeTab === 'summary' && (
           <div className="strategy-grid">
             {analysisData.map(bid => (
               <div key={bid.id} className="strategy-card card animate-fade-in" onClick={() => setSelectedBidId(bid.id)}>
