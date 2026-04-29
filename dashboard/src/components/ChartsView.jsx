@@ -6,6 +6,7 @@ import {
   ComposedChart
 } from 'recharts';
 import { formatPrice } from '../utils';
+import { IconCharts, IconBids, IconTarget } from './Icons';
 
 const COLORS = ['#1ABB9C', '#3498DB', '#9B59B6', '#E74C3C', '#F39C12', '#34495E', '#16a085', '#2980b9', '#8e44ad', '#c0392b'];
 const BPS_COLORS = { 'GREEN': '#1ABB9C', 'YELLOW': '#F39C12', 'RED': '#E74C3C', 'GRAY': '#95a5a6' };
@@ -567,18 +568,39 @@ export default function ChartsView({ bids, customers, products, orders, productM
       <div className="charts-tabs" style={{display:'flex', gap: 15, borderBottom: '1px solid #e2e8f0', paddingBottom: 15, paddingTop: 10}}>
         <button 
           onClick={() => setActiveTab('sales')} 
-          style={{padding:'10px 20px', borderRadius:8, border:'none', background: activeTab === 'sales' ? 'var(--accent)' : '#f8fafc', color: activeTab === 'sales' ? '#fff' : '#64748b', fontWeight:600, cursor:'pointer', transition:'all 0.3s', display:'flex', alignItems:'center', gap:8}}>
-          <span style={{fontSize: 16}}>🟢</span> Doanh số & Công nợ
+          className={`chart-tab-btn ${activeTab === 'sales' ? 'active' : ''}`}
+          style={{
+            padding:'10px 20px', borderRadius:8, border:'none', 
+            background: activeTab === 'sales' ? 'var(--accent)' : '#f8fafc', 
+            color: activeTab === 'sales' ? '#fff' : '#64748b', 
+            fontWeight:600, cursor:'pointer', transition:'all 0.3s', 
+            display:'flex', alignItems:'center', gap:8
+          }}>
+          <IconCharts size={16} /> Doanh số & Công nợ
         </button>
         <button 
           onClick={() => setActiveTab('bids')} 
-          style={{padding:'10px 20px', borderRadius:8, border:'none', background: activeTab === 'bids' ? 'var(--accent)' : '#f8fafc', color: activeTab === 'bids' ? '#fff' : '#64748b', fontWeight:600, cursor:'pointer', transition:'all 0.3s', display:'flex', alignItems:'center', gap:8}}>
-          <span style={{fontSize: 16}}>🔵</span> Gói thầu & Cơ hội
+          className={`chart-tab-btn ${activeTab === 'bids' ? 'active' : ''}`}
+          style={{
+            padding:'10px 20px', borderRadius:8, border:'none', 
+            background: activeTab === 'bids' ? 'var(--accent)' : '#f8fafc', 
+            color: activeTab === 'bids' ? '#fff' : '#64748b', 
+            fontWeight:600, cursor:'pointer', transition:'all 0.3s', 
+            display:'flex', alignItems:'center', gap:8
+          }}>
+          <IconBids size={16} /> Gói thầu & Cơ hội
         </button>
         <button 
           onClick={() => setActiveTab('strategy')} 
-          style={{padding:'10px 20px', borderRadius:8, border:'none', background: activeTab === 'strategy' ? 'var(--accent)' : '#f8fafc', color: activeTab === 'strategy' ? '#fff' : '#64748b', fontWeight:600, cursor:'pointer', transition:'all 0.3s', display:'flex', alignItems:'center', gap:8}}>
-          <span style={{fontSize: 16}}>🟣</span> Chiến lược Khách hàng & SP
+          className={`chart-tab-btn ${activeTab === 'strategy' ? 'active' : ''}`}
+          style={{
+            padding:'10px 20px', borderRadius:8, border:'none', 
+            background: activeTab === 'strategy' ? 'var(--accent)' : '#f8fafc', 
+            color: activeTab === 'strategy' ? '#fff' : '#64748b', 
+            fontWeight:600, cursor:'pointer', transition:'all 0.3s', 
+            display:'flex', alignItems:'center', gap:8
+          }}>
+          <IconTarget size={16} /> Chiến lược Khách hàng & SP
         </button>
       </div>
 
