@@ -12,7 +12,7 @@ import DebtEmailModal from './components/DebtEmailModal';
 import BPSConfig from './components/BPSConfig';
 import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND, formatPhone } from './utils';
 
-const APP_VERSION = '1.0.3'; // Increment this to force update mock data if needed
+const APP_VERSION = '1.0.4'; // Increment this to force update mock data if needed
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
   IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle, IconPackage
@@ -210,7 +210,7 @@ function App() {
   useEffect(() => {
     if (loading || bids.length === 0) return;
     
-    const migrationKey = 'bh_price_randomized_v102';
+    const migrationKey = 'bh_price_randomized_v104';
     const hasMigrated = localStorage.getItem(migrationKey);
     
     // Check if we have enough data to perform migration
@@ -220,7 +220,8 @@ function App() {
         const next = prev.map(p => {
           const minCeil = productMinCeilings[p.id];
           if (minCeil && minCeil > 0) {
-            const factor = 0.4 + Math.random() * 0.8;
+            // Random factor: 40% - 110% (0.4 to 1.1)
+            const factor = 0.4 + Math.random() * 0.7;
             return { ...p, Gia_Niem_Yet: Math.round(minCeil * factor) };
           }
           return p;

@@ -28,11 +28,11 @@ export default function PotentialAnalysis({ bids, products }) {
           const bidCeiling = parseVND(item['Giá trần (VND)']);
           const bidUnitPrice = bidQty > 0 ? bidCeiling / bidQty : 0;
           
-          // Bình thường hóa giá niêm yết (nếu > 50k thì giả định là giá hộp/vỉ, chia cho 20 để ra đơn giá viên)
-          const normalizedOurPrice = p.Gia_Niem_Yet > 50000 ? p.Gia_Niem_Yet / 20 : (p.Gia_Niem_Yet || 0);
+          // Sử dụng trực tiếp giá niêm yết (vì đã được chuẩn hóa về đơn giá ở App.jsx)
+          const ourPrice = p.Gia_Niem_Yet || 0;
           
           // Tính margin: (Giá trần - Giá niêm yết của mình)
-          const margin = bidUnitPrice - normalizedOurPrice;
+          const margin = bidUnitPrice - ourPrice;
           const marginPercent = bidUnitPrice > 0 ? (margin / bidUnitPrice) * 100 : 0;
 
           // CHỈ LẤY CÁC MẶT HÀNG CÓ LỢI NHUẬN DƯƠNG (BÁN ĐƯỢC)
@@ -40,7 +40,7 @@ export default function PotentialAnalysis({ bids, products }) {
             matchedItems.push({
               ...item,
               ourProduct: p,
-              normalizedOurPrice,
+              normalizedOurPrice: ourPrice,
               margin,
               marginPercent,
               bidUnitPrice

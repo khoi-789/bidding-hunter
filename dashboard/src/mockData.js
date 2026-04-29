@@ -33,9 +33,9 @@ export const MOCK_PRODUCTS = [
     "Duong_Dung": "Tiêm",
     "Dang_Bao_Che": "Tiêm",
     "Nhom_Ky_Thuat": "5",
-    "Gia_Ke_Khai": 17040000,
+    "Gia_Ke_Khai": 17040,
     "SL_Ton": 9000000,
-    "Gia_Niem_Yet": 14200000
+    "Gia_Niem_Yet": 14200
   },
   {
     "id": "SP202",
@@ -46,9 +46,9 @@ export const MOCK_PRODUCTS = [
     "Duong_Dung": "Tiêm",
     "Dang_Bao_Che": "Tiêm",
     "Nhom_Ky_Thuat": "5",
-    "Gia_Ke_Khai": 25800000,
+    "Gia_Ke_Khai": 25800,
     "SL_Ton": 9000000,
-    "Gia_Niem_Yet": 21500000
+    "Gia_Niem_Yet": 21500
   },
   {
     "id": "SP203",
@@ -59,9 +59,9 @@ export const MOCK_PRODUCTS = [
     "Duong_Dung": "Tiêm",
     "Dang_Bao_Che": "Tiêm",
     "Nhom_Ky_Thuat": "5",
-    "Gia_Ke_Khai": 42960000,
+    "Gia_Ke_Khai": 42960,
     "SL_Ton": 9000000,
-    "Gia_Niem_Yet": 35800000
+    "Gia_Niem_Yet": 35800
   },
   {
     "id": "SP204",
@@ -72,9 +72,9 @@ export const MOCK_PRODUCTS = [
     "Duong_Dung": "Nhỏ mắt",
     "Dang_Bao_Che": "Nhỏ mắt",
     "Nhom_Ky_Thuat": "5",
-    "Gia_Ke_Khai": 20040000,
+    "Gia_Ke_Khai": 20040,
     "SL_Ton": 9000000,
-    "Gia_Niem_Yet": 16700000
+    "Gia_Niem_Yet": 16700
   },
   {
     "id": "SP205",
@@ -85,9 +85,9 @@ export const MOCK_PRODUCTS = [
     "Duong_Dung": "Tiêm",
     "Dang_Bao_Che": "Tiêm",
     "Nhom_Ky_Thuat": "5",
-    "Gia_Ke_Khai": 31680000,
+    "Gia_Ke_Khai": 31680,
     "SL_Ton": 9000000,
-    "Gia_Niem_Yet": 26400000
+    "Gia_Niem_Yet": 26400
   },
   {
     "id": "SP206",
@@ -124,9 +124,9 @@ export const MOCK_PRODUCTS = [
     "Duong_Dung": "Tiêm",
     "Dang_Bao_Che": "Tiêm",
     "Nhom_Ky_Thuat": "1",
-    "Gia_Ke_Khai": 20000000,
+    "Gia_Ke_Khai": 20000,
     "SL_Ton": 1000000,
-    "Gia_Niem_Yet": 5000000
+    "Gia_Niem_Yet": 15000
   },
   {
     "id": "SP209",
@@ -137,9 +137,9 @@ export const MOCK_PRODUCTS = [
     "Duong_Dung": "Uống",
     "Dang_Bao_Che": "Viên",
     "Nhom_Ky_Thuat": "2",
-    "Gia_Ke_Khai": 30000000,
+    "Gia_Ke_Khai": 30000,
     "SL_Ton": 9000000,
-    "Gia_Niem_Yet": 25000000
+    "Gia_Niem_Yet": 25000
   },
   {
     "id": "SP210",
@@ -150,9 +150,9 @@ export const MOCK_PRODUCTS = [
     "Duong_Dung": "Uống",
     "Dang_Bao_Che": "Viên",
     "Nhom_Ky_Thuat": "1",
-    "Gia_Ke_Khai": 18000000,
+    "Gia_Ke_Khai": 18000,
     "SL_Ton": 9000000,
-    "Gia_Niem_Yet": 15000000
+    "Gia_Niem_Yet": 15000
   },
   {
     "id": "SP211",
