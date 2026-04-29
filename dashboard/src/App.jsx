@@ -11,7 +11,7 @@ import PotentialAnalysis from './components/PotentialAnalysis';
 import BPSConfig from './components/BPSConfig';
 import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND, formatPhone } from './utils';
 
-const APP_VERSION = '1.0.2'; // Increment this to force update mock data if needed
+const APP_VERSION = '1.0.3'; // Increment this to force update mock data if needed
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
   IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle, IconPackage
@@ -46,14 +46,21 @@ function App() {
   const [customers, setCustomers] = useState(() => {
     try {
       const saved = localStorage.getItem('bh_customers');
+      const version = localStorage.getItem('bh_customers_version');
       const parsed = saved ? JSON.parse(saved) : null;
-      if (!Array.isArray(parsed)) return (MOCK_CUSTOMERS || []);
+      
+      // Force refresh if version mismatch or invalid data
+      if (version !== APP_VERSION || !Array.isArray(parsed)) {
+        localStorage.setItem('bh_customers_version', APP_VERSION);
+        return MOCK_CUSTOMERS || [];
+      }
       
       return parsed.map(c => {
         if (!c) return null;
         const mock = (MOCK_CUSTOMERS || []).find(m => m && m.Ma_KH === c.Ma_KH);
         return {
           ...c,
+          Ten_Ben_Vien: c.Ten_Ben_Vien || mock?.Ten_Ben_Vien || '',
           Ten_Lien_He: c.Ten_Lien_He || mock?.Ten_Lien_He || '',
           SDT: c.SDT || mock?.SDT || '',
           Thoi_Gian_No: c.Thoi_Gian_No || mock?.Thoi_Gian_No || '0 ngày'
