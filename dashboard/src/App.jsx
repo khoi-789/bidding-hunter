@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { getBids, subscribeToBids } from './firebase';
+import { getBids, subscribeToBids, subscribeToHistory } from './firebase';
 import { MOCK_CUSTOMERS, MOCK_PRODUCTS } from './mockData';
 import BidModal from './components/BidModal';
 import BulkEmailModal from './components/BulkEmailModal';
@@ -32,6 +32,8 @@ function App() {
   const [toasts, setToasts] = useState([]);
   const [spinning, setSpinning] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [history, setHistory] = useState([]);
+  const [expandedHistoryId, setExpandedHistoryId] = useState(null);
   const addToastRef = useRef(null);
 
   // Mock data cho Khách hàng & Sản phẩm (test)
@@ -77,7 +79,11 @@ function App() {
         addToastRef.current?.(parts.join(' · '), 'info');
       }
     });
-    return () => unsub();
+    const unsubHistory = subscribeToHistory(setHistory);
+    return () => {
+      unsub();
+      unsubHistory();
+    };
   }, []);
 
   const addToast = useCallback((msg, type = 'success') => {
@@ -274,6 +280,9 @@ function App() {
           <div className={`nav-item ${activeNav === 'products' ? 'active' : ''}`} onClick={() => setActiveNav('products')}>
             <IconProducts className="nav-icon" /> Sản phẩm
           </div>
+          <div className={`nav-item ${activeNav === 'history' ? 'active' : ''}`} onClick={() => setActiveNav('history')}>
+            <IconClock className="nav-icon" /> Lịch sử
+          </div>
         </nav>
       </aside>
 
@@ -467,6 +476,81 @@ function App() {
                     </tr>
                   ))}</tbody>
                 </table>
+              </div>
+            </div>
+          )}
+
+          {activeNav === 'history' && (
+            <div className="history-container animate-fade-in">
+              <div className="card">
+                <div className="card-header">
+                  <h3 className="card-title">Lịch sử chạy Crawler (Terminal)</h3>
+                  <div className="section-meta">Ghi nhận các gói thầu được nạp lên Firebase</div>
+                </div>
+                <div className="card-body" style={{padding: 0}}>
+                  <table className="data-table history-table">
+                    <thead>
+                      <tr>
+                        <th>Thời gian</th>
+                        <th>Từ khóa</th>
+                        <th style={{textAlign:'center'}}>Gói mới</th>
+                        <th style={{textAlign:'center'}}>Cập nhật</th>
+                        <th style={{textAlign:'center'}}>Tổng cộng</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {history.length === 0 ? (
+                        <tr><td colSpan="6" style={{textAlign:'center', padding:40, color:'#94a3b8'}}>Chưa có dữ liệu lịch sử.</td></tr>
+                      ) : history.map(h => (
+                        <React.Fragment key={h.id}>
+                          <tr 
+                            className={`history-row ${expandedHistoryId === h.id ? 'active' : ''}`}
+                            onClick={() => setExpandedHistoryId(expandedHistoryId === h.id ? null : h.id)}
+                          >
+                            <td style={{fontSize: 12, fontWeight: 600}}>{h.time.toLocaleString('vi-VN')}</td>
+                            <td><span className="keyword-tag">{h.keyword}</span></td>
+                            <td style={{textAlign:'center'}}><span style={{color: 'var(--accent)', fontWeight: 700}}>+{h.new_count}</span></td>
+                            <td style={{textAlign:'center'}}><span style={{color: 'var(--blue)', fontWeight: 700}}>{h.update_count}</span></td>
+                            <td style={{textAlign:'center'}}><b>{(h.new_count || 0) + (h.update_count || 0)}</b></td>
+                            <td style={{textAlign:'right'}}>{expandedHistoryId === h.id ? '🔼' : '🔽'}</td>
+                          </tr>
+                          {expandedHistoryId === h.id && (
+                            <tr className="history-detail-row">
+                              <td colSpan="6" style={{padding: '0 20px 20px 20px', background: '#f8fafc'}}>
+                                <div className="history-details animate-fade-in">
+                                  <h4 style={{margin: '15px 0 10px 0', fontSize: 13, color: '#64748b'}}>Chi tiết các gói thầu đã xử lý:</h4>
+                                  <table className="inner-table">
+                                    <thead>
+                                      <tr>
+                                        <th>Mã số</th>
+                                        <th>Tên gói thầu</th>
+                                        <th>Chủ đầu tư</th>
+                                        <th style={{textAlign:'right'}}>Giá dự toán</th>
+                                        <th style={{textAlign:'center'}}>Danh mục</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {h.bids?.map(b => (
+                                        <tr key={b.id}>
+                                          <td style={{fontSize:11}}><b>{b.id}</b></td>
+                                          <td style={{fontSize:11}}>{b.name}</td>
+                                          <td style={{fontSize:11}}>{b.chu_dau_tu}</td>
+                                          <td style={{fontSize:11, textAlign:'right'}}>{b.gia}</td>
+                                          <td style={{fontSize:11, textAlign:'center'}}>{b.items_count}</td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           )}

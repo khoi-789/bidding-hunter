@@ -833,3 +833,24 @@ input[type="checkbox"] {
 }
 .ai-send-btn:hover:not(:disabled) { background: var(--accent-hover); transform: translateY(-1px); }
 .ai-send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ── Crawler History ────────────────────── */
+.history-row { cursor: pointer; transition: background 0.2s; }
+.history-row:hover { background: #f1f5f9; }
+.history-row.active { background: #eff6ff; }
+.keyword-tag {
+  background: #e2e8f0; color: #475569; padding: 2px 8px;
+  border-radius: 12px; font-size: 11px; font-weight: 600;
+}
+.inner-table {
+  width: 100%; border-collapse: collapse; background: #fff;
+  border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.inner-table th {
+  background: #f8fafc; color: #64748b; font-size: 10px;
+  text-transform: uppercase; letter-spacing: 0.05em; padding: 10px;
+  border-bottom: 1px solid #e2e8f0; text-align: left;
+}
+.inner-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; }
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }

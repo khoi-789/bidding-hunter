@@ -15,6 +15,7 @@ export const db = getFirestore(app);
 
 // ─── Collection name (matches crawler output) ─────────────────────────────────
 const BIDS_COLLECTION = 'Bids';
+const CRAWLER_HISTORY_COLLECTION = 'CrawlerHistory';
 
 // ─── BPS Score Calculator ─────────────────────────────────────────────────────
 // Tạm thời dùng scoring đơn giản để test app. Sẽ tinh chỉnh sau.
@@ -141,5 +142,21 @@ export function subscribeToBids(callback) {
     } else {
       callback(allBids, { newCount, duplicateCount: dupCount, isInitial: false });
     }
+  });
+}
+
+// ─── Crawler History listener ──────────────────────────────────────────────────
+export function subscribeToHistory(callback) {
+  return onSnapshot(collection(db, CRAWLER_HISTORY_COLLECTION), (snapshot) => {
+    const history = snapshot.docs.map(d => {
+      const data = d.data();
+      return {
+        id: d.id,
+        ...data,
+        // Chuyển Firebase Timestamp sang Date object
+        time: data.time?.toDate?.() || new Date(data.time) || new Date()
+      };
+    }).sort((a, b) => b.time - a.time);
+    callback(history);
   });
 }
