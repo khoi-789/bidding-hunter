@@ -10,6 +10,8 @@ import AIAssistant from './components/AIAssistant';
 import PotentialAnalysis from './components/PotentialAnalysis';
 import BPSConfig from './components/BPSConfig';
 import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND, formatPhone } from './utils';
+
+const APP_VERSION = '1.0.1'; // Increment this to force update mock data if needed
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
   IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle, IconPackage
@@ -65,8 +67,15 @@ function App() {
   const [products, setProducts] = useState(() => {
     try {
       const saved = localStorage.getItem('bh_products');
+      const version = localStorage.getItem('bh_products_version');
       const parsed = saved ? JSON.parse(saved) : null;
-      return Array.isArray(parsed) ? parsed : (MOCK_PRODUCTS || []);
+      
+      // If version mismatch or first time, merge with MOCK_PRODUCTS to get new prices
+      if (version !== APP_VERSION || !Array.isArray(parsed)) {
+        localStorage.setItem('bh_products_version', APP_VERSION);
+        return MOCK_PRODUCTS || [];
+      }
+      return parsed;
     } catch (e) { return MOCK_PRODUCTS || []; }
   });
 
@@ -139,6 +148,21 @@ function App() {
     const duration = type === 'info' ? 6000 : 3000;
     setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), duration);
   }, []);
+
+  const minCeilingMap = React.useMemo(() => {
+    const map = {};
+    bids.forEach(bid => {
+      (bid.items || []).forEach(item => {
+        if (!item.ingredient || !item.ceiling_price || !item.quantity || item.quantity === 0) return;
+        const hc = item.ingredient.toLowerCase().trim();
+        const unitPrice = item.ceiling_price / item.quantity;
+        if (!map[hc] || unitPrice < map[hc]) {
+          map[hc] = unitPrice;
+        }
+      });
+    });
+    return map;
+  }, [bids]);
 
   const handleExport = (type) => {
     const dataToExport = type === 'customers' ? customers : products;
@@ -624,18 +648,30 @@ function App() {
                       <th>Hoạt chất</th>
                       <th>Dạng bào chế</th>
                       <th style={{textAlign:'right'}}>Giá niêm yết</th>
+                      <th style={{textAlign:'right', color: 'var(--accent)'}}>Giá trần tối thiểu</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {products.map(p => (
-                      <tr key={p.id}>
-                        <td><b>{p.id}</b></td>
-                        <td>{p.Ten_Biet_Duoc}</td>
-                        <td>{p.Hoat_Chat}</td>
-                        <td>{p.Dang_Bao_Che}</td>
-                        <td style={{textAlign:'right'}}>{formatPrice(p.Gia_Niem_Yet)}</td>
-                      </tr>
-                    ))}
+                    {products.map(p => {
+                      const minCeiling = minCeilingMap[p.Hoat_Chat?.toLowerCase().trim()];
+                      const isTooLow = minCeiling && p.Gia_Niem_Yet < (minCeiling * 0.4);
+
+                      return (
+                        <tr key={p.id}>
+                          <td><b>{p.id}</b></td>
+                          <td>{p.Ten_Biet_Duoc}</td>
+                          <td>{p.Hoat_Chat}</td>
+                          <td>{p.Dang_Bao_Che}</td>
+                          <td style={{textAlign:'right', color: isTooLow ? '#e74c3c' : 'inherit', fontWeight: isTooLow ? 700 : 400}}>
+                            {formatPrice(p.Gia_Niem_Yet)}
+                            {isTooLow && <span title="Giá thấp hơn 40% giá trần tối thiểu" style={{marginLeft:4, cursor:'help'}}>⚠️</span>}
+                          </td>
+                          <td style={{textAlign:'right', fontWeight: 600, color: '#475569'}}>
+                            {minCeiling ? formatPrice(minCeiling) : '---'}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
