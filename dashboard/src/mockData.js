@@ -101,4 +101,17 @@ export const MOCK_PRODUCTS = [
   { id: 'SP432', Ma_Hang: 'HD-SEP', Ten_Biet_Duoc: 'Septanest HD', Hoat_Chat: 'Septanest with Adrenaline 1/100,000', Ham_Luong: '1.7ml', Duong_Dung: 'Tiêm', Dang_Bao_Che: 'Ống', Nhom_Ky_Thuat: '5', Gia_Niem_Yet: 8000, SL_Ton: 1000000 },
   { id: 'SP433', Ma_Hang: 'HD-SIN', Ten_Biet_Duoc: 'Singulair 5mg HD', Hoat_Chat: 'Singulair 5mg (đóng gói tại Merck Sharp & Dohme B.V. Địa chỉ: Waarderweg 39, 2031 BN Haarlem', Ham_Luong: '5mg', Duong_Dung: 'Uống', Dang_Bao_Che: 'Viên', Nhom_Ky_Thuat: '5', Gia_Niem_Yet: 6500, SL_Ton: 1000000 },
   { id: 'SP434', Ma_Hang: 'HD-SME', Ten_Biet_Duoc: 'Solu-Medrol HD', Hoat_Chat: 'Solu', Ham_Luong: '40mg', Duong_Dung: 'Tiêm', Dang_Bao_Che: 'Lọ', Nhom_Ky_Thuat: '5', Gia_Niem_Yet: 20000, SL_Ton: 1000000 },
+  
+  // --- NHÓM MOCK CHO GÓI IB2600174579 (~65% KHỚP) ---
+  { id: 'SP501', Ma_Hang: 'HD-DTL', Ten_Biet_Duoc: 'Dolutegravir + Lamivudin + Tenofovir HD', Hoat_Chat: 'Dolutegravir + Lamivudin + Tenofovir disoproxil fumarate', Ham_Luong: '50mg + 300mg + 300mg', Duong_Dung: 'Uống', Dang_Bao_Che: 'Viên', Nhom_Ky_Thuat: '5', Gia_Niem_Yet: 1800, SL_Ton: 1000000 },
+  { id: 'SP502', Ma_Hang: 'HD-CIS', Ten_Biet_Duoc: 'Cisplatin HD', Hoat_Chat: 'Cisplatin', Ham_Luong: '10mg/20ml', Duong_Dung: 'Tiêm', Dang_Bao_Che: 'Lọ', Nhom_Ky_Thuat: '4', Gia_Niem_Yet: 35000, SL_Ton: 1000000 },
+  { id: 'SP504', Ma_Hang: 'HD-SOR', Ten_Biet_Duoc: 'Sorbitol HD', Hoat_Chat: 'Sorbitol', Ham_Luong: '5g', Duong_Dung: 'Uống', Dang_Bao_Che: 'Gói', Nhom_Ky_Thuat: '2', Gia_Niem_Yet: 900, SL_Ton: 1000000 },
+  { id: 'SP505', Ma_Hang: 'HD-EFA', Ten_Biet_Duoc: 'Efavirenz HD', Hoat_Chat: 'Efavirenz', Ham_Luong: '600mg', Duong_Dung: 'Uống', Dang_Bao_Che: 'Viên', Nhom_Ky_Thuat: '5', Gia_Niem_Yet: 1400, SL_Ton: 1000000 },
+  { id: 'SP506', Ma_Hang: 'HD-CAR', Ten_Biet_Duoc: 'Carboplatin HD', Hoat_Chat: 'Carboplatin', Ham_Luong: '150mg', Duong_Dung: 'Tiêm', Dang_Bao_Che: 'Lọ', Nhom_Ky_Thuat: '4', Gia_Niem_Yet: 165000, SL_Ton: 1000000 },
+  { id: 'SP507', Ma_Hang: 'HD-CYC', Ten_Biet_Duoc: 'Cyclophosphamid HD', Hoat_Chat: 'Cyclophosphamid', Ham_Luong: '500mg', Duong_Dung: 'Tiêm', Dang_Bao_Che: 'Lọ', Nhom_Ky_Thuat: '1', Gia_Niem_Yet: 65000, SL_Ton: 1000000 },
+  { id: 'SP508', Ma_Hang: 'HD-TRI-H', Ten_Biet_Duoc: 'Trihexyphenidyl HD', Hoat_Chat: 'Trihexyphenidyl hydroclorid', Ham_Luong: '2mg', Duong_Dung: 'Uống', Dang_Bao_Che: 'Viên', Nhom_Ky_Thuat: '4', Gia_Niem_Yet: 70, SL_Ton: 1000000 },
+  { id: 'SP509', Ma_Hang: 'HD-GLI', Ten_Biet_Duoc: 'Gliclazid HD', Hoat_Chat: 'Gliclazid', Ham_Luong: '60mg', Duong_Dung: 'Uống', Dang_Bao_Che: 'Viên', Nhom_Ky_Thuat: '2', Gia_Niem_Yet: 600, SL_Ton: 1000000 },
+  { id: 'SP510', Ma_Hang: 'HD-INS-N', Ten_Biet_Duoc: 'Insulin Nhanh HD', Hoat_Chat: 'Insulin người tác dụng nhanh, ngắn', Ham_Luong: '400 IU/10ml', Duong_Dung: 'Tiêm', Dang_Bao_Che: 'Lọ', Nhom_Ky_Thuat: '5', Gia_Niem_Yet: 45000, SL_Ton: 1000000 },
+  { id: 'SP511', Ma_Hang: 'HD-INS-T', Ten_Biet_Duoc: 'Insulin Trung Bình HD', Hoat_Chat: 'Insulin người tác dụng trung bình, trung gian', Ham_Luong: '400 IU/10ml', Duong_Dung: 'Tiêm', Dang_Bao_Che: 'Lọ', Nhom_Ky_Thuat: '5', Gia_Niem_Yet: 45000, SL_Ton: 1000000 },
+  { id: 'SP512', Ma_Hang: 'HD-ETH', Ten_Biet_Duoc: 'Ethyl ester acid béo iod hóa HD', Hoat_Chat: 'Ethyl ester của acid béo iod hóa trong dầu hạt thuốc phiện', Ham_Luong: '4,8g Iod/ 10ml', Duong_Dung: 'Tiêm', Dang_Bao_Che: 'Lọ', Nhom_Ky_Thuat: '1', Gia_Niem_Yet: 3100000, SL_Ton: 1000000 },
 ];
