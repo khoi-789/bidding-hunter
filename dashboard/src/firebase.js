@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, onSnapshot, doc, setDoc } from 'firebase/firestore';
+import { MOCK_CUSTOMERS, MOCK_PRODUCTS } from './mockData';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -17,42 +18,86 @@ export const db = getFirestore(app);
 const BIDS_COLLECTION = 'Bids';
 const CRAWLER_HISTORY_COLLECTION = 'CrawlerHistory';
 
-// ─── BPS Score Calculator ─────────────────────────────────────────────────────
-// Tạm thời dùng scoring đơn giản để test app. Sẽ tinh chỉnh sau.
+// ─── BPS Score Calculator v2 ──────────────────────────────────────────────────
+// - Doanh thu dự kiến (35%): Logarithmic (Max 3.5)
+// - Thời gian còn lại (25%): Parabolic (Max 2.5, 14 ngày đạt 80%)
+// - % Khớp thầu (20%): Linear (Max 2.0)
+// - Công nợ (10%): Logarithmic Inverse (Max 1.0)
+// - Base score (10%): 1.0 điểm mặc định
 export function computeBPS(bid) {
   const items = bid.items || [];
   if (items.length === 0) return { bps_score: 0, flag: 'GRAY' };
 
-  let score = 4.0; // base score
+  let score = 1.0; // 10% Base Score
 
-  // Số lượng mặt hàng: nhiều danh mục = giá trị cao hơn
-  if (items.length >= 5)  score += 1.0;
-  if (items.length >= 15) score += 1.0;
-  if (items.length >= 30) score += 0.5;
+  // 1. Tính toán Revenue & Match Count trước (Sử dụng logic giống UI)
+  let matchedCount = 0;
+  let revenue = 0;
+  items.forEach(item => {
+    const itemName = String(item['Hoạt chất'] || item['Tên thuốc'] || '').toLowerCase().trim();
+    const p = MOCK_PRODUCTS.find(prod => {
+      const prodName = String(prod.Hoat_Chat || '').toLowerCase().trim();
+      return itemName.includes(prodName) || prodName.includes(itemName);
+    });
+    
+    if (p) {
+      const bidQty = parseVND(item['Số lượng']);
+      const bidTotal = parseVND(item['Giá trần (VND)']);
+      if (bidQty > 0) {
+        const bidUnitPrice = bidTotal / bidQty;
+        if ((p.Gia_Niem_Yet || 0) < bidUnitPrice) {
+          matchedCount++;
+          if (p.SL_Ton > 0) {
+            const effQty = Math.min(bidQty, p.SL_Ton);
+            revenue += (bidUnitPrice * effQty * 0.8);
+          }
+        }
+      }
+    }
+  });
 
-  // Nhóm thuốc: ưu tiên nhóm 1-2 (biệt dược gốc / tương đương sinh học)
-  const groups = items.map(it => String(it['Nhóm thuốc'] || '').trim()).filter(Boolean);
-  if (groups.some(g => g === '1' || g === '2')) score += 2.0;
-  else if (groups.some(g => g === '3'))          score += 1.0;
-  else if (groups.some(g => g === '4'))          score += 0.5;
+  // Factor 1: Revenue (35% - Max 3.5) - Logarithmic
+  // Scale: 5 tỷ (5e9) đạt max. Sử dụng Math.log10(1 + x/1e8)
+  const revFactor = 3.5 * Math.log10(1 + revenue / 1e8) / Math.log10(51); 
+  score += Math.min(3.5, revFactor);
 
-  // Gói thầu còn thời gian > 7 ngày
-  const closeTime = bid['Thời điểm đóng thầu'];
+  // Factor 2: Time (25% - Max 2.5) - Parabolic
+  // Công thức: y = 2.5 * (1 - (1 - t/25)^2). Tại t=14, y ≈ 2.0 (80%)
+  const closeTime = bid['Thời điểm đóng thầu'] || bid['thoi_diem_dong_thau'];
   if (closeTime) {
     const t = parseDateTime(closeTime);
-    const daysLeft = t ? (t - Date.now()) / 86400000 : -1;
-    if (daysLeft > 7) score += 0.5;
+    const daysLeft = t ? (t - Date.now()) / 86400000 : 0;
+    if (daysLeft > 0) {
+      const cappedDays = Math.min(25, daysLeft);
+      const timeFactor = 2.5 * (1 - Math.pow(1 - cappedDays / 25, 2));
+      score += timeFactor;
+    }
   }
 
-  // Có giá gói thầu cụ thể (không phải NA / undefined)
-  const gia = bid['Giá gói thầu'];
-  if (gia && gia !== 'NA' && gia !== '' && !isNaN(Number(String(gia).replace(/,/g, '')))) {
-    score += 0.5;
-  }
+  // Factor 3: Match Rate (20% - Max 2.0) - Linear
+  const winRatio = items.length > 0 ? (matchedCount / items.length) : 0;
+  score += (winRatio * 2.0);
+
+  // Factor 4: Debt (10% - Max 1.0) - Logarithmic Inverse
+  // Tìm khách hàng tương ứng
+  const hospitalName = bid['Chủ đầu tư'] || bid['chu_dau_tu'] || '';
+  const customer = MOCK_CUSTOMERS.find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+  const debt = customer ? (customer.Du_No_Hien_Tai || 0) : 0;
+  // Càng nhiều nợ càng ít điểm. Nợ 1 tỷ (1e9) thì điểm về ~0.
+  const debtFactor = 1.0 * (1 - Math.log10(1 + debt / 5e7) / Math.log10(21));
+  score += Math.max(0, debtFactor);
 
   const bps_score = Math.min(10, parseFloat(score.toFixed(1)));
   const flag = bps_score >= 8 ? 'GREEN' : bps_score >= 5 ? 'YELLOW' : 'RED';
   return { bps_score, flag };
+}
+
+// Helper local cho parse tiền (tránh circular dependency)
+function parseVND(val) {
+  if (!val || val === 'NA') return 0;
+  const clean = String(val).replace(/[^\d]/g, '');
+  const num = parseFloat(clean);
+  return isNaN(num) ? 0 : num;
 }
 
 // ─── Date parser for Vietnamese datetime strings ───────────────────────────────
