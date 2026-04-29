@@ -268,6 +268,32 @@ function App() {
     }
   }, [loading, orders.length]);
 
+  // Migration: Double Order Prices again (User Request)
+  useEffect(() => {
+    if (loading || orders.length === 0) return;
+    const migrationKey = 'bh_orders_x2_v105_final';
+    if (!localStorage.getItem(migrationKey)) {
+      setOrders(prev => {
+        const next = prev.map(order => {
+          let newTotal = 0;
+          const newItems = order.Items.map(item => {
+            const newPrice = Math.round(item.Don_Gia * 2);
+            const newSubtotal = Math.round(newPrice * item.SL);
+            newTotal += newSubtotal;
+            return { ...item, Don_Gia: newPrice, Thanh_Tien: newSubtotal };
+          });
+          return { ...order, Items: newItems, Tong_Tien: newTotal };
+        });
+        localStorage.setItem('bh_orders', JSON.stringify(next));
+        return next;
+      });
+      localStorage.setItem(migrationKey, 'true');
+      setTimeout(() => {
+        addToastRef.current?.('🚀 Tiếp tục x2 đơn giá (Tổng cộng x6 so với gốc)', 'success');
+      }, 3000);
+    }
+  }, [loading, orders.length]);
+
   const addToast = useCallback((msg, type = 'success') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, msg, type }]);
