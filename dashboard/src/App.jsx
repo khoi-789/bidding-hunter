@@ -975,6 +975,15 @@ function App() {
           onSuccess={() => { setSelectedIds([]); setShowBulkEmail(false); }}
         />
       )}
+      {showDebtEmailModal && (
+        <DebtEmailModal
+          selectedCustomers={customers.filter(c => selectedCustomerIds.includes(c.id))}
+          customerConfigs={customerConfigs}
+          onClose={() => setShowDebtEmailModal(false)}
+          addToast={addToast}
+          onSuccess={() => { setShowDebtEmailModal(false); setSelectedCustomerIds([]); }}
+        />
+      )}
       <div className="toast-container">{toasts.map(t => <Toast key={t.id} msg={t.msg} type={t.type} />)}</div>
       <AIAssistant bids={bids} customers={customers} products={products} />
 
