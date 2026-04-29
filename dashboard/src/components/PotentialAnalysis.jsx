@@ -28,13 +28,17 @@ export default function PotentialAnalysis({ bids, products }) {
           const bidCeiling = parseVND(item['Giá trần (VND)']);
           const bidUnitPrice = bidQty > 0 ? bidCeiling / bidQty : 0;
           
+          // Bình thường hóa giá niêm yết (nếu > 50k thì giả định là giá hộp/vỉ, chia cho 20 để ra đơn giá viên)
+          const normalizedOurPrice = p.Gia_Niem_Yet > 50000 ? p.Gia_Niem_Yet / 20 : (p.Gia_Niem_Yet || 0);
+          
           // Tính margin: (Giá trần - Giá niêm yết của mình)
-          const margin = bidUnitPrice - (p.Gia_Niem_Yet || 0);
+          const margin = bidUnitPrice - normalizedOurPrice;
           const marginPercent = bidUnitPrice > 0 ? (margin / bidUnitPrice) * 100 : 0;
 
           matchedItems.push({
             ...item,
             ourProduct: p,
+            normalizedOurPrice,
             margin,
             marginPercent,
             bidUnitPrice
@@ -342,7 +346,7 @@ export default function PotentialAnalysis({ bids, products }) {
                   "Nhìn vào gói thầu này ở <b>{selectedBid.chu_dau_tu}</b>, tôi thấy có <b>{selectedBid.matchedItems.length}</b> mặt hàng nằm trong thế mạnh của mình. 
                   Đặc biệt là <b>{selectedBid.highMarginCount}</b> mã có biên lợi nhuận trên 15%, đây là 'mỏ vàng' thực sự. 
                   Dự kiến nếu trúng được 80% các danh mục mục tiêu, doanh thu sẽ rơi vào khoảng <b>{formatPrice(selectedBid.totalRevenue)}</b>. 
-                  Chiến thuật: {selectedBid.strategy === 'ĐÁNH MẠNH' ? "Dồn toàn lực chào giá sát trần ở các mã margin cao, bỏ qua các mã margin thấp." : "Thăm dò là chính, đừng quá mặn mà."}"
+                  Chiến thuật: {selectedBid.strategy === 'ĐÁNH MẠNH' ? "Dồn toàn lực chào giá sát trần ở các mã lợi nhuận cao, bỏ qua các mã lợi nhuận thấp." : "Thăm dò là chính, đừng quá mặn mà."}"
                 </p>
               </div>
 
@@ -352,10 +356,10 @@ export default function PotentialAnalysis({ bids, products }) {
                     <tr>
                       <th>Hoạt chất (Gói thầu)</th>
                       <th>Sản phẩm của mình</th>
-                      <th style={{textAlign:'right'}}>Giá trần</th>
-                      <th style={{textAlign:'right'}}>Giá NY</th>
-                      <th style={{textAlign:'right'}}>Margin</th>
-                      <th style={{textAlign:'right'}}>Biên (%)</th>
+                      <th style={{textAlign:'right'}}>Giá trần (đ)</th>
+                      <th style={{textAlign:'right'}}>Giá niêm yết</th>
+                      <th style={{textAlign:'right'}}>Lợi nhuận (đ)</th>
+                      <th style={{textAlign:'right'}}>Biên LN (%)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -364,12 +368,14 @@ export default function PotentialAnalysis({ bids, products }) {
                         <td style={{fontSize: 12}}>{item['Hoạt chất']}</td>
                         <td style={{fontSize: 12}}><b>{item.ourProduct.Ten_Biet_Duoc}</b></td>
                         <td style={{fontSize: 12, textAlign:'right'}}>{formatPrice(item.bidUnitPrice)}</td>
-                        <td style={{fontSize: 12, textAlign:'right'}}>{formatPrice(item.ourProduct.Gia_Niem_Yet)}</td>
-                        <td style={{fontSize: 12, textAlign:'right', color: '#10b981'}}>+{formatPrice(item.margin)}</td>
+                        <td style={{fontSize: 12, textAlign:'right'}}>{formatPrice(item.normalizedOurPrice)}</td>
+                        <td style={{fontSize: 12, textAlign:'right', color: item.margin > 0 ? '#10b981' : '#ef4444'}}>
+                          {item.margin > 0 ? '+' : ''}{formatPrice(item.margin)}
+                        </td>
                         <td style={{fontSize: 12, textAlign:'right'}}>
                           <span style={{
                             fontWeight: 700, 
-                            color: item.marginPercent > 15 ? '#10b981' : '#f59e0b'
+                            color: item.marginPercent > 15 ? '#10b981' : (item.marginPercent > 0 ? '#f59e0b' : '#ef4444')
                           }}>
                             {Math.round(item.marginPercent)}%
                           </span>
