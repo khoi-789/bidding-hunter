@@ -615,7 +615,7 @@ function App() {
             </>
           )}
 
-          {activeNav === 'charts' && <ChartsView bids={allFilteredBids} customers={customers} products={products} orders={orders} />}
+          {activeNav === 'charts' && <ChartsView bids={allFilteredBids} customers={customers} products={products} orders={orders} productMinCeilings={productMinCeilings} />}
 
           {activeNav === 'bids' && (
             <div className="card">
