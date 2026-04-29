@@ -11,7 +11,7 @@ import PotentialAnalysis from './components/PotentialAnalysis';
 import BPSConfig from './components/BPSConfig';
 import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND, formatPhone } from './utils';
 
-const APP_VERSION = '1.0.1'; // Increment this to force update mock data if needed
+const APP_VERSION = '1.0.2'; // Increment this to force update mock data if needed
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
   IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle, IconPackage
@@ -141,6 +141,37 @@ function App() {
       unsubHistory();
     };
   }, []);
+
+  // One-time randomization of prices based on min ceiling (40-120%)
+  // Triggered when bids are loaded and migration flag is missing
+  useEffect(() => {
+    if (loading || bids.length === 0) return;
+    
+    const migrationKey = 'bh_price_randomized_v102';
+    const hasMigrated = localStorage.getItem(migrationKey);
+    
+    // Check if we have enough data to perform migration
+    const minCeilKeys = Object.keys(productMinCeilings);
+    if (!hasMigrated && minCeilKeys.length > 0) {
+      setProducts(prev => {
+        const next = prev.map(p => {
+          const minCeil = productMinCeilings[p.id];
+          if (minCeil && minCeil > 0) {
+            const factor = 0.4 + Math.random() * 0.8;
+            return { ...p, Gia_Niem_Yet: Math.round(minCeil * factor) };
+          }
+          return p;
+        });
+        localStorage.setItem('bh_products', JSON.stringify(next));
+        return next;
+      });
+      localStorage.setItem(migrationKey, 'true');
+      // Delay toast slightly to ensure ref is ready
+      setTimeout(() => {
+        addToastRef.current?.('🎲 Đã cập nhật Giá niêm yết ngẫu nhiên (40-120% giá trần)', 'success');
+      }, 1000);
+    }
+  }, [loading, bids, productMinCeilings]);
 
   const addToast = useCallback((msg, type = 'success') => {
     const id = Date.now();
