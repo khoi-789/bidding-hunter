@@ -35,19 +35,22 @@ export default function PotentialAnalysis({ bids, products }) {
           const margin = bidUnitPrice - normalizedOurPrice;
           const marginPercent = bidUnitPrice > 0 ? (margin / bidUnitPrice) * 100 : 0;
 
-          matchedItems.push({
-            ...item,
-            ourProduct: p,
-            normalizedOurPrice,
-            margin,
-            marginPercent,
-            bidUnitPrice
-          });
+          // CHỈ LẤY CÁC MẶT HÀNG CÓ LỢI NHUẬN DƯƠNG (BÁN ĐƯỢC)
+          if (margin >= 0) {
+            matchedItems.push({
+              ...item,
+              ourProduct: p,
+              normalizedOurPrice,
+              margin,
+              marginPercent,
+              bidUnitPrice
+            });
 
-          if (marginPercent > 15) highMarginCount++;
-          
-          // Giả định doanh thu dự kiến (80% giá trần)
-          totalRevenue += (bidCeiling * 0.8);
+            if (marginPercent > 15) highMarginCount++;
+            
+            // Giả định doanh thu dự kiến (80% giá trần)
+            totalRevenue += (bidCeiling * 0.8);
+          }
         }
       });
 
