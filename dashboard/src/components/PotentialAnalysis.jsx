@@ -84,8 +84,8 @@ export default function PotentialAnalysis({ bids, products }) {
   const selectedBid = analysisData.find(b => b.id === selectedBidId);
 
   return (
-    <div className="potential-analysis animate-fade-in" style={{height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column'}}>
-      <div className="analysis-header card" style={{marginBottom: 20, flexShrink: 0}}>
+    <div className="potential-analysis animate-fade-in" style={{height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column', padding: '0 30px 20px 30px'}}>
+      <div className="analysis-header card" style={{margin: '0 0 20px 0', flexShrink: 0}}>
         <div className="card-body" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <div>
             <h2 style={{margin: 0, fontSize: 24, fontWeight: 800, color: 'var(--text-dark)'}}>
@@ -120,13 +120,13 @@ export default function PotentialAnalysis({ bids, products }) {
         </div>
       </div>
 
-      <div className="tab-content" style={{marginTop: 20, overflowY: 'auto', flex: 1, paddingRight: 5}}>
+      <div className="tab-content" style={{marginTop: 20, overflowY: 'auto', flex: 1, paddingRight: 10, paddingLeft: 5}}>
         {activeTab === 'focus' && (
           <div className="focus-report animate-fade-in">
-            <div className="card" style={{borderLeft: '5px solid #ef4444', marginBottom: 25}}>
-              <div className="card-body">
-                <h3 style={{marginTop:0, color:'#ef4444'}}>🚩 TOP 3 GÓI THẦU CẦN TẬP TRUNG NGUỒN LỰC</h3>
-                <p style={{color:'#64748b'}}>Dựa trên phân tích về biên lợi nhuận và khả năng cung ứng, đây là 3 mục tiêu chiến lược nhất trong tuần này.</p>
+            <div className="card" style={{borderLeft: '5px solid #ef4444', marginBottom: 25, boxShadow: '0 4px 15px rgba(0,0,0,0.05)'}}>
+              <div className="card-body" style={{padding: '25px 30px'}}>
+                <h3 style={{marginTop:0, color:'#ef4444', fontSize: 18, letterSpacing: 1}}>🚩 TOP 3 GÓI THẦU CẦN TẬP TRUNG NGUỒN LỰC</h3>
+                <p style={{color:'#64748b', marginBottom: 25}}>Dựa trên phân tích về biên lợi nhuận và khả năng cung ứng, đây là 3 mục tiêu chiến lược nhất trong tuần này.</p>
                 
                 <div className="focus-list" style={{display:'flex', flexDirection:'column', gap: 15}}>
                   {analysisData.slice(0, 3).map((bid, idx) => (
