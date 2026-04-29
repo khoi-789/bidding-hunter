@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { formatPrice, parseVND } from '../utils';
-import { IconTarget, IconCharts, IconUrgent, IconClock, IconCircle } from './Icons';
+import { IconTarget, IconCharts, IconUrgent, IconClock, IconCircle, IconClose } from './Icons';
 
 export default function PotentialAnalysis({ bids, products }) {
   const [activeTab, setActiveTab] = useState('focus');
@@ -325,7 +325,9 @@ export default function PotentialAnalysis({ bids, products }) {
                   <p style={{margin:0, fontSize:12, color:'#64748b'}}>{selectedBid.chu_dau_tu} · {selectedBid.ma_goi_thau}</p>
                 </div>
               </div>
-              <button className="close-btn" onClick={() => setSelectedBidId(null)}>&times;</button>
+              <button className="close-btn" onClick={() => setSelectedBidId(null)}>
+                <IconClose size={20} />
+              </button>
             </div>
             <div className="modal-body" style={{padding: 25, overflowY: 'auto', flex: 1}}>
               <div className="analysis-summary-box" style={{
@@ -493,6 +495,25 @@ export default function PotentialAnalysis({ bids, products }) {
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+
+        .close-btn {
+          background: #f1f5f9;
+          border: none;
+          color: #64748b;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .close-btn:hover {
+          background: #e2e8f0;
+          color: #ef4444;
+          transform: rotate(90deg);
         }
       `}</style>
     </div>
