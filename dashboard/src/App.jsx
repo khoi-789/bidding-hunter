@@ -330,7 +330,7 @@ function App() {
         const next = prev.map(c => ({
           ...c,
           Du_No_Hien_Tai: Math.round((c.Du_No_Hien_Tai || 0) * 5),
-          Han_Muc: Math.round((c.Han_Muc || 0) * 5)
+          Han_Muc_No: Math.round((c.Han_Muc_No || 0) * 5)
         }));
         localStorage.setItem('bh_customers', JSON.stringify(next));
         return next;

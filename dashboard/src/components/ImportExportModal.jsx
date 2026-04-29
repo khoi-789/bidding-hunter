@@ -6,7 +6,7 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
   const fileInputRef = useRef(null);
 
   const schema = type === 'customers' 
-    ? ['Ma_KH', 'Ten_Benh_Vien', 'Ten_Lien_He', 'SDT', 'Phan_Tuyen', 'Du_No_Hien_Tai', 'Thoi_Gian_No', 'Han_Muc_No', 'To_Emails', 'Cc_Emails']
+    ? ['Ma_KH', 'Ten_Ben_Vien', 'Ten_Lien_He', 'SDT', 'Phan_Tuyen', 'Du_No_Hien_Tai', 'Thoi_Gian_No', 'Han_Muc_No', 'To_Emails', 'Cc_Emails']
     : ['Ma_SP', 'Ten_Biet_Duoc', 'Hoat_Chat', 'Dang_Bao_Che', 'Gia_Niem_Yet'];
 
   const labels = type === 'customers'
@@ -18,7 +18,7 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
       if (type === 'customers') {
         return {
           'Mã KH': item.Ma_KH,
-          'Tên Bệnh Viện': item.Ten_Benh_Vien,
+          'Tên Bệnh Viện': item.Ten_Ben_Vien,
           'Người liên hệ': item.Ten_Lien_He || '',
           'Số điện thoại': item.SDT || '',
           'Phân Tuyến': item.Phan_Tuyen,
@@ -113,7 +113,7 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
           return {
             id: row['Mã KH'] || `ID_${Math.random().toString(36).substr(2, 9)}`,
             Ma_KH: row['Mã KH'],
-            Ten_Benh_Vien: row['Tên Bệnh Viện'],
+            Ten_Ben_Vien: row['Tên Bệnh Viện'],
             Ten_Lien_He: cleanName(row['Người liên hệ']),
             SDT: cleanPhone(row['Số điện thoại']),
             Phan_Tuyen: row['Phân Tuyến'],
