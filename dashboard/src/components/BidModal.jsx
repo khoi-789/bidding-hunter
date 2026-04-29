@@ -150,11 +150,28 @@ export default function BidModal({ bid, products = [], onClose, addToast, ingred
 
           {/* Bảng danh mục thuốc (Scroll độc lập) */}
           {items.length > 0 && (
-            <div style={{ flex: 1, overflowY: 'hidden', display: 'flex', flexDirection: 'column', padding: '0 28px' }}>
-              <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--text-primary)', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
-                📋 Danh mục thuốc <span style={{ color: 'var(--text-muted)', fontWeight: 400 }}>({items.length} mặt hàng)</span>
+            <div style={{ flex: 1, overflowY: 'hidden', display: 'flex', flexDirection: 'column', padding: '0 28px 12px 28px' }}>
+              <div style={{ 
+                fontWeight: 700, 
+                fontSize: 14, 
+                color: 'var(--text-primary)', 
+                padding: '20px 0 12px 0', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 8,
+                borderTop: '1px solid #f1f5f9',
+                marginTop: 8
+              }}>
+                <span style={{fontSize: 18}}>📋</span> Danh mục thuốc <span style={{ color: 'var(--text-muted)', fontWeight: 400, fontSize: 12 }}>({items.length} mặt hàng)</span>
               </div>
-              <div style={{ flex: 1, overflow: 'auto', border: '1px solid #e0e0e0', borderRadius: 8, background: '#fff' }}>
+              <div style={{ 
+                flex: 1, 
+                overflow: 'auto', 
+                border: '1px solid #e2e8f0', 
+                borderRadius: 10, 
+                background: '#fff',
+                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.05)'
+              }}>
                 <table className="data-table" style={{ fontSize: 11, width: '100%', borderCollapse: 'separate', borderSpacing: 0 }}>
                   <thead style={{ position: 'sticky', top: 0, background: '#f8fafc', zIndex: 1, boxShadow: '0 1px 0 #e0e0e0' }}>
                     <tr>
