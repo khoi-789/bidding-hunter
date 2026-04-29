@@ -153,9 +153,19 @@ function App() {
     const map = {};
     bids.forEach(bid => {
       (bid.items || []).forEach(item => {
-        if (!item.ingredient || !item.ceiling_price || !item.quantity || item.quantity === 0) return;
-        const hc = item.ingredient.toLowerCase().trim();
-        const unitPrice = item.ceiling_price / item.quantity;
+        const hcRaw = item['Hoạt chất'] || item['Tên thuốc'];
+        const qtyRaw = item['Số lượng'];
+        const ceilingRaw = item['Giá trần (VND)'];
+        
+        if (!hcRaw || !qtyRaw || !ceilingRaw) return;
+        
+        const hc = String(hcRaw).toLowerCase().trim();
+        const qty = parseVND(qtyRaw);
+        const ceiling = parseVND(ceilingRaw);
+        
+        if (qty <= 0) return;
+        const unitPrice = ceiling / qty;
+        
         if (!map[hc] || unitPrice < map[hc]) {
           map[hc] = unitPrice;
         }
@@ -163,6 +173,23 @@ function App() {
     });
     return map;
   }, [bids]);
+
+  const productMinCeilings = React.useMemo(() => {
+    const results = {};
+    products.forEach(p => {
+      const prodHC = p.Hoat_Chat?.toLowerCase().trim();
+      if (!prodHC) return;
+      
+      let min = null;
+      Object.entries(minCeilingMap).forEach(([hcKey, price]) => {
+        if (hcKey.includes(prodHC) || prodHC.includes(hcKey)) {
+          if (min === null || price < min) min = price;
+        }
+      });
+      results[p.id] = min;
+    });
+    return results;
+  }, [products, minCeilingMap]);
 
   const handleExport = (type) => {
     const dataToExport = type === 'customers' ? customers : products;
@@ -653,7 +680,7 @@ function App() {
                   </thead>
                   <tbody>
                     {products.map(p => {
-                      const minCeiling = minCeilingMap[p.Hoat_Chat?.toLowerCase().trim()];
+                      const minCeiling = productMinCeilings[p.id];
                       const isTooLow = minCeiling && p.Gia_Niem_Yet < (minCeiling * 0.4);
 
                       return (
