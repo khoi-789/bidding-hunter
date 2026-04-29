@@ -175,14 +175,24 @@ function App() {
   }, [bids]);
 
   const productMinCeilings = React.useMemo(() => {
+    const GENERIC_TERMS = ['tiêm', 'uống', 'viên', 'dung', 'dịch', 'hỗn', 'nhỏ', 'mắt', 'chai', 'lọ', 'ống', 'gói', 'nước', 'cất', 'túi', 'hộp'];
     const results = {};
+    
     products.forEach(p => {
       const prodHC = p.Hoat_Chat?.toLowerCase().trim();
       if (!prodHC) return;
       
+      const prodWords = prodHC.split(/[\s,+-]+/).filter(w => w.length > 2 && !GENERIC_TERMS.includes(w));
       let min = null;
+      
       Object.entries(minCeilingMap).forEach(([hcKey, price]) => {
-        if (hcKey.includes(prodHC) || prodHC.includes(hcKey)) {
+        const keyWords = hcKey.split(/[\s,+-]+/).filter(w => w.length > 2 && !GENERIC_TERMS.includes(w));
+        
+        // Match if they share at least one significant word
+        const isMatch = prodWords.some(pw => keyWords.includes(pw)) || 
+                        keyWords.some(kw => prodWords.includes(kw));
+        
+        if (isMatch) {
           if (min === null || price < min) min = price;
         }
       });
