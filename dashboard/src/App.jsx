@@ -30,6 +30,7 @@ function App() {
   const [showBulkEmail, setShowBulkEmail] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [spinning, setSpinning] = useState(false);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
   const addToastRef = useRef(null);
 
   // Mock data cho Khách hàng & Sản phẩm (test)
@@ -78,6 +79,64 @@ function App() {
       addToast('Dữ liệu đã được cập nhật!');
     }, 800);
   };
+
+  const requestSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedData = (data, type) => {
+    if (!sortConfig.key) return data;
+
+    return [...data].sort((a, b) => {
+      let valA, valB;
+
+      if (type === 'bids') {
+        if (sortConfig.key === 'gia_goi_thau') {
+          valA = parseVND(a.gia_goi_thau || '0');
+          valB = parseVND(b.gia_goi_thau || '0');
+        } else if (sortConfig.key === 'thoi_diem_dong_thau') {
+          valA = new Date(a.thoi_diem_dong_thau).getTime();
+          valB = new Date(b.thoi_diem_dong_thau).getTime();
+        } else if (sortConfig.key === 'bps_score') {
+          valA = a.bps_score ?? 0;
+          valB = b.bps_score ?? 0;
+        } else if (sortConfig.key === 'so_danh_muc') {
+          valA = a.so_danh_muc ?? 0;
+          valB = b.so_danh_muc ?? 0;
+        } else {
+          valA = (a[sortConfig.key] || '').toString().toLowerCase();
+          valB = (b[sortConfig.key] || '').toString().toLowerCase();
+        }
+      } else {
+        valA = a[sortConfig.key];
+        valB = b[sortConfig.key];
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+      }
+
+      if (valA < valB) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (valA > valB) return sortConfig.direction === 'asc' ? 1 : -1;
+      return 0;
+    });
+  };
+
+  const SortHeader = ({ label, columnKey, align = 'left' }) => (
+    <th 
+      style={{ textAlign: align, cursor: 'pointer', userSelect: 'none' }} 
+      onClick={() => requestSort(columnKey)}
+    >
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+        {label}
+        <span style={{ fontSize: 10, color: sortConfig.key === columnKey ? 'var(--accent)' : '#ccc' }}>
+          {sortConfig.key === columnKey ? (sortConfig.direction === 'asc' ? '↑' : '↓') : '↕'}
+        </span>
+      </div>
+    </th>
+  );
 
   const getFilteredBids = (dataList) => {
     return dataList.filter(b => {
@@ -187,7 +246,12 @@ function App() {
                   <h3 className="card-title">Gói thầu dược phẩm mới cập nhật</h3>
                   <button className="action-btn" onClick={() => setActiveNav('bids')}>Xem tất cả →</button>
                 </div>
-                {renderTable(getFilteredBids(bids.slice(0, 10)), selectedIds, toggleSelect, handleSelectAll, setSelected, () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products)}
+                {renderTable(
+                  getSortedData(getFilteredBids(bids.slice(0, 10)), 'bids'), 
+                  selectedIds, toggleSelect, handleSelectAll, setSelected, 
+                  () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products,
+                  sortConfig, requestSort, SortHeader
+                )}
               </div>
             </>
           )}
@@ -200,7 +264,12 @@ function App() {
                 <h3 className="card-title">Danh sách toàn bộ gói thầu</h3>
                 <div className="section-meta">{allFilteredBids.length} bản ghi</div>
               </div>
-              {renderTable(allFilteredBids, selectedIds, toggleSelect, handleSelectAll, setSelected, () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products)}
+              {renderTable(
+                getSortedData(allFilteredBids, 'bids'), 
+                selectedIds, toggleSelect, handleSelectAll, setSelected, 
+                () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products,
+                sortConfig, requestSort, SortHeader
+              )}
             </div>
           )}
 
@@ -212,8 +281,17 @@ function App() {
               </div>
               <div className="card-body">
                 <table className="data-table">
-                  <thead><tr><th>Mã KH</th><th>Tên Bệnh Viện</th><th>Phân Tuyến</th><th>Dư nợ hiện tại</th><th>Hạn mức</th><th>Trạng thái</th></tr></thead>
-                  <tbody>{customers.map(c => {
+                  <thead>
+                    <tr>
+                      <SortHeader label="Mã KH" columnKey="Ma_KH" />
+                      <SortHeader label="Tên Bệnh Viện" columnKey="Ten_Benh_Vien" />
+                      <SortHeader label="Phân Tuyến" columnKey="Phan_Tuyen" />
+                      <SortHeader label="Dư nợ hiện tại" columnKey="Du_No_Hien_Tai" align="right" />
+                      <SortHeader label="Hạn mức" columnKey="Han_Muc_No" align="right" />
+                      <th>Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody>{getSortedData(customers, 'customers').map(c => {
                     const over = c.Du_No_Hien_Tai > c.Han_Muc_No;
                     return (
                       <tr key={c.id}>
@@ -239,8 +317,18 @@ function App() {
               </div>
               <div className="card-body">
                 <table className="data-table">
-                  <thead><tr><th>Mã hàng</th><th>Tên biệt dược</th><th>Hoạt chất</th><th>Hàm lượng</th><th>Đường dùng</th><th>Nhóm</th><th>Giá kê khai</th></tr></thead>
-                  <tbody>{products.map(p => (
+                  <thead>
+                    <tr>
+                      <SortHeader label="Mã hàng" columnKey="Ma_Hang" />
+                      <SortHeader label="Tên biệt dược" columnKey="Ten_Biet_Duoc" />
+                      <SortHeader label="Hoạt chất" columnKey="Hoat_Chat" />
+                      <SortHeader label="Hàm lượng" columnKey="Ham_Luong" />
+                      <SortHeader label="Đường dùng" columnKey="Duong_Dung" />
+                      <SortHeader label="Nhóm" columnKey="Nhom_Ky_Thuat" />
+                      <SortHeader label="Giá kê khai" columnKey="Gia_Ke_Khai" align="right" />
+                    </tr>
+                  </thead>
+                  <tbody>{getSortedData(products, 'products').map(p => (
                     <tr key={p.id}>
                       <td><b>{p.Ma_Hang}</b></td>
                       <td>{p.Ten_Biet_Duoc}</td>
@@ -276,7 +364,7 @@ function App() {
   );
 }
 
-function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelected, onBulkEmail, deadlineFilter, setDeadlineFilter, products = []) {
+function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelected, onBulkEmail, deadlineFilter, setDeadlineFilter, products = [], sortConfig, onSort, SortHeader) {
   // Helper tìm sản phẩm (copy từ BidModal)
   const findProduct = (item) => {
     const itemName = String(item['Hoạt chất'] || '').toLowerCase().trim();
@@ -313,10 +401,14 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
           <thead>
             <tr>
               <th style={{width:40, textAlign:'center'}}><input type="checkbox" onChange={() => handleSelectAll(data)} checked={data.length > 0 && selectedIds.length === data.length} /></th>
-              <th>Tên gói thầu</th><th>Chủ đầu tư</th><th>Danh mục thuốc</th>
-              <th style={{textAlign:'right'}}>Giá thầu</th>
+              <SortHeader label="Tên gói thầu" columnKey="ten_goi_thau" />
+              <SortHeader label="Chủ đầu tư" columnKey="chu_dau_tu" />
+              <SortHeader label="Danh mục thuốc" columnKey="so_danh_muc" />
+              <SortHeader label="Giá thầu" columnKey="gia_goi_thau" align="right" />
               <th style={{textAlign:'right'}}>Dự kiến DT</th>
-              <th>Đóng thầu</th><th style={{textAlign:'center'}}>Tỷ lệ trúng</th><th>BPS</th>
+              <SortHeader label="Đóng thầu" columnKey="thoi_diem_dong_thau" />
+              <th style={{textAlign:'center'}}>Tỷ lệ trúng</th>
+              <SortHeader label="BPS" columnKey="bps_score" align="center" />
             </tr>
           </thead>
           <tbody>
