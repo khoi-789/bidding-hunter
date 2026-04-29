@@ -342,6 +342,31 @@ function App() {
     }
   }, [loading, customers.length]);
 
+  // Migration: Remove specific products from orders (User Request - Cleanup)
+  useEffect(() => {
+    if (loading || orders.length === 0) return;
+    const migrationKey = 'bh_orders_filter_cleanup_v108_final_v2';
+    const codesToRemove = ['SP208', 'SP205', 'SP202', 'SP204', 'SP214'];
+    
+    if (!localStorage.getItem(migrationKey)) {
+      setOrders(prev => {
+        const next = prev.map(order => {
+          const filteredItems = order.Items.filter(item => !codesToRemove.includes(item.Ma_SP));
+          const newTotal = filteredItems.reduce((sum, item) => sum + (item.Thanh_Tien || 0), 0);
+          return { ...order, Items: filteredItems, Tong_Tien: newTotal };
+        });
+        // Remove orders with no items left
+        const finalOrders = next.filter(o => o.Items.length > 0);
+        localStorage.setItem('bh_orders', JSON.stringify(finalOrders));
+        return finalOrders;
+      });
+      localStorage.setItem(migrationKey, 'true');
+      setTimeout(() => {
+        addToastRef.current?.('🧹 Đã loại bỏ 5 mã hàng (SP208, 205, 202, 204, 214) khỏi Đơn hàng', 'success');
+      }, 4500);
+    }
+  }, [loading, orders.length]);
+
   const addToast = useCallback((msg, type = 'success') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, msg, type }]);
