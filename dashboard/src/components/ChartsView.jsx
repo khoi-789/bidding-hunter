@@ -34,20 +34,35 @@ export default function ChartsView({ bids, customers, products, orders }) {
   // Helper cho Tooltip tự format tiền tệ
   const CustomTooltipValue = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
+      // Lấy data gốc từ payload đầu tiên
+      const originalData = payload[0].payload;
+      
       return (
         <div style={{background:'#fff', border:'1px solid #ccc', padding:'10px', borderRadius:'4px', boxShadow:'0 2px 5px rgba(0,0,0,0.1)'}}>
           <p style={{margin:0, fontWeight:'bold', marginBottom:'5px'}}>{label}</p>
           {payload.map((p, i) => {
             let val = p.value;
-            // Nếu thuộc tính là tiền tệ thì format
-            if (p.name.includes('Doanh thu') || p.name.includes('Dư nợ') || p.name.includes('Hạn mức') || p.name.includes('Ngân sách') || p.name.includes('Giá')) {
-              val = typeof val === 'number' && val > 1000 ? formatPrice(val) : val;
-              // Nếu scatter chart chia cho 1e6 thì nhân lại
-              if (p.name.includes('(Tr)')) val = formatPrice(p.value * 1e6);
+            let displayName = p.name;
+            
+            // Nếu là Radar chart (có Score), ta hiển thị giá trị thực từ originalData
+            if (p.dataKey && p.dataKey.includes('_Score')) {
+              const realKey = p.name; // "Giá Niêm Yết" hoặc "Giá Trần BQ"
+              val = formatPrice(originalData[realKey]);
+            } else if (p.name.includes('Doanh thu') || p.name.includes('Dư nợ') || p.name.includes('Hạn mức') || p.name.includes('Ngân sách') || p.name.includes('Giá')) {
+              // Xử lý Scatter chart hoặc các chart khác
+              if (typeof val === 'number') {
+                 // Nếu là Scatter chart (đã chia 1e6), nhân lại để format
+                 if (p.dataKey === 'revenue' || p.dataKey === 'budget') {
+                   val = formatPrice(val * 1e6);
+                 } else {
+                   val = val > 1000 ? formatPrice(val) : val;
+                 }
+              }
             }
+            
             return (
               <p key={i} style={{color:p.color || p.fill, margin:0, fontSize:12, fontWeight:600}}>
-                {p.name.replace(' (Tr)', '')}: {val}
+                {displayName.replace(' (Tr)', '')}: {val}
               </p>
             );
           })}
@@ -401,7 +416,8 @@ export default function ChartsView({ bids, customers, products, orders }) {
     // Chiến lược
     const revByCustomer = {};
     (orders || []).forEach(o => {
-      revByCustomer[o.Ten_KH] = (revByCustomer[o.Ten_KH] || 0) + o.Tong_Tien;
+      // Sử dụng Ma_KH làm key để đảm bảo tính duy nhất và chính xác khi khớp với MOCK_CUSTOMERS
+      revByCustomer[o.Ma_KH] = (revByCustomer[o.Ma_KH] || 0) + o.Tong_Tien;
     });
     
     const budgetByCustomer = {};
@@ -413,15 +429,15 @@ export default function ChartsView({ bids, customers, products, orders }) {
 
     const scatterData = customers.map(c => {
       const normC = normalizeName(c.Ten_Ben_Vien || c.Ten_Benh_Vien);
-      const rev = revByCustomer[c.Ma_KH] || 0; // Dùng mã KH cho chắc chắn
+      const rev = revByCustomer[c.Ma_KH] || 0;
       const budget = budgetByCustomer[normC] || 0;
       return {
         name: (c.Ten_Ben_Vien || c.Ten_Benh_Vien || '').replace('Bệnh viện', 'BV'),
-        'Doanh thu (Tr)': Math.round(rev / 1e6),
-        'Ngân sách (Tr)': Math.round(budget / 1e6),
+        revenue: Math.round(rev / 1e6),
+        budget: Math.round(budget / 1e6),
         z: 1
       };
-    }).filter(d => d['Ngân sách (Tr)'] > 0 || d['Doanh thu (Tr)'] > 0);
+    }).filter(d => d.budget > 0 || d.revenue > 0);
 
     const nhuCau = {};
     bids.forEach(b => {
@@ -462,8 +478,8 @@ export default function ChartsView({ bids, customers, products, orders }) {
       const maxVal = Math.max(p.Gia_Niem_Yet, avgGiaTran);
       return {
         name: p.Ten_Biet_Duoc,
-        'Giá Niêm Yết Score': (p.Gia_Niem_Yet / maxVal) * 100,
-        'Giá Trần BQ Score': (avgGiaTran / maxVal) * 100,
+        'Gia_Niem_Yet_Score': (p.Gia_Niem_Yet / maxVal) * 100,
+        'Gia_Tran_Score': (avgGiaTran / maxVal) * 100,
         // Giữ giá trị thực để hiển thị tooltip
         'Giá Niêm Yết': p.Gia_Niem_Yet,
         'Giá Trần BQ': Math.round(avgGiaTran)
@@ -500,9 +516,9 @@ export default function ChartsView({ bids, customers, products, orders }) {
               <ResponsiveContainer width="100%" height="100%">
                 <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#E6E9ED" />
-                  <XAxis dataKey="Ngân sách (Tr)" type="number" name="Ngân sách" tickFormatter={v => `${v}Tr`} />
-                  <YAxis dataKey="Doanh thu (Tr)" type="number" name="Doanh thu" tickFormatter={v => `${v}Tr`} />
-                  <ZAxis dataKey="z" range={[80, 80]} />
+                  <XAxis dataKey="budget" type="number" name="Ngân sách" tickFormatter={v => `${v}Tr`} />
+                  <YAxis dataKey="revenue" type="number" name="Doanh thu" tickFormatter={v => `${v}Tr`} />
+                  <ZAxis dataKey="z" range={[100, 100]} />
                   <RechartsTooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltipValue />} />
                   <Scatter name="Bệnh viện" data={scatterData} fill="#3498DB" />
                 </ScatterChart>
@@ -538,9 +554,14 @@ export default function ChartsView({ bids, customers, products, orders }) {
                 <RadarChart cx="50%" cy="50%" outerRadius="75%" data={priceRadar}>
                   <PolarGrid />
                   <PolarAngleAxis dataKey="name" tick={{fontSize: 11, fontWeight: 600}} />
-                  <PolarRadiusAxis angle={30} domain={[0, 110]} tick={false} axisLine={false} />
-                  <Radar name="Giá Niêm Yết" dataKey="Giá Niêm Yết Score" stroke="#8E44AD" fill="#8E44AD" fillOpacity={0.5} />
-                  <Radar name="Giá Trần BQ" dataKey="Giá Trần BQ Score" stroke="#3498DB" fill="#3498DB" fillOpacity={0.5} />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                  
+                  {/* Vẽ Giá Trần trước như một vùng giới hạn */}
+                  <Radar name="Giá Trần BQ" dataKey="Gia_Tran_Score" stroke="#3498DB" fill="#3498DB" fillOpacity={0.3} />
+                  
+                  {/* Vẽ Giá Niêm Yết sau, đậm hơn để nổi bật sự so sánh */}
+                  <Radar name="Giá Niêm Yết" dataKey="Gia_Niem_Yet_Score" stroke="#8E44AD" fill="#8E44AD" fillOpacity={0.6} />
+                  
                   <Legend />
                   <RechartsTooltip content={<CustomTooltipValue />} />
                 </RadarChart>
