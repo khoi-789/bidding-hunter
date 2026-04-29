@@ -198,6 +198,8 @@ export default function ChartsView({ bids, customers, products, orders, productM
       </div>
     );
   };
+
+  const renderTab1 = () => {
     // 1. Line Chart: Doanh thu theo thời gian (Tháng/Năm)
     const revenueByMonth = {};
     (orders || []).forEach(o => {
