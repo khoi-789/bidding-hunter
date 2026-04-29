@@ -60,6 +60,41 @@ function App() {
   }, []);
 
   useEffect(() => { addToastRef.current = addToast; }, [addToast]);
+  
+  // Helper tìm sản phẩm cho bid stats
+  const findProduct = useCallback((item) => {
+    const itemName = String(item['Hoạt chất'] || item['Tên thuốc'] || '').toLowerCase().trim();
+    if (!itemName) return null;
+    return products.find(p => {
+      const prodName = String(p.Hoat_Chat || '').toLowerCase().trim();
+      return itemName.includes(prodName) || prodName.includes(itemName);
+    });
+  }, [products]);
+
+  const calculateBidStats = useCallback((bid) => {
+    const items = bid.items || [];
+    let matchedCount = 0;
+    let revenue = 0;
+
+    items.forEach(item => {
+      const p = findProduct(item);
+      if (!p) return;
+      const bidQty = parseVND(item['Số lượng']);
+      if (bidQty <= 0) return;
+      const bidUnitPrice = parseVND(item['Giá trần (VND)']) / bidQty;
+      
+      if ((p.Gia_Niem_Yet || 0) < bidUnitPrice) {
+        matchedCount++;
+        if (p.SL_Ton > 0) {
+          const effQty = Math.min(bidQty, p.SL_Ton);
+          revenue += (bidUnitPrice * effQty * 0.8);
+        }
+      }
+    });
+
+    const winRatio = items.length > 0 ? (matchedCount / items.length) * 100 : 0;
+    return { winRatio, revenue, matchedCount };
+  }, [findProduct]);
 
   const toggleSelect = (id) => {
     setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
@@ -107,6 +142,11 @@ function App() {
         } else if (sortConfig.key === 'so_danh_muc') {
           valA = a.so_danh_muc ?? 0;
           valB = b.so_danh_muc ?? 0;
+        } else if (sortConfig.key === 'revenue' || sortConfig.key === 'winRatio') {
+          const statsA = calculateBidStats(a);
+          const statsB = calculateBidStats(b);
+          valA = statsA[sortConfig.key];
+          valB = statsB[sortConfig.key];
         } else {
           valA = (a[sortConfig.key] || '').toString().toLowerCase();
           valB = (b[sortConfig.key] || '').toString().toLowerCase();
@@ -250,7 +290,7 @@ function App() {
                   getSortedData(getFilteredBids(bids.slice(0, 10)), 'bids'), 
                   selectedIds, toggleSelect, handleSelectAll, setSelected, 
                   () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products,
-                  sortConfig, requestSort, SortHeader
+                  sortConfig, requestSort, SortHeader, calculateBidStats
                 )}
               </div>
             </>
@@ -268,7 +308,7 @@ function App() {
                 getSortedData(allFilteredBids, 'bids'), 
                 selectedIds, toggleSelect, handleSelectAll, setSelected, 
                 () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products,
-                sortConfig, requestSort, SortHeader
+                sortConfig, requestSort, SortHeader, calculateBidStats
               )}
             </div>
           )}
@@ -364,16 +404,7 @@ function App() {
   );
 }
 
-function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelected, onBulkEmail, deadlineFilter, setDeadlineFilter, products = [], sortConfig, onSort, SortHeader) {
-  // Helper tìm sản phẩm (copy từ BidModal)
-  const findProduct = (item) => {
-    const itemName = String(item['Hoạt chất'] || '').toLowerCase().trim();
-    if (!itemName) return null;
-    return products.find(p => {
-      const prodName = String(p.Hoat_Chat || '').toLowerCase().trim();
-      return itemName.includes(prodName) || prodName.includes(itemName);
-    });
-  };
+function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelected, onBulkEmail, deadlineFilter, setDeadlineFilter, products = [], sortConfig, onSort, SortHeader, calculateBidStats) {
   return (
     <>
       <div className="table-controls" style={{display:'flex', justifyContent:'space-between', alignItems:'center', padding:'15px 20px', borderBottom:'1px solid #eee'}}>
@@ -405,9 +436,9 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
               <SortHeader label="Chủ đầu tư" columnKey="chu_dau_tu" />
               <SortHeader label="Danh mục thuốc" columnKey="so_danh_muc" />
               <SortHeader label="Giá thầu" columnKey="gia_goi_thau" align="right" />
-              <th style={{textAlign:'right'}}>Dự kiến DT</th>
+              <SortHeader label="Dự kiến DT" columnKey="revenue" align="right" />
               <SortHeader label="Đóng thầu" columnKey="thoi_diem_dong_thau" />
-              <th style={{textAlign:'center'}}>Tỷ lệ trúng</th>
+              <SortHeader label="Tỷ lệ trúng" columnKey="winRatio" align="center" />
               <SortHeader label="BPS" columnKey="bps_score" align="center" />
             </tr>
           </thead>
@@ -419,17 +450,9 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
               const bps     = bid.bps_score ?? 0;
               const flag    = bid.flag || 'GRAY';
               const items   = bid.items || [];
-
-              // Tính tỷ lệ trúng thầu (Win Ratio)
-              const matchedCount = items.reduce((count, item) => {
-                const p = findProduct(item);
-                if (!p) return count;
-                const bidQty = parseVND(item['Số lượng']);
-                if (bidQty <= 0) return count;
-                const bidUnitPrice = parseVND(item['Giá trần (VND)']) / bidQty;
-                return (p.Gia_Niem_Yet || 0) < bidUnitPrice ? count + 1 : count;
-              }, 0);
-              const winRatio = items.length > 0 ? (matchedCount / items.length) * 100 : 0;
+              
+              // Lấy stats đã tính toán
+              const { winRatio, revenue, matchedCount } = calculateBidStats(bid);
 
               return (
                 <tr key={bid.id} onClick={() => setSelected(bid)} className={isSel ? 'selected-row' : ''}>
@@ -454,21 +477,7 @@ function renderTable(data, selectedIds, toggleSelect, handleSelectAll, setSelect
                     })()}
                   </td>
                   <td style={{textAlign:'right', fontWeight:700, color:'#27ae60'}}>
-                    {(() => {
-                      const rev = items.reduce((sum, item) => {
-                        const p = findProduct(item);
-                        if (!p) return sum;
-                        const bidQty = parseVND(item['Số lượng']);
-                        if (bidQty <= 0) return sum;
-                        const bidUnitPrice = parseVND(item['Giá trần (VND)']) / bidQty;
-                        if (p.SL_Ton > 0 && (p.Gia_Niem_Yet || 0) < bidUnitPrice) {
-                          const effQty = Math.min(bidQty, p.SL_Ton);
-                          return sum + (bidUnitPrice * effQty * 0.8);
-                        }
-                        return sum;
-                      }, 0);
-                      return rev > 0 ? formatPrice(rev) : '—';
-                    })()}
+                    {revenue > 0 ? formatPrice(revenue) : '—'}
                   </td>
                   <td className={`cell-deadline ${dlClass}`}>
                     <div style={{fontWeight:600}}>{formatDeadline(bid.thoi_diem_dong_thau)}</div>
