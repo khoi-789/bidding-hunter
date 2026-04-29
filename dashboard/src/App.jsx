@@ -354,7 +354,8 @@ function App() {
                   <button className="action-btn" onClick={() => setActiveNav('bids')}>Xem tất cả →</button>
                 </div>
                 {(() => {
-                  const sortedBids = getSortedData(allFilteredBids, 'bids');
+                  const activeFilteredBids = allFilteredBids.filter(b => getDaysLeft(b.thoi_diem_dong_thau) > 0);
+                  const sortedBids = getSortedData(activeFilteredBids, 'bids');
                   return renderTable(
                     sortedBids.slice(0, 10), 
                     selectedIds, toggleSelect, handleSelectAll, setSelected, 
