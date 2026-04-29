@@ -238,6 +238,36 @@ function App() {
     }
   }, [loading, bids, productMinCeilings]);
 
+  // Migration: Triple Order Prices (User Request)
+  useEffect(() => {
+    if (loading || orders.length === 0) return;
+    const migrationKey = 'bh_orders_tripled_v104_final';
+    if (!localStorage.getItem(migrationKey)) {
+      setOrders(prev => {
+        const next = prev.map(order => {
+          let newTotal = 0;
+          const newItems = order.Items.map(item => {
+            // Normalize if still in millions (legacy mock data)
+            let basePrice = item.Don_Gia;
+            if (basePrice > 1000000) basePrice = basePrice / 1000; 
+            
+            const newPrice = Math.round(basePrice * 3);
+            const newSubtotal = Math.round(newPrice * item.SL);
+            newTotal += newSubtotal;
+            return { ...item, Don_Gia: newPrice, Thanh_Tien: newSubtotal };
+          });
+          return { ...order, Items: newItems, Tong_Tien: newTotal };
+        });
+        localStorage.setItem('bh_orders', JSON.stringify(next));
+        return next;
+      });
+      localStorage.setItem(migrationKey, 'true');
+      setTimeout(() => {
+        addToastRef.current?.('📈 Đã nhân 3 đơn giá toàn bộ đơn hàng (Data Profitability Fix)', 'success');
+      }, 2500);
+    }
+  }, [loading, orders.length]);
+
   const addToast = useCallback((msg, type = 'success') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, msg, type }]);

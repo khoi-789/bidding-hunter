@@ -1230,7 +1230,7 @@ export const MOCK_ORDERS = [
     "So_Hoa_Don": "HD2001",
     "Ngay_Soan": "2026-04-18",
     "Ngay_Giao": "2026-04-25",
-    "Tong_Tien": 20863637202,
+    "Tong_Tien": 150000000,
     "Items": [
       {
         "Ma_SP": "SP310",
@@ -1261,8 +1261,8 @@ export const MOCK_ORDERS = [
         "Ten_SP": "Avelumab",
         "SL": 170,
         "DVT": "Ống",
-        "Don_Gia": 5329726,
-        "Thanh_Tien": 906053420
+        "Don_Gia": 5329,
+        "Thanh_Tien": 905930
       },
       {
         "Ma_SP": "SP306",
@@ -1293,8 +1293,8 @@ export const MOCK_ORDERS = [
         "Ten_SP": "Azathioprin",
         "SL": 331,
         "DVT": "Viên",
-        "Don_Gia": 25068530,
-        "Thanh_Tien": 8297683430
+        "Don_Gia": 25068,
+        "Thanh_Tien": 8297508
       },
       {
         "Ma_SP": "SP301",
@@ -1333,24 +1333,24 @@ export const MOCK_ORDERS = [
         "Ten_SP": "Pethidin",
         "SL": 235,
         "DVT": "Ống",
-        "Don_Gia": 26571395,
-        "Thanh_Tien": 6244277825
+        "Don_Gia": 26571,
+        "Thanh_Tien": 6244185
       },
       {
         "Ma_SP": "SP201",
         "Ten_SP": "Atropin",
         "SL": 27,
         "DVT": "Ống",
-        "Don_Gia": 15602829,
-        "Thanh_Tien": 421276383
+        "Don_Gia": 15602,
+        "Thanh_Tien": 421254
       },
       {
         "Ma_SP": "SP202",
         "Ten_SP": "Lidocain + epinephrine",
         "SL": 202,
         "DVT": "Ống",
-        "Don_Gia": 24545944,
-        "Thanh_Tien": 4958280688
+        "Don_Gia": 24545,
+        "Thanh_Tien": 4958090
       }
     ]
   },
