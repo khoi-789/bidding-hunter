@@ -84,8 +84,8 @@ export default function PotentialAnalysis({ bids, products }) {
   const selectedBid = analysisData.find(b => b.id === selectedBidId);
 
   return (
-    <div className="potential-analysis animate-fade-in">
-      <div className="analysis-header card" style={{marginBottom: 20}}>
+    <div className="potential-analysis animate-fade-in" style={{height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column'}}>
+      <div className="analysis-header card" style={{marginBottom: 20, flexShrink: 0}}>
         <div className="card-body" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
           <div>
             <h2 style={{margin: 0, fontSize: 24, fontWeight: 800, color: 'var(--text-dark)'}}>
@@ -108,7 +108,7 @@ export default function PotentialAnalysis({ bids, products }) {
         </div>
       </div>
 
-      <div className="tabs-container">
+      <div className="tabs-container" style={{flexShrink: 0}}>
         <div className={`tab-item ${activeTab === 'focus' ? 'active' : ''}`} onClick={() => setActiveTab('focus')}>
           Báo cáo Trọng tâm (Dành cho Sếp)
         </div>
@@ -120,7 +120,7 @@ export default function PotentialAnalysis({ bids, products }) {
         </div>
       </div>
 
-      <div className="tab-content" style={{marginTop: 20}}>
+      <div className="tab-content" style={{marginTop: 20, overflowY: 'auto', flex: 1, paddingRight: 5}}>
         {activeTab === 'focus' && (
           <div className="focus-report animate-fade-in">
             <div className="card" style={{borderLeft: '5px solid #ef4444', marginBottom: 25}}>
@@ -218,17 +218,17 @@ export default function PotentialAnalysis({ bids, products }) {
         )}
 
         {activeTab === 'matrix' && (
-          <div className="card">
+          <div className="card" style={{marginBottom: 20}}>
             <div className="card-body" style={{padding: 0}}>
-              <table className="data-table">
-                <thead>
+              <table className="data-table" style={{tableLayout: 'fixed', width: '100%'}}>
+                <thead style={{position: 'sticky', top: 0, zIndex: 10, background: '#fff', boxShadow: '0 2px 5px rgba(0,0,0,0.05)'}}>
                   <tr>
-                    <th>Gói thầu</th>
-                    <th style={{textAlign:'right'}}>Dự kiến DT</th>
-                    <th style={{textAlign:'center'}}>Khớp thầu</th>
-                    <th style={{textAlign:'center'}}>High Margin</th>
-                    <th style={{textAlign:'center'}}>BPS</th>
-                    <th>Lời khuyên</th>
+                    <th style={{width: '35%'}}>Gói thầu</th>
+                    <th style={{textAlign:'right', width: '12%'}}>Dự kiến DT</th>
+                    <th style={{textAlign:'center', width: '10%'}}>Khớp thầu</th>
+                    <th style={{textAlign:'center', width: '10%'}}>High Margin</th>
+                    <th style={{textAlign:'center', width: '8%'}}>BPS</th>
+                    <th style={{width: '25%'}}>Lời khuyên</th>
                   </tr>
                 </thead>
                 <tbody>
