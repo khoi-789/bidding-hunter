@@ -499,6 +499,8 @@ function App() {
                     <tr>
                       <SortHeader label="Mã KH" columnKey="Ma_KH" />
                       <SortHeader label="Tên Bệnh Viện" columnKey="Ten_Benh_Vien" />
+                      <th>Người liên hệ</th>
+                      <th>SĐT</th>
                       <SortHeader label="Phân Tuyến" columnKey="Phan_Tuyen" />
                       <SortHeader label="Dư nợ hiện tại" columnKey="Du_No_Hien_Tai" align="right" />
                       <SortHeader label="Hạn mức" columnKey="Han_Muc_No" align="right" />
@@ -514,6 +516,8 @@ function App() {
                       <tr key={c.id}>
                         <td><b>{c.Ma_KH}</b></td>
                         <td>{c.Ten_Benh_Vien}</td>
+                        <td style={{fontSize: 12, fontWeight: 500}}>{c.Ten_Lien_He || '—'}</td>
+                        <td style={{fontSize: 12, color: '#64748b'}}>{c.SDT || '—'}</td>
                         <td><span style={{fontSize:10, background:'#e8f4fd', color:'#2980b9', padding:'2px 6px', borderRadius:4}}>{c.Phan_Tuyen?.replace('TUYEN_','')}</span></td>
                         <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Du_No_Hien_Tai)}</td>
                         <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Han_Muc_No)}</td>

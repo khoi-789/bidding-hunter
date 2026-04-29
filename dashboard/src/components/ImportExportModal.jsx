@@ -6,11 +6,11 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
   const fileInputRef = useRef(null);
 
   const schema = type === 'customers' 
-    ? ['Ma_KH', 'Ten_Benh_Vien', 'Phan_Tuyen', 'Du_No_Hien_Tai', 'Han_Muc_No', 'To_Emails', 'Cc_Emails']
+    ? ['Ma_KH', 'Ten_Benh_Vien', 'Ten_Lien_He', 'SDT', 'Phan_Tuyen', 'Du_No_Hien_Tai', 'Han_Muc_No', 'To_Emails', 'Cc_Emails']
     : ['Ma_SP', 'Ten_Biet_Duoc', 'Hoat_Chat', 'Dang_Bao_Che', 'Gia_Niem_Yet'];
 
   const labels = type === 'customers'
-    ? ['Mã KH', 'Tên Bệnh Viện', 'Phân Tuyến', 'Dư nợ hiện tại', 'Hạn mức', 'Người nhận (To)', 'Đồng gửi (Cc)']
+    ? ['Mã KH', 'Tên Bệnh Viện', 'Người liên hệ', 'Số điện thoại', 'Phân Tuyến', 'Dư nợ hiện tại', 'Hạn mức', 'Người nhận (To)', 'Đồng gửi (Cc)']
     : ['Mã SP', 'Tên Biệt Dược', 'Hoạt chất', 'Dạng bào chế', 'Giá niêm yết'];
 
   const handleExport = () => {
@@ -19,6 +19,8 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
         return {
           'Mã KH': item.Ma_KH,
           'Tên Bệnh Viện': item.Ten_Benh_Vien,
+          'Người liên hệ': item.Ten_Lien_He || '',
+          'Số điện thoại': item.SDT || '',
           'Phân Tuyến': item.Phan_Tuyen,
           'Dư nợ hiện tại': item.Du_No_Hien_Tai,
           'Hạn mức': item.Han_Muc_No,
@@ -51,6 +53,8 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
       templateData[0] = {
         'Mã KH': 'KH001',
         'Tên Bệnh Viện': 'BV Bạch Mai',
+        'Người liên hệ': 'Nguyễn Văn A',
+        'Số điện thoại': '0901234567',
         'Phân Tuyến': 'TW',
         'Dư nợ hiện tại': 520000000,
         'Hạn mức': 400000000,
@@ -96,6 +100,8 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
             id: row['Mã KH'] || `ID_${Math.random().toString(36).substr(2, 9)}`,
             Ma_KH: row['Mã KH'],
             Ten_Benh_Vien: row['Tên Bệnh Viện'],
+            Ten_Lien_He: row['Người liên hệ'] || '',
+            SDT: row['Số điện thoại'] || '',
             Phan_Tuyen: row['Phân Tuyến'],
             Du_No_Hien_Tai: parseNum(row['Dư nợ hiện tại']),
             Han_Muc_No: parseNum(row['Hạn mức']),
