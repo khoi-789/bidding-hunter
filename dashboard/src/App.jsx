@@ -350,24 +350,13 @@ function App() {
 
               <div className="card">
                 <div className="card-header">
-                  <h3 className="card-title">Gói thầu dược phẩm mới cập nhật</h3>
+                  <h3 className="card-title">Top 10 Gói thầu tiềm năng nhất</h3>
                   <button className="action-btn" onClick={() => setActiveNav('bids')}>Xem tất cả →</button>
                 </div>
                 {(() => {
-                  // Lọc bỏ gói hết hạn cho Dashboard
-                  const activeBids = getFilteredBids(bids).filter(b => getDaysLeft(b.thoi_diem_dong_thau) > 0);
-                  
-                  let displayData = [...activeBids];
-                  
-                  // Nếu không có sort thủ công, sort theo Revenue giảm dần
-                  if (!sortConfig.key) {
-                    displayData.sort((a, b) => calculateBidStats(b).revenue - calculateBidStats(a).revenue);
-                  } else {
-                    displayData = getSortedData(displayData, 'bids');
-                  }
-
+                  const sortedBids = getSortedData(allFilteredBids, 'bids');
                   return renderTable(
-                    displayData.slice(0, 10), 
+                    sortedBids.slice(0, 10), 
                     selectedIds, toggleSelect, handleSelectAll, setSelected, 
                     () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products,
                     sortConfig, requestSort, SortHeader, calculateBidStats
