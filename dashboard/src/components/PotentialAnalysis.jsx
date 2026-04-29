@@ -120,7 +120,7 @@ export default function PotentialAnalysis({ bids, products }) {
         </div>
       </div>
 
-      <div className="tab-content" style={{marginTop: 20, overflowY: 'auto', flex: 1, paddingRight: 10, paddingLeft: 5}}>
+      <div className="tab-content" style={{marginTop: 20, overflowY: 'auto', flex: 1, paddingRight: 10, paddingLeft: 5, paddingTop: 5}}>
         {activeTab === 'focus' && (
           <div className="focus-report animate-fade-in">
             <div className="card" style={{borderLeft: '5px solid #ef4444', marginBottom: 25, boxShadow: '0 4px 15px rgba(0,0,0,0.05)'}}>
@@ -266,15 +266,15 @@ export default function PotentialAnalysis({ bids, products }) {
         {activeTab === 'matrix' && (
           <div className="card" style={{marginBottom: 20}}>
             <div className="card-body" style={{padding: 0}}>
-              <table className="data-table" style={{width: '100%', borderCollapse: 'collapse'}}>
-                <thead style={{position: 'sticky', top: 0, zIndex: 10, background: '#fff', boxShadow: '0 2px 5px rgba(0,0,0,0.05)'}}>
+              <table className="data-table" style={{width: '100%', borderCollapse: 'separate', borderSpacing: 0}}>
+                <thead style={{position: 'sticky', top: -1, zIndex: 10, background: '#ffffff', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'}}>
                   <tr>
-                    <th style={{textAlign:'left'}}>Gói thầu</th>
-                    <th style={{textAlign:'right'}}>Dự kiến DT</th>
-                    <th style={{textAlign:'center'}}>Khớp thầu</th>
-                    <th style={{textAlign:'center'}}>High Margin</th>
-                    <th style={{textAlign:'center'}}>BPS</th>
-                    <th style={{textAlign:'left'}}>Lời khuyên</th>
+                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>Gói thầu</th>
+                    <th style={{textAlign:'right', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>Dự kiến DT</th>
+                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>Khớp thầu</th>
+                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>High Margin</th>
+                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>BPS</th>
+                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>Lời khuyên</th>
                   </tr>
                 </thead>
                 <tbody>
