@@ -19,7 +19,8 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
       // Local helper logic since findCustomer isn't defined yet in closure if I move it
       const normHosp = (hospitalName || '').toLowerCase().replace(/bệnh viện/g, 'bv').trim();
       const customer = MOCK_CUSTOMERS.find(c => {
-        const normCust = (c.Ten_Benh_Vien || '').toLowerCase().replace(/bệnh viện/g, 'bv').trim();
+        const custName = String(c.Ten_Benh_Vien || c.Ten_Ben_Vien || '');
+        const normCust = custName.toLowerCase().replace(/bệnh viện/g, 'bv').trim();
         return normHosp.includes(normCust) || normCust.includes(normHosp);
       });
       const isOver = customer && customer.Du_No_Hien_Tai > customer.Han_Muc_No;
@@ -36,7 +37,8 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
     if (!hospitalName) return null;
     const normHosp = normalizeName(hospitalName);
     return MOCK_CUSTOMERS.find(c => {
-      const normCust = normalizeName(c.Ten_Benh_Vien);
+      const custName = String(c.Ten_Benh_Vien || c.Ten_Ben_Vien || '');
+      const normCust = normalizeName(custName);
       return normHosp.includes(normCust) || normCust.includes(normHosp);
     });
   };

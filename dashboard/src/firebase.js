@@ -89,7 +89,10 @@ export function computeBPS(bid) {
   // Factor 4: Debt (Max w.debt) - Logarithmic Inverse
   // Tìm khách hàng tương ứng
   const hospitalName = bid['Chủ đầu tư'] || bid['chu_dau_tu'] || '';
-  const customer = MOCK_CUSTOMERS.find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+  const customer = MOCK_CUSTOMERS.find(c => {
+    const custName = String(c.Ten_Benh_Vien || c.Ten_Ben_Vien || '');
+    return hospitalName.includes(custName) || custName.includes(hospitalName);
+  });
   const debt = customer ? (customer.Du_No_Hien_Tai || 0) : 0;
   // Càng nhiều nợ càng ít điểm. Nợ 1 tỷ (1e9) thì điểm về ~0.
   const debtFactor = w.debt * (1 - Math.log10(1 + debt / 5e7) / Math.log10(21));

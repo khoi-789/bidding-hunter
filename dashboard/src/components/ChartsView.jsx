@@ -68,7 +68,7 @@ export default function ChartsView({ bids, customers, products }) {
 
   // 6. Tình trạng công nợ Khách hàng (mock data)
   const debtData = customers.map(c => ({
-    name: c.Ten_Benh_Vien?.replace('Bệnh viện', 'BV').substring(0, 15) + '...',
+    name: (c.Ten_Ben_Vien || c.Ten_Benh_Vien || '').replace('Bệnh viện', 'BV').substring(0, 15) + '...',
     'Hạn mức': c.Han_Muc_No,
     'Dư nợ': c.Du_No_Hien_Tai
   })).slice(0, 6);

@@ -25,7 +25,10 @@ export default function BidModal({ bid, products = [], onClose, addToast, ingred
   const handleSendEmail = async () => {
     // Tìm customer để lấy mail config
     const hospitalName = bid.chu_dau_tu || '';
-    const customer = Object.values(MOCK_CUSTOMERS).find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+    const customer = Object.values(MOCK_CUSTOMERS).find(c => {
+      const custName = String(c.Ten_Benh_Vien || c.Ten_Ben_Vien || '');
+      return hospitalName.includes(custName) || custName.includes(hospitalName);
+    });
     const config = customer ? customerConfigs[customer.id] : null;
     
     const to = config?.to || TARGET_EMAIL;
