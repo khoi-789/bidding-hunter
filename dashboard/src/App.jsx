@@ -41,14 +41,16 @@ function App() {
   const [customerConfigs, setCustomerConfigs] = useState(() => {
     try {
       const saved = localStorage.getItem('bh_customer_configs');
-      if (saved) return JSON.parse(saved);
+      const parsed = saved ? JSON.parse(saved) : {};
       
-      // Default: all customers get leminhkhoi279@gmail.com
-      const defaults = {};
+      const initial = {};
       MOCK_CUSTOMERS.forEach(c => {
-        defaults[c.id] = { to: 'leminhkhoi279@gmail.com', cc: '' };
+        initial[c.id] = {
+          to: parsed[c.id]?.to || 'leminhkhoi279@gmail.com',
+          cc: parsed[c.id]?.cc || ''
+        };
       });
-      return defaults;
+      return initial;
     } catch (e) { return {}; }
   });
 
