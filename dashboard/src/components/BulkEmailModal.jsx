@@ -74,6 +74,33 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
               </ul>
             </div>
 
+            <div style="margin: 25px 0;">
+              <h4 style="margin: 0 0 12px; color: #0f172a; font-size: 15px;">Danh mục sản phẩm đề xuất tiêu biểu:</h4>
+              <table style="width: 100%; border-collapse: collapse; font-size: 12px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                <thead>
+                  <tr style="background: #f8fafc; color: #64748b; text-align: left;">
+                    <th style="padding: 10px; border-bottom: 1px solid #e2e8f0;">Tên sản phẩm</th>
+                    <th style="padding: 10px; border-bottom: 1px solid #e2e8f0;">Hoạt chất</th>
+                    <th style="padding: 10px; border-bottom: 1px solid #e2e8f0;">Dạng bào chế</th>
+                    <th style="padding: 10px; border-bottom: 1px solid #e2e8f0;">Đường dùng</th>
+                    <th style="padding: 10px; border-bottom: 1px solid #e2e8f0;">Nhóm</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${(bid.items || []).slice(0, 15).map(item => `
+                    <tr>
+                      <td style="padding: 8px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 600; color: #1ABB9C;">${item['Tên hàng hóa'] || 'N/A'}</td>
+                      <td style="padding: 8px 10px; border-bottom: 1px solid #f1f5f9;">${item['Hoạt chất'] || 'N/A'}</td>
+                      <td style="padding: 8px 10px; border-bottom: 1px solid #f1f5f9;">${item['Dạng bào chế'] || 'N/A'}</td>
+                      <td style="padding: 8px 10px; border-bottom: 1px solid #f1f5f9;">${item['Đường dùng'] || 'N/A'}</td>
+                      <td style="padding: 8px 10px; border-bottom: 1px solid #f1f5f9; font-weight: 700;">${item['Nhóm kỹ thuật'] || 'N/A'}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+              ${(bid.items || []).length > 15 ? `<p style="font-size: 11px; color: #94a3b8; margin-top: 8px; font-style: italic;">* Và ${(bid.items || []).length - 15} danh mục sản phẩm phù hợp khác...</p>` : ''}
+            </div>
+
             ${hasDebtReminder ? `
             <div style="background: #fff3f2; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #fecaca; color: #b91c1c; font-size: 13px;">
               ⚠️ <b>Lưu ý về đối chiếu công nợ:</b><br/>
@@ -101,6 +128,24 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
           <p>Kính gửi Ban lãnh đạo <b>${hospital}</b>,</p>
           <p>Chúng tôi đề xuất <b>${soDM} danh mục thuốc</b> cho gói thầu <b>${title}</b>.</p>
           <p>Sản phẩm tiêu biểu: <b>${topDrug}</b>. Điểm BPS hệ thống: <b>${bps}</b>.</p>
+          
+          <div style="margin: 15px 0;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 11px; border: 1px solid #eee;">
+              <tr style="background: #f4f4f4; text-align: left;">
+                <th style="padding: 6px; border: 1px solid #eee;">Tên SP</th>
+                <th style="padding: 6px; border: 1px solid #eee;">Hoạt chất</th>
+                <th style="padding: 6px; border: 1px solid #eee;">Nhóm</th>
+              </tr>
+              ${(bid.items || []).slice(0, 5).map(item => `
+                <tr>
+                  <td style="padding: 5px 6px; border: 1px solid #eee;">${item['Tên hàng hóa'] || 'N/A'}</td>
+                  <td style="padding: 5px 6px; border: 1px solid #eee;">${item['Hoạt chất'] || 'N/A'}</td>
+                  <td style="padding: 5px 6px; border: 1px solid #eee;">${item['Nhóm kỹ thuật'] || 'N/A'}</td>
+                </tr>
+              `).join('')}
+            </table>
+          </div>
+
           ${hasDebtReminder ? `
           <p style="color: #b91c1c; font-size: 12px; border: 1px solid #fecaca; background: #fff3f2; padding: 10px; border-radius: 4px;">
             ⚠️ <b>Nhắc nợ:</b> Quý đơn vị đang có công nợ vượt hạn mức. Vui lòng hỗ trợ rà soát thanh toán.
