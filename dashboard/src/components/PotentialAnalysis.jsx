@@ -267,14 +267,14 @@ export default function PotentialAnalysis({ bids, products }) {
           <div className="card" style={{marginBottom: 20}}>
             <div className="card-body" style={{padding: 0}}>
               <table className="data-table" style={{width: '100%', borderCollapse: 'separate', borderSpacing: 0}}>
-                <thead style={{position: 'sticky', top: 0, zIndex: 100, background: '#ffffff', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'}}>
+                <thead style={{position: 'sticky', top: 0, zIndex: 100}}>
                   <tr>
-                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>Gói thầu</th>
-                    <th style={{textAlign:'right', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>Dự kiến DT</th>
-                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>Khớp thầu</th>
-                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>High Margin</th>
-                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>BPS</th>
-                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>Lời khuyên</th>
+                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px', position: 'sticky', top: 0, zIndex: 100}}>Gói thầu</th>
+                    <th style={{textAlign:'right', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px', position: 'sticky', top: 0, zIndex: 100}}>Dự kiến DT</th>
+                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px', position: 'sticky', top: 0, zIndex: 100}}>Khớp thầu</th>
+                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px', position: 'sticky', top: 0, zIndex: 100}}>High Margin</th>
+                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px', position: 'sticky', top: 0, zIndex: 100}}>BPS</th>
+                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px', position: 'sticky', top: 0, zIndex: 100}}>Lời khuyên</th>
                   </tr>
                 </thead>
                 <tbody>
