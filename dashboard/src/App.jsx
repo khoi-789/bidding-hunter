@@ -382,7 +382,7 @@ function App() {
         const config = customerConfigs[item.id] || {};
         return {
           'Mã KH': item.Ma_KH,
-          'Tên Bệnh Viện': item.Ten_Benh_Vien,
+          'Tên Bệnh Viện': item.Ten_Ben_Vien,
           'Người liên hệ': item.Ten_Lien_He || '',
           'Số điện thoại': item.SDT || '',
           'Phân Tuyến': item.Phan_Tuyen,
