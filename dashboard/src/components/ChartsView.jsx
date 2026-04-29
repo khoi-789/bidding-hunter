@@ -458,34 +458,45 @@ export default function ChartsView({ bids, customers, products, orders }) {
       };
     }).sort((a,b) => b['Tồn kho'] - a['Tồn kho']).slice(0, 8);
 
-    const priceRadar = products.slice(0, 5).map(p => {
-      const hc = (p.Hoat_Chat || '').toLowerCase();
-      let totalGiaTran = 0;
-      let count = 0;
-      bids.forEach(b => {
-        (b.items || []).forEach(i => {
-          if ((i['Hoạt chất'] || '').toLowerCase() === hc) {
-            const qty = parseMoney(i['Số lượng']) || 1;
-            const thTien = parseMoney(i['Giá trần (VND)']);
-            totalGiaTran += (thTien / qty);
-            count++;
-          }
-        });
+    // Tính toán đơn giá trần trung bình của toàn bộ thị trường cho từng hoạt chất
+    const avgCeilingMap = {};
+    const countMap = {};
+    bids.forEach(b => {
+      (b.items || []).forEach(i => {
+        const hc = (i['Hoạt chất'] || '').toLowerCase().trim();
+        if (!hc || hc === 'na') return;
+        const qty = parseMoney(i['Số lượng']) || 1;
+        const total = parseMoney(i['Giá trần (VND)']);
+        const unitPrice = total / qty;
+        
+        avgCeilingMap[hc] = (avgCeilingMap[hc] || 0) + unitPrice;
+        countMap[hc] = (countMap[hc] || 0) + 1;
       });
-      
-      const avgGiaTran = count > 0 ? totalGiaTran / count : p.Gia_Niem_Yet * 1.15;
-      
-      // Chuẩn hóa về thang 100 để Radar không bị lệch scale giữa các thuốc khác giá
-      const maxVal = Math.max(p.Gia_Niem_Yet, avgGiaTran);
-      return {
-        name: p.Ten_Biet_Duoc,
-        'Gia_Niem_Yet_Score': (p.Gia_Niem_Yet / maxVal) * 100,
-        'Gia_Tran_Score': (avgGiaTran / maxVal) * 100,
-        // Giữ giá trị thực để hiển thị tooltip
-        'Giá Niêm Yết': p.Gia_Niem_Yet,
-        'Giá Trần BQ': Math.round(avgGiaTran)
-      };
     });
+    Object.keys(avgCeilingMap).forEach(hc => {
+      avgCeilingMap[hc] = avgCeilingMap[hc] / countMap[hc];
+    });
+
+    const priceRadar = products
+      .map(p => {
+        const hc = (p.Hoat_Chat || '').toLowerCase().trim();
+        // Lấy giá trần trung bình từ thị trường, nếu không có thì mặc định cao hơn giá mình 15% để có mốc so sánh
+        const avgGiaTran = avgCeilingMap[hc] || (p.Gia_Niem_Yet * 1.15);
+        const ratio = p.Gia_Niem_Yet / (avgGiaTran || 1);
+        
+        const maxVal = Math.max(p.Gia_Niem_Yet, avgGiaTran);
+        return {
+          name: p.Ten_Biet_Duoc,
+          ratio: ratio,
+          'Gia_Niem_Yet_Score': (p.Gia_Niem_Yet / maxVal) * 100,
+          'Gia_Tran_Score': (avgGiaTran / maxVal) * 100,
+          'Giá Niêm Yết': p.Gia_Niem_Yet,
+          'Giá Trần BQ': Math.round(avgGiaTran)
+        };
+      })
+      .filter(d => d['Giá Trần BQ'] > 0)
+      .sort((a, b) => a.ratio - b.ratio) // Tỷ lệ thấp nhất lên đầu (lời nhất)
+      .slice(0, 10);
 
     const bvCanThuocMinh = new Set();
     bids.forEach(b => {
@@ -549,7 +560,10 @@ export default function ChartsView({ bids, customers, products, orders }) {
           </div>
 
           <div className="card" style={{gridColumn: '1 / -1'}}>
-            <div className="card-header"><h3 className="card-title">Sức cạnh tranh Giá (Top 5 SP chiến lược)</h3></div>
+            <div className="card-header">
+              <h3 className="card-title">Top 10 Sản phẩm có Biên lợi nhuận tiềm năng cao nhất</h3>
+              <div style={{fontSize:11, color:'#e67e22', fontWeight:600}}>Tỷ lệ Giá niêm yết / Giá trần thấp nhất - Càng thấp càng có lợi thế thầu</div>
+            </div>
             <div className="card-body" style={{ height: 350, padding: 20 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="75%" data={priceRadar}>
