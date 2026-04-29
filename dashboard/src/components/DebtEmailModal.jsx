@@ -35,26 +35,33 @@ export default function DebtEmailModal({ selectedCustomers, onClose, addToast, o
 
     if (group === 1) {
       return {
-        subject: `[Thông báo khẩn] Tạm ngưng cung cấp hàng - ${hospital}`,
+        subject: `[Thông báo quan trọng] V/v Tạm ngưng cung ứng hàng hóa do quá hạn hạn mức tín dụng - ${hospital}`,
         html: `
-          <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-            <div style="background: #e74c3c; color: #fff; padding: 20px; text-align: center;">
-              <h2 style="margin: 0;">THÔNG BÁO TẠM NGƯNG CUNG CẤP HÀNG</h2>
+          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #1e293b; max-width: 650px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);">
+            <div style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: #fff; padding: 30px; text-align: center;">
+              <h2 style="margin: 0; font-size: 20px; text-transform: uppercase; letter-spacing: 1px;">Thông báo Điều chỉnh Công tác Cung ứng</h2>
             </div>
-            <div style="padding: 30px;">
+            <div style="padding: 40px; background: #fff;">
               <p>Kính gửi: <b>Ban Lãnh đạo ${hospital}</b>,</p>
-              <p>Công ty Dược phẩm Hoàng Đức xin thông báo về tình trạng công nợ quá hạn của Quý đơn vị như sau:</p>
-              <div style="background: #fff5f5; border: 1px solid #feb2b2; padding: 15px; border-radius: 6px; margin: 20px 0;">
-                <ul style="margin: 0; padding-left: 20px;">
-                  <li>Số dư nợ hiện tại: <b>${debt}</b></li>
-                  <li>Thời gian nợ quá hạn: <b>${time}</b> (Vượt quá 12 tháng)</li>
-                </ul>
+              <p>Lời đầu tiên, <b>Công ty TNHH Dược phẩm Hoàng Đức</b> xin gửi lời chào trân trọng và lời cảm ơn chân thành vì sự tin tưởng và đồng hành của Quý đơn vị trong suốt thời gian qua.</p>
+              <p>Với tinh thần hợp tác cùng phát triển, chúng tôi luôn nỗ lực tối đa để đảm bảo nguồn hàng ổn định và kịp thời cho công tác điều trị tại bệnh viện. Tuy nhiên, qua rà soát hệ thống quản lý công nợ tập trung, chúng tôi nhận thấy tình trạng dư nợ của Quý đơn vị đã vượt quá các giới hạn an toàn tài chính cho phép:</p>
+              
+              <div style="background: #fff5f5; border-left: 4px solid #e74c3c; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                <table style="width: 100%; font-size: 14px;">
+                  <tr><td style="color: #64748b; padding-bottom: 8px;">Tổng dư nợ hiện tại:</td><td style="font-weight: 700; color: #e74c3c; text-align: right;">${debt}</td></tr>
+                  <tr><td style="color: #64748b;">Thời gian nợ lâu nhất:</td><td style="font-weight: 700; text-align: right;">${time}</td></tr>
+                </table>
               </div>
-              <p>Theo quy định của công ty, chúng tôi rất tiếc phải thông báo sẽ <b>TẠM NGƯNG cung cấp hàng hóa</b> đối với các đơn hàng mới kể từ ngày hôm nay cho đến khi khoản nợ trên được quyết toán.</p>
-              <p>Kính đề nghị Quý đơn vị khẩn trương thực hiện thanh toán để không làm gián đoạn công tác điều trị.</p>
+
+              <p>Mặc dù hai bên đã có nhiều nỗ lực đối chiếu trong thời gian qua, nhưng do khoản nợ đã kéo dài trên 12 tháng, hệ thống quản trị rủi ro của chúng tôi buộc phải thực hiện lệnh <b>TẠM NGƯNG tiếp nhận các đơn hàng mới</b> kể từ ngày hôm nay.</p>
+              <p>Chúng tôi rất lấy làm tiếc về sự gián đoạn ngoài ý muốn này. Kính đề nghị Quý Ban Lãnh đạo chỉ đạo bộ phận Tài chính - Kế toán khẩn trương rà soát và thực hiện quyết toán một phần hoặc toàn bộ số nợ trên để chúng tôi có cơ sở mở lại hạn mức cung ứng ngay lập tức.</p>
+              <p>Hoàng Đức Pharma luôn mong muốn sớm tìm được tiếng nói chung để tiếp tục đồng hành cùng Quý Bệnh viện trong sứ mệnh chăm sóc sức khỏe nhân dân.</p>
               <p>Trân trọng cảm ơn.</p>
-              <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-              <p style="font-size: 12px; color: #666;">Phòng Kế toán - Hoàng Đức Pharma</p>
+              
+              <div style="margin-top: 40px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+                <b style="color: #0f172a;">Bộ phận Quản lý Công nợ Chiến lược</b><br/>
+                Công ty Dược phẩm Hoàng Đức
+              </div>
             </div>
           </div>
         `
@@ -63,21 +70,34 @@ export default function DebtEmailModal({ selectedCustomers, onClose, addToast, o
 
     if (group === 2) {
       return {
-        subject: `[Nhắc nhở] Đối chiếu và Thanh toán công nợ - ${hospital}`,
+        subject: `[Thư nhắc] Đề nghị hỗ trợ đối chiếu và quyết toán công nợ định kỳ - ${hospital}`,
         html: `
-          <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-            <div style="background: #f39c12; color: #fff; padding: 20px; text-align: center;">
-              <h2 style="margin: 0;">THƯ NHẮC THANH TOÁN</h2>
+          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #1e293b; max-width: 650px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #f39c12, #d35400); color: #fff; padding: 25px; text-align: center;">
+              <h2 style="margin: 0; font-size: 18px; text-transform: uppercase;">Thư nhắc Thanh toán Định kỳ</h2>
             </div>
-            <div style="padding: 30px;">
+            <div style="padding: 40px; background: #fff;">
               <p>Kính gửi: <b>Ban Lãnh đạo ${hospital}</b>,</p>
-              <p>Lời đầu tiên, Hoàng Đức Pharma xin cảm ơn Quý đối tác đã tin tưởng sử dụng sản phẩm của chúng tôi.</p>
-              <p>Qua rà soát hệ thống, chúng tôi nhận thấy Quý đơn vị đang có khoản nợ phát sinh từ <b>${time}</b> với số tiền: <b>${debt}</b>.</p>
-              <p>Kính mong Quý đơn vị hỗ trợ đối chiếu và sắp xếp kế hoạch thanh toán trong thời gian sớm nhất để đảm bảo hạn mức tín dụng cho các đơn hàng tiếp theo.</p>
-              <p>Mọi thắc mắc vui lòng liên hệ hotline: 028.XXXX.XXXX</p>
-              <p>Trân trọng cảm ơn.</p>
-              <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-              <p style="font-size: 12px; color: #666;">Bộ phận Công nợ - Hoàng Đức Pharma</p>
+              <p>Lời đầu tiên, <b>Công ty Dược phẩm Hoàng Đức</b> xin gửi lời chúc sức khỏe và thành công tới Quý đối tác.</p>
+              <p>Nhằm đảm bảo tính chính xác trong công tác quản lý tài chính giữa hai bên và duy trì sự ổn định của chuỗi cung ứng, chúng tôi xin gửi thư nhắc về các khoản nợ đã đến hạn thanh toán:</p>
+              
+              <div style="background: #fdf6e3; border-left: 4px solid #f39c12; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                <p style="margin: 0 0 10px 0; font-size: 14px; color: #7b5e10;">Thông tin chi tiết:</p>
+                <table style="width: 100%; font-size: 15px;">
+                  <tr><td>Số tiền cần thanh toán:</td><td style="font-weight: 700; text-align: right;">${debt}</td></tr>
+                  <tr><td>Tuổi nợ bình quân:</td><td style="font-weight: 700; text-align: right;">${time}</td></tr>
+                </table>
+              </div>
+
+              <p>Chúng tôi thấu hiểu những áp lực về thủ tục chứng từ tại Quý bệnh viện. Tuy nhiên, việc thanh toán đúng hạn sẽ giúp chúng tôi đảm bảo nguồn tài chính để nhập kho các lô thuốc mới phục vụ kịp thời cho nhu cầu của Quý đơn vị trong thời gian tới.</p>
+              <p>Nếu Quý đơn vị gặp bất kỳ khó khăn nào về hồ sơ đối chiếu, xin vui lòng phản hồi trực tiếp cho bộ phận kế toán của chúng tôi qua hotline: <b>028.XXXX.XXXX</b> để được hỗ trợ xử lý ngay.</p>
+              <p>Hoàng Đức Pharma rất trân trọng sự phối hợp từ Quý đối tác.</p>
+              <p>Trân trọng!</p>
+              
+              <div style="margin-top: 40px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+                <b style="color: #0f172a;">Phòng Kế toán Công nợ</b><br/>
+                Công ty Dược phẩm Hoàng Đức
+              </div>
             </div>
           </div>
         `
@@ -86,21 +106,34 @@ export default function DebtEmailModal({ selectedCustomers, onClose, addToast, o
 
     if (group === 3) {
       return {
-        subject: `[Tri ân] Thư cảm ơn và Ưu đãi đặc biệt cho Khách hàng VIP - ${hospital}`,
+        subject: `[Tri ân Đối tác Chiến lược] Thư cảm ơn và Chương trình Ưu đãi VIP - ${hospital}`,
         html: `
-          <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-            <div style="background: #1abc9c; color: #fff; padding: 20px; text-align: center;">
-              <h2 style="margin: 0;">THƯ CẢM ƠN & ƯU ĐÃI VIP</h2>
-            </div>
-            <div style="padding: 30px;">
+          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #1e293b; max-width: 650px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; border-top: 5px solid #1abc9c;">
+            <div style="padding: 40px; background: #fff;">
+              <div style="text-align: center; margin-bottom: 30px;">
+                <div style="display: inline-block; padding: 10px 20px; background: #e6fffa; color: #1abc9c; border-radius: 30px; font-weight: 700; font-size: 12px; text-transform: uppercase;">Strategic Partnership Program</div>
+              </div>
               <p>Kính gửi: <b>Ban Lãnh đạo ${hospital}</b>,</p>
-              <p>Hoàng Đức Pharma xin gửi lời tri ân sâu sắc tới Quý Bệnh viện - một trong những đối tác chiến lược hàng đầu của chúng tôi.</p>
-              <p>Chúng tôi ghi nhận sự chuyên nghiệp của Quý đơn vị trong việc duy trì dòng tiền và đối chiếu công nợ đúng hạn. Để hỗ trợ Quý bệnh viện tốt hơn, chúng tôi xin gửi tặng <b>Gói ưu đãi chiết khấu 2%</b> cho các đơn hàng vật tư tiêu hao trong quý này.</p>
-              <p>Chúng tôi cam kết sẽ luôn ưu tiên nguồn hàng và dịch vụ hậu mãi tốt nhất cho Quý đơn vị.</p>
-              <p>Kính chúc Quý Lãnh đạo sức khỏe và thành công.</p>
+              <p>Thay mặt <b>Công ty TNHH Dược phẩm Hoàng Đức</b>, tôi xin gửi lời tri ân sâu sắc tới Quý Bệnh viện vì sự tin tưởng và tinh thần hợp tác chuyên nghiệp tuyệt vời trong suốt thời gian qua.</p>
+              <p>Chúng tôi đặc biệt đánh giá cao sự minh bạch và hiệu quả của Quý đơn vị trong công tác đối chiếu và quyết toán các nghĩa vụ tài chính. Đây chính là nền tảng vững chắc giúp hai bên duy trì một chuỗi cung ứng y tế bền vững và chất lượng.</p>
+              <p>Để thay lời cảm ơn và hỗ trợ Quý bệnh viện tối ưu hóa ngân sách hoạt động, Hoàng Đức Pharma xin thông báo áp dụng <b>Gói ưu đãi đặc biệt dành cho Đối tác VIP</b>:</p>
+              
+              <div style="background: #f0fff4; border: 1px dashed #48bb78; padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0;">
+                <h3 style="margin: 0; color: #2f855a; font-size: 24px;">CHIẾT KHẤU THÊM 2%</h3>
+                <p style="margin: 5px 0 0; color: #38a169; font-size: 14px;">Áp dụng cho toàn bộ danh mục vật tư & hóa chất xét nghiệm trong Quý này</p>
+              </div>
+
+              <p>Bên cạnh đó, Quý đơn vị sẽ luôn được ưu tiên giữ hàng đối với các biệt dược khan hiếm và nhận được sự hỗ trợ kỹ thuật 24/7 từ đội ngũ chuyên gia của chúng tôi.</p>
+              <p>Một lần nữa, xin kính chúc Quý Ban Lãnh đạo cùng toàn thể đội ngũ y bác sĩ dồi dào sức khỏe và công tác tốt.</p>
               <p>Trân trọng!</p>
-              <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-              <p style="font-size: 12px; color: #666;">Giám đốc Kinh doanh - Hoàng Đức Pharma</p>
+              
+              <div style="margin-top: 40px; border-top: 1px solid #f1f5f9; padding-top: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                  <b style="color: #0f172a; font-size: 16px;">Giám đốc Kinh doanh</b><br/>
+                  Công ty Dược phẩm Hoàng Đức
+                </div>
+                <div style="color: #94a3b8; font-size: 11px;">Hoàng Đức Pharma - Partner in Healthcare</div>
+              </div>
             </div>
           </div>
         `
@@ -108,20 +141,31 @@ export default function DebtEmailModal({ selectedCustomers, onClose, addToast, o
     }
 
     return {
-      subject: `[Giới thiệu] Cập nhật Danh mục sản phẩm mới - ${hospital}`,
+      subject: `[Thư thăm hỏi] Cập nhật Danh mục giải pháp Y tế mới nhất từ Hoàng Đức Pharma - ${hospital}`,
       html: `
-        <div style="font-family: sans-serif; line-height: 1.6; color: #333; max-width: 600px; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
-          <div style="background: #3498db; color: #fff; padding: 20px; text-align: center;">
-            <h2 style="margin: 0;">THƯ THĂM HỎI & GIỚI THIỆU SP</h2>
-          </div>
-          <div style="padding: 30px;">
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.8; color: #1e293b; max-width: 650px; margin: auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+          <div style="padding: 40px; background: #fff;">
             <p>Kính gửi: <b>Ban Lãnh đạo ${hospital}</b>,</p>
-            <p>Đã một thời gian Hoàng Đức Pharma chưa có cơ hội được phục vụ các đơn hàng mới từ Quý đơn vị. Chúng tôi xin gửi lời thăm hỏi và hy vọng công tác chuyên môn tại đơn vị vẫn đang diễn ra thuận lợi.</p>
-            <p>Hiện nay, chúng tôi vừa nhập kho danh mục <b>Sản phẩm nhóm chuyên khoa mới</b> với mức giá cực kỳ cạnh tranh và đầy đủ hồ sơ thầu. Kính mời Quý đơn vị tham khảo bảng giá đính kèm.</p>
-            <p>Chúng tôi rất mong được sớm kết nối lại và hỗ trợ Quý đơn vị.</p>
-            <p>Trân trọng cảm ơn.</p>
-            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-            <p style="font-size: 12px; color: #666;">Phòng Phát triển Thị trường - Hoàng Đức Pharma</p>
+            <p>Đã một thời gian chúng tôi chưa có dịp được đồng hành cùng Quý đơn vị trong các dự án cung ứng thuốc và vật tư y tế. Thay mặt <b>Hoàng Đức Pharma</b>, tôi xin gửi lời thăm hỏi chân thành và hy vọng công tác chuyên môn tại đơn vị vẫn đang diễn ra thuận lợi và hiệu quả.</p>
+            <p>Thị trường dược phẩm luôn biến động, và chúng tôi thấu hiểu Quý bệnh viện luôn cần những giải pháp có sự cân bằng tối ưu giữa chất lượng điều trị và hiệu quả kinh tế. Trong thời gian qua, chúng tôi đã cập nhật danh mục sản phẩm với nhiều <b>Biệt dược nhóm chuyên khoa</b> và <b>Vật tư tiêu hao công nghệ mới</b>:</p>
+            
+            <div style="background: #ebf8ff; border-radius: 12px; padding: 25px; margin: 30px 0;">
+              <h4 style="margin: 0 0 15px 0; color: #2b6cb0;">Điểm nổi bật trong danh mục mới:</h4>
+              <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #2c5282;">
+                <li style="margin-bottom: 10px;"><b>Tối ưu chi phí:</b> Mức giá thầu cạnh tranh hơn nhờ tối ưu hóa chuỗi cung ứng toàn cầu.</li>
+                <li style="margin-bottom: 10px;"><b>Đầy đủ pháp lý:</b> Hồ sơ thầu, giấy phép lưu hành và chứng nhận GxP luôn sẵn sàng.</li>
+                <li><b>Hỗ trợ chuyên môn:</b> Sẵn sàng cung cấp mẫu thử và báo cáo đánh giá lâm sàng từ nhà sản xuất.</li>
+              </ul>
+            </div>
+
+            <p>Chúng tôi đính kèm bảng chào giá chi tiết cho các sản phẩm chủ lực để Quý đơn vị tiện tham khảo cho các kế hoạch đấu thầu sắp tới.</p>
+            <p>Nếu Quý bệnh viện có bất kỳ nhu cầu đặc thù nào, chúng tôi rất mong được cử đại diện chuyên môn đến trao đổi trực tiếp để đưa ra phương án hỗ trợ tốt nhất.</p>
+            <p>Trân trọng cảm ơn và mong sớm nhận được phản hồi từ Quý đơn vị.</p>
+            
+            <div style="margin-top: 40px; border-top: 1px solid #f1f5f9; padding-top: 20px;">
+              <b style="color: #0f172a;">Phòng Phát triển Thị trường & Quan hệ Đối tác</b><br/>
+              Công ty Dược phẩm Hoàng Đức
+            </div>
           </div>
         </div>
       `
