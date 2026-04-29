@@ -333,7 +333,7 @@ function App() {
                   <span className="stat-icon"><IconCircle size={32} color="#D4AF37" /></span>
                   <div className="stat-label">Ưu tiên thầu (VIP)</div>
                   <div className="stat-value" style={{color:'#B8860B'}}>{gold}</div>
-                  <div className="stat-sub">BPS > 7.0</div>
+                  <div className="stat-sub">BPS {'>'} 7.0</div>
                 </div>
                 <div className="stat-card">
                   <span className="stat-icon"><IconCircle size={32} color="var(--green)" /></span>
