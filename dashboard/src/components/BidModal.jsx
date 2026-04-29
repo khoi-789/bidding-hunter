@@ -1,11 +1,25 @@
 import { formatPrice, formatDeadline, getDaysLeft, parseVND } from '../utils';
 
-export default function BidModal({ bid, products = [], onClose, addToast }) {
+export default function BidModal({ bid, products = [], onClose, addToast, ingredientSearch = '' }) {
   const TARGET_EMAIL = 'leminhkhoi279@gmail.com';
 
   const flag = bid.flag || 'GRAY';
   const bps  = bid.bps_score ?? 0;
   const items = bid.items || [];
+
+  const highlightText = (text, highlight) => {
+    if (!highlight || !text) return text;
+    const parts = String(text).split(new RegExp(`(${highlight})`, 'gi'));
+    return (
+      <span>
+        {parts.map((part, i) => 
+          part.toLowerCase() === highlight.toLowerCase() 
+            ? <mark key={i} style={{ backgroundColor: '#fff3cd', color: '#856404', padding: '0 2px', borderRadius: 2 }}>{part}</mark> 
+            : part
+        )}
+      </span>
+    );
+  };
 
   const handleSendEmail = async () => {
     addToast(`📧 Đang gửi email tới ${TARGET_EMAIL}...`, 'info');
@@ -150,8 +164,12 @@ export default function BidModal({ bid, products = [], onClose, addToast }) {
                     {items.map((item, idx) => (
                       <tr key={idx} style={{ borderBottom: '1px solid #f1f5f9' }}>
                         <td style={{ textAlign: 'center', color: '#999', padding: '8px 10px' }}>{idx + 1}</td>
-                        <td style={{ fontWeight: 500, padding: '8px 10px', color: 'var(--accent)' }}>{item['Tên hàng hóa'] || '—'}</td>
-                        <td style={{ padding: '8px 10px' }}>{item['Hoạt chất'] || '—'}</td>
+                        <td style={{ fontWeight: 500, padding: '8px 10px', color: 'var(--accent)' }}>
+                          {highlightText(item['Tên hàng hóa'] || '—', ingredientSearch)}
+                        </td>
+                        <td style={{ padding: '8px 10px' }}>
+                          {highlightText(item['Hoạt chất'] || '—', ingredientSearch)}
+                        </td>
                         <td style={{ padding: '8px 10px' }}>{item['Nồng độ/Hàm lượng'] || item['Hàm lượng'] || '—'}</td>
                         <td style={{ padding: '8px 10px' }}>{item['Đường dùng'] || '—'}</td>
                         <td style={{ padding: '8px 10px' }}>{item['Dạng bào chế'] || '—'}</td>
