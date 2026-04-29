@@ -10,7 +10,7 @@ import BPSConfig from './components/BPSConfig';
 import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND } from './utils';
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
-  IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings
+  IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle
 } from './components/Icons';
 import './index.css';
 
