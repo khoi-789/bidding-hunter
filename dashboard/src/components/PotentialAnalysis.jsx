@@ -109,6 +109,9 @@ export default function PotentialAnalysis({ bids, products }) {
       </div>
 
       <div className="tabs-container">
+        <div className={`tab-item ${activeTab === 'focus' ? 'active' : ''}`} onClick={() => setActiveTab('focus')}>
+          Báo cáo Trọng tâm (Dành cho Sếp)
+        </div>
         <div className={`tab-item ${activeTab === 'summary' ? 'active' : ''}`} onClick={() => setActiveTab('summary')}>
           Tóm lược Chiến lược
         </div>
@@ -118,7 +121,63 @@ export default function PotentialAnalysis({ bids, products }) {
       </div>
 
       <div className="tab-content" style={{marginTop: 20}}>
-        {activeTab === 'summary' && (
+        {activeTab === 'focus' && (
+          <div className="focus-report animate-fade-in">
+            <div className="card" style={{borderLeft: '5px solid #ef4444', marginBottom: 25}}>
+              <div className="card-body">
+                <h3 style={{marginTop:0, color:'#ef4444'}}>🚩 TOP 3 GÓI THẦU CẦN TẬP TRUNG NGUỒN LỰC</h3>
+                <p style={{color:'#64748b'}}>Dựa trên phân tích về biên lợi nhuận và khả năng cung ứng, đây là 3 mục tiêu chiến lược nhất trong tuần này.</p>
+                
+                <div className="focus-list" style={{display:'flex', flexDirection:'column', gap: 15}}>
+                  {analysisData.slice(0, 3).map((bid, idx) => (
+                    <div key={bid.id} className="focus-item" style={{display:'flex', gap: 20, padding: 20, background:'#f8fafc', borderRadius: 12}}>
+                      <div className="rank" style={{fontSize: 32, fontWeight: 900, color: '#cbd5e1'}}>0{idx+1}</div>
+                      <div style={{flex: 1}}>
+                        <div style={{display:'flex', justifyContent:'space-between', marginBottom: 5}}>
+                          <h4 style={{margin:0, fontSize: 16}}>{bid.ten_goi_thau}</h4>
+                          <span className="badge red" style={{height: 'fit-content'}}>ƯU TIÊN SỐ {idx+1}</span>
+                        </div>
+                        <p style={{margin: '0 0 10px 0', fontSize: 13, color: '#475569'}}><b>Tại:</b> {bid.chu_dau_tu}</p>
+                        <div style={{display:'flex', gap: 30}}>
+                          <div className="focus-metric">
+                            <label style={{display:'block', fontSize:11, color:'#94a3b8'}}>DOANH THU MỤC TIÊU</label>
+                            <span style={{fontWeight:800, color:'var(--accent)'}}>{formatPrice(bid.totalRevenue)}</span>
+                          </div>
+                          <div className="focus-metric">
+                            <label style={{display:'block', fontSize:11, color:'#94a3b8'}}>TỶ LỆ KHỚP THẦU</label>
+                            <span style={{fontWeight:800, color:'var(--blue)'}}>{Math.round(bid.fitScore)}%</span>
+                          </div>
+                          <div className="focus-metric">
+                            <label style={{display:'block', fontSize:11, color:'#94a3b8'}}>MÃ LỢI NHUẬN CAO</label>
+                            <span style={{fontWeight:800, color:'#10b981'}}>{bid.highMarginCount} mặt hàng</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="focus-action" style={{alignSelf: 'center'}}>
+                        <button className="btn btn-primary" onClick={() => setSelectedBidId(bid.id)} style={{padding: '10px 20px', borderRadius: 8}}>
+                          Xem thuyết minh chi tiết
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="card">
+              <div className="card-body">
+                <h4 style={{marginTop:0}}>📝 Thuyết minh tổng quát:</h4>
+                <div style={{lineHeight: 1.8, color: '#334155'}}>
+                  Thưa Sếp, qua rà soát hệ thống muasamcong, chúng ta đang có tổng cộng <b>{analysisData.length}</b> cơ hội. 
+                  Tuy nhiên, em đề xuất chỉ tập trung 80% nguồn lực vào 3 gói thầu trọng tâm phía trên vì biên lợi nhuận gộp dự kiến đạt trên 18%. 
+                  Các gói thầu còn lại đa phần là thuốc Generic phổ thông có sự cạnh tranh giá rất gắt, chúng ta chỉ nên tham gia với mục đích "lót đường" hoặc giữ quan hệ. 
+                  Phòng thầu đã sẵn sàng hồ sơ kỹ thuật cho các mã hàng chủ lực như <b>Ceftriaxone, Levofloxacin</b>... 
+                  Kính trình Sếp phê duyệt chủ trương để triển khai chào giá.
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
           <div className="strategy-grid">
             {analysisData.map(bid => (
               <div key={bid.id} className="strategy-card card animate-fade-in" onClick={() => setSelectedBidId(bid.id)}>
@@ -200,7 +259,7 @@ export default function PotentialAnalysis({ bids, products }) {
       {/* Modal chi tiết phân tích */}
       {selectedBid && (
         <div className="modal-overlay" onClick={() => setSelectedBidId(null)}>
-          <div className="modal-content large animate-slide-up" onClick={e => e.stopPropagation()} style={{maxWidth: 1000}}>
+          <div className="modal-content large animate-slide-up" onClick={e => e.stopPropagation()} style={{maxWidth: 1000, background: '#ffffff', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'}}>
             <div className="modal-header">
               <div style={{display:'flex', alignItems:'center', gap: 12}}>
                 <div className="bps-badge">{selectedBid.bps_score}</div>
@@ -338,22 +397,24 @@ export default function PotentialAnalysis({ bids, products }) {
         .metric-row .val { font-size: 13px; font-weight: 700; color: var(--text-dark); }
         .progress-mini {
           width: 80px;
-          height: 6px;
-          background: #e2e8f0;
-          border-radius: 3px;
+          height: 8px;
+          background: #f1f5f9;
+          border-radius: 4px;
           position: relative;
+          margin-right: 35px;
         }
         .progress-bar {
           height: 100%;
-          border-radius: 3px;
+          border-radius: 4px;
         }
         .progress-text {
           position: absolute;
-          right: -35px;
-          top: -6px;
+          left: 85px;
+          top: -3px;
           font-size: 10px;
           font-weight: 700;
           color: #64748b;
+          white-space: nowrap;
         }
         .bps-circle {
           display: inline-block;
