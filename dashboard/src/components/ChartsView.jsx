@@ -428,17 +428,6 @@ export default function ChartsView({ bids, customers, products, orders, productM
       budgetByCustomer[cvName] = (budgetByCustomer[cvName] || 0) + val;
     });
 
-    const scatterData = customers.map(c => {
-      const normC = normalizeName(c.Ten_Ben_Vien || c.Ten_Benh_Vien);
-      const rev = revByCustomer[c.Ma_KH] || 0;
-      const budget = budgetByCustomer[normC] || 0;
-      return {
-        name: (c.Ten_Ben_Vien || c.Ten_Benh_Vien || '').replace('Bệnh viện', 'BV'),
-        revenue: Math.round(rev / 1e6),
-        budget: Math.round(budget / 1e6),
-        z: 1
-      };
-    }).filter(d => d.budget > 0 || d.revenue > 0);
 
     const nhuCau = {};
     bids.forEach(b => {
@@ -504,19 +493,22 @@ export default function ChartsView({ bids, customers, products, orders, productM
         <div className="stats-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
           <div className="card">
             <div className="card-header">
-              <h3 className="card-title">Ma trận Thâm nhập Bệnh viện</h3>
-              <div style={{fontSize:11, color:'#888', fontWeight:500}}>Ngân sách thầu vs Doanh thu đang bán</div>
+              <h3 className="card-title">Top 10 Sản phẩm có Biên lợi nhuận tiềm năng cao nhất</h3>
+              <div style={{fontSize:11, color:'#e67e22', fontWeight:600}}>So sánh Giá Niêm Yết và Giá Trần tối thiểu trên thị trường</div>
             </div>
             <div className="card-body" style={{ height: 350, padding: 20 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E6E9ED" />
-                  <XAxis dataKey="budget" type="number" name="Ngân sách" tickFormatter={v => `${v}Tr`} />
-                  <YAxis dataKey="revenue" type="number" name="Doanh thu" tickFormatter={v => `${v}Tr`} />
-                  <ZAxis dataKey="z" range={[100, 100]} />
-                  <RechartsTooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltipValue />} />
-                  <Scatter name="Bệnh viện" data={scatterData} fill="#3498DB" />
-                </ScatterChart>
+                <RadarChart cx="50%" cy="50%" outerRadius="75%" data={priceRadar}>
+                  <PolarGrid />
+                  <PolarAngleAxis dataKey="name" tick={{fontSize: 11, fontWeight: 600}} />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                  
+                  <Radar name="Giá Niêm Yết" dataKey="Gia_Niem_Yet_Score" stroke="#8E44AD" fill="#8E44AD" fillOpacity={0.6} />
+                  <Radar name="Giá Trần tối thiểu" dataKey="Gia_Tran_Score" stroke="#3498DB" fill="#3498DB" fillOpacity={0.3} />
+                  
+                  <Legend />
+                  <RechartsTooltip content={<CustomTooltipValue />} />
+                </RadarChart>
               </ResponsiveContainer>
             </div>
           </div>
@@ -538,28 +530,6 @@ export default function ChartsView({ bids, customers, products, orders, productM
                   <Bar yAxisId="left" dataKey="Tồn kho" fill="#1ABB9C" barSize={20} radius={[4, 4, 0, 0]} />
                   <Line yAxisId="right" type="monotone" dataKey="Nhu cầu thầu" stroke="#E74C3C" strokeWidth={3} dot={{r:4}} />
                 </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          <div className="card" style={{gridColumn: '1 / -1'}}>
-            <div className="card-header">
-              <h3 className="card-title">Top 10 Sản phẩm có Biên lợi nhuận tiềm năng cao nhất</h3>
-              <div style={{fontSize:11, color:'#e67e22', fontWeight:600}}>So sánh Giá Niêm Yết và Giá Trần tối thiểu trên thị trường</div>
-            </div>
-            <div className="card-body" style={{ height: 350, padding: 20 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart cx="50%" cy="50%" outerRadius="75%" data={priceRadar}>
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="name" tick={{fontSize: 11, fontWeight: 600}} />
-                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                  
-                  <Radar name="Giá Niêm Yết" dataKey="Gia_Niem_Yet_Score" stroke="#8E44AD" fill="#8E44AD" fillOpacity={0.6} />
-                  <Radar name="Giá Trần tối thiểu" dataKey="Gia_Tran_Score" stroke="#3498DB" fill="#3498DB" fillOpacity={0.3} />
-                  
-                  <Legend />
-                  <RechartsTooltip content={<CustomTooltipValue />} />
-                </RadarChart>
               </ResponsiveContainer>
             </div>
           </div>
