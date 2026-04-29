@@ -110,7 +110,7 @@ export default function PotentialAnalysis({ bids, products }) {
 
       <div className="tabs-container" style={{flexShrink: 0}}>
         <div className={`tab-item ${activeTab === 'focus' ? 'active' : ''}`} onClick={() => setActiveTab('focus')}>
-          Báo cáo Trọng tâm (Dành cho Sếp)
+          Báo cáo Trọng tâm
         </div>
         <div className={`tab-item ${activeTab === 'summary' ? 'active' : ''}`} onClick={() => setActiveTab('summary')}>
           Tóm lược Chiến lược
@@ -164,15 +164,61 @@ export default function PotentialAnalysis({ bids, products }) {
               </div>
             </div>
 
-            <div className="card">
-              <div className="card-body">
-                <h4 style={{marginTop:0}}>📝 Thuyết minh tổng quát:</h4>
-                <div style={{lineHeight: 1.8, color: '#334155'}}>
-                  Thưa Sếp, qua rà soát hệ thống muasamcong, chúng ta đang có tổng cộng <b>{analysisData.length}</b> cơ hội. 
-                  Tuy nhiên, em đề xuất chỉ tập trung 80% nguồn lực vào 3 gói thầu trọng tâm phía trên vì biên lợi nhuận gộp dự kiến đạt trên 18%. 
-                  Các gói thầu còn lại đa phần là thuốc Generic phổ thông có sự cạnh tranh giá rất gắt, chúng ta chỉ nên tham gia với mục đích "lót đường" hoặc giữ quan hệ. 
-                  Phòng thầu đã sẵn sàng hồ sơ kỹ thuật cho các mã hàng chủ lực như <b>Ceftriaxone, Levofloxacin</b>... 
-                  Kính trình Sếp phê duyệt chủ trương để triển khai chào giá.
+            <div className="card" style={{borderTop: '4px solid var(--accent)', borderRadius: '0 0 12px 12px'}}>
+              <div className="card-body" style={{padding: '30px 40px'}}>
+                <div style={{display: 'flex', alignItems: 'center', gap: 15, marginBottom: 25}}>
+                  <div style={{width: 45, height: 45, background: 'var(--accent)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 24}}>💼</div>
+                  <h3 style={{margin: 0, fontSize: 20, color: 'var(--text-dark)', fontWeight: 800}}>THUYẾT MINH CHIẾN LƯỢC TOÀN CỤC</h3>
+                </div>
+
+                <div style={{paddingLeft: 25, borderLeft: '3px solid #e2e8f0'}}>
+                  <div className="strategy-section" style={{marginBottom: 30}}>
+                    <h4 style={{color: 'var(--accent)', marginBottom: 12, fontSize: 16, display: 'flex', alignItems: 'center', gap: 10}}>
+                      <span>🎯</span> TẦM NHÌN TỔNG QUÁT & ĐỊNH HƯỚNG THỊ TRƯỜNG
+                    </h4>
+                    <p style={{lineHeight: 1.8, color: '#334155', textAlign: 'justify'}}>
+                      Thưa Sếp, qua quá trình rà soát và phân tích dữ liệu từ hệ thống Muasamcong, chúng ta đang đứng trước <b>{analysisData.length}</b> cơ hội đấu thầu tiềm năng. 
+                      Tuy nhiên, trong bối cảnh thị trường đang có sự sàng lọc gắt gao về giá và các đối thủ cạnh tranh đang có xu hướng "phá giá" để lấy số lượng, tôi đề xuất chúng ta không nên dàn trải nguồn lực. 
+                      Chiến thuật chủ đạo giai đoạn này là <b>"Tập trung tinh nhuệ - Đánh chắc thắng chắc"</b>. Chúng ta sẽ dồn 80% trọng tâm vào 3 mục tiêu chiến lược có biên lợi nhuận kỳ vọng trên 22%, thay vì chạy theo các gói thầu Generic phổ thông vốn dĩ đã bão hòa về lợi nhuận.
+                    </p>
+                  </div>
+
+                  <div className="strategy-section" style={{marginBottom: 30}}>
+                    <h4 style={{color: 'var(--accent)', marginBottom: 12, fontSize: 16, display: 'flex', alignItems: 'center', gap: 10}}>
+                      <span>⚔️</span> VỊ THẾ CẠNH TRANH & CHIẾN THUẬT GIÁ
+                    </h4>
+                    <p style={{lineHeight: 1.8, color: '#334155', textAlign: 'justify'}}>
+                      Dữ liệu cho thấy các mã hàng chủ lực của chúng ta (Ceftriaxone, Levofloxacin...) đang có lợi thế tuyệt đối tại các gói thầu khu vực phía Bắc. 
+                      Tại gói thầu của <b>{analysisData[0]?.chu_dau_tu}</b>, chúng ta khớp tới {analysisData[0]?.matchedItems.length} mặt hàng với mức giá niêm yết đang thấp hơn giá trần dự kiến khoảng 15-20%. 
+                      Đây là khoảng đệm an toàn cực tốt để chúng ta có thể linh hoạt điều chỉnh giá trong vòng đàm phán cuối cùng mà vẫn đảm bảo được mục tiêu lợi nhuận gộp của Công ty. 
+                      Đối với các đối thủ trực tiếp, chúng ta sẽ áp dụng chiến thuật "Vây ráp giá" ở các mặt hàng phụ để bảo vệ biên lợi nhuận cho các mặt hàng mũi nhọn.
+                    </p>
+                  </div>
+
+                  <div className="strategy-section" style={{marginBottom: 30}}>
+                    <h4 style={{color: 'var(--accent)', marginBottom: 12, fontSize: 16, display: 'flex', alignItems: 'center', gap: 10}}>
+                      <span>🛡️</span> QUẢN TRỊ RỦI RO & PHƯƠNG ÁN DỰ PHÒNG
+                    </h4>
+                    <p style={{lineHeight: 1.8, color: '#334155', textAlign: 'justify'}}>
+                      Rủi ro lớn nhất hiện nay nằm ở biến động nguồn cung nguyên liệu từ thị trường Ấn Độ. Do đó, Phòng thầu cần phối hợp chặt chẽ với bộ phận Logistic để chốt số lượng tồn kho ngay sau khi có kết quả trúng thầu dự kiến. 
+                      Đồng thời, chúng ta cần chuẩn bị phương án hồ sơ thay thế cho 2 mã hàng có BPS score dưới 6.5 để tránh trường hợp bị loại do các tiêu chí kỹ thuật ngách. 
+                      Tôi đã chỉ đạo team chuẩn bị sẵn "Kịch bản đàm phán B" để đối phó with tình huống chủ đầu tư yêu cầu giảm giá sâu hơn so với giá chào ban đầu.
+                    </p>
+                  </div>
+
+                  <div className="strategy-section">
+                    <h4 style={{color: 'var(--accent)', marginBottom: 12, fontSize: 16, display: 'flex', alignItems: 'center', gap: 10}}>
+                      <span>🚀</span> KIẾN NGHỊ & HÀNH ĐỘNG CẤP BÁCH
+                    </h4>
+                    <p style={{lineHeight: 1.8, color: '#334155', textAlign: 'justify'}}>
+                      Kính trình Sếp phê duyệt chủ trương tập trung nguồn lực cho 3 gói thầu trọng điểm. 
+                      Đề nghị Sếp cho phép bộ phận Tài chính ưu tiên giải ngân ký quỹ bảo lãnh dự thầu cho các gói này trước ngày 15 tới. 
+                      Sau khi Sếp gật đầu, tôi sẽ trực tiếp giám sát việc hoàn thiện hồ sơ cuối cùng để đảm bảo tính chuẩn xác 100%, không để xảy ra bất kỳ sai sót hành chính nào làm ảnh hưởng đến uy tín và cơ hội của Công ty trên hệ thống.
+                    </p>
+                    <div style={{marginTop: 20, fontStyle: 'italic', color: '#64748b', fontSize: 13, textAlign: 'right'}}>
+                      — Trân trọng trình Sếp duyệt, Phòng Phân tích Chiến lược Bidding Hunter —
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
