@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { getBids, subscribeToBids, subscribeToHistory, parseDateTime } from './firebase';
-import { MOCK_CUSTOMERS, MOCK_PRODUCTS } from './mockData';
+import { MOCK_CUSTOMERS, MOCK_PRODUCTS, MOCK_ORDERS } from './mockData';
 import BidModal from './components/BidModal';
 import BulkEmailModal from './components/BulkEmailModal';
 import ImportExportModal from './components/ImportExportModal';
@@ -12,7 +12,7 @@ import BPSConfig from './components/BPSConfig';
 import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND, formatPhone } from './utils';
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
-  IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle
+  IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle, IconPackage
 } from './components/Icons';
 import './index.css';
 
@@ -38,6 +38,7 @@ function App() {
   const [sortConfig, setSortConfig] = useState({ key: 'revenue', direction: 'desc' });
   const [history, setHistory] = useState([]);
   const [expandedHistoryId, setExpandedHistoryId] = useState(null);
+  const [expandedOrderId, setExpandedOrderId] = useState(null);
   const addToastRef = useRef(null);
 
   const [customers, setCustomers] = useState(() => {
@@ -62,6 +63,11 @@ function App() {
     return saved ? JSON.parse(saved) : MOCK_PRODUCTS;
   });
 
+  const [orders, setOrders] = useState(() => {
+    const saved = localStorage.getItem('bh_orders');
+    return saved ? JSON.parse(saved) : MOCK_ORDERS;
+  });
+
   const [showImportExport, setShowImportExport] = useState(null); // 'customers' | 'products' | null
 
   const [customerConfigs, setCustomerConfigs] = useState(() => {
@@ -82,6 +88,7 @@ function App() {
 
   useEffect(() => { localStorage.setItem('bh_customers', JSON.stringify(customers)); }, [customers]);
   useEffect(() => { localStorage.setItem('bh_products', JSON.stringify(products)); }, [products]);
+  useEffect(() => { localStorage.setItem('bh_orders', JSON.stringify(orders)); }, [orders]);
 
   useEffect(() => {
     localStorage.setItem('bh_customer_configs', JSON.stringify(customerConfigs));
@@ -283,6 +290,17 @@ function App() {
           valA = (a[sortConfig.key] || '').toString().toLowerCase();
           valB = (b[sortConfig.key] || '').toString().toLowerCase();
         }
+      } else if (type === 'orders') {
+        if (sortConfig.key === 'Tong_Tien') {
+          valA = a.Tong_Tien || 0;
+          valB = b.Tong_Tien || 0;
+        } else if (sortConfig.key === 'Ngay_Giao') {
+          valA = new Date(a.Ngay_Giao).getTime();
+          valB = new Date(b.Ngay_Giao).getTime();
+        } else {
+          valA = a[sortConfig.key];
+          valB = b[sortConfig.key];
+        }
       } else {
         valA = a[sortConfig.key];
         valB = b[sortConfig.key];
@@ -380,6 +398,9 @@ function App() {
           </div>
           <div className={`nav-item ${activeNav === 'products' ? 'active' : ''}`} onClick={() => setActiveNav('products')}>
             <IconProducts className="nav-icon" /> Sản phẩm
+          </div>
+          <div className={`nav-item ${activeNav === 'orders' ? 'active' : ''}`} onClick={() => setActiveNav('orders')}>
+            <IconPackage className="nav-icon" /> Đơn hàng
           </div>
 
           <div className="nav-section" style={{marginTop: 20}}>CHIẾN LƯỢC</div>
@@ -593,6 +614,87 @@ function App() {
                         <td>{p.Dang_Bao_Che}</td>
                         <td style={{textAlign:'right'}}>{formatPrice(p.Gia_Niem_Yet)}</td>
                       </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {activeNav === 'orders' && (
+            <div className="card">
+              <div className="card-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                <h3 className="card-title">Quản lý Đơn hàng ({orders.length})</h3>
+                <div className="section-meta">Dữ liệu liên thông với Khách hàng & Sản phẩm</div>
+              </div>
+              <div className="card-body" style={{padding: 0}}>
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <SortHeader label="Mã Đơn" columnKey="id" />
+                      <SortHeader label="Mã KH" columnKey="Ma_KH" />
+                      <th>Khách hàng</th>
+                      <SortHeader label="Số hóa đơn" columnKey="So_Hoa_Don" />
+                      <SortHeader label="Ngày giao" columnKey="Ngay_Giao" />
+                      <SortHeader label="Tổng tiền" columnKey="Tong_Tien" align="right" />
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getSortedData(orders, 'orders').map(order => (
+                      <React.Fragment key={order.id}>
+                        <tr 
+                          className={`history-row ${expandedOrderId === order.id ? 'active' : ''}`}
+                          onClick={() => setExpandedOrderId(expandedOrderId === order.id ? null : order.id)}
+                          style={{cursor:'pointer'}}
+                        >
+                          <td><b>{order.id}</b></td>
+                          <td><span className="bps-badge GRAY" style={{fontSize:10}}>{order.Ma_KH}</span></td>
+                          <td><div style={{fontWeight:500}}>{order.Ten_KH}</div></td>
+                          <td><code style={{background:'#f1f5f9', padding:'2px 4px', borderRadius:4}}>{order.So_Hoa_Don}</code></td>
+                          <td style={{fontSize:12}}>{new Date(order.Ngay_Giao).toLocaleDateString('vi-VN')}</td>
+                          <td style={{textAlign:'right', fontWeight:700, color:'var(--accent)'}}>{formatPrice(order.Tong_Tien)}</td>
+                          <td style={{textAlign:'right'}}>{expandedOrderId === order.id ? '🔼' : '🔽'}</td>
+                        </tr>
+                        {expandedOrderId === order.id && (
+                          <tr className="history-detail-row">
+                            <td colSpan="7" style={{padding: '10px 20px 20px 20px', background: '#f8fafc'}}>
+                              <div className="animate-fade-in" style={{background:'#fff', borderRadius:8, border:'1px solid #e2e8f0', overflow:'hidden', boxShadow:'0 4px 6px -1px rgb(0 0 0 / 0.1)'}}>
+                                <table className="inner-table">
+                                  <thead>
+                                    <tr style={{background:'#f1f5f9'}}>
+                                      <th>Mã SP</th>
+                                      <th>Tên Sản Phẩm</th>
+                                      <th style={{textAlign:'center'}}>Số lượng</th>
+                                      <th>ĐVT</th>
+                                      <th style={{textAlign:'right'}}>Đơn giá</th>
+                                      <th style={{textAlign:'right'}}>Thành tiền</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {order.Items.map((item, idx) => (
+                                      <tr key={idx}>
+                                        <td style={{fontSize:11}}><b>{item.Ma_SP}</b></td>
+                                        <td style={{fontSize:11, color:'#1e293b'}}>{item.Ten_SP}</td>
+                                        <td style={{fontSize:11, textAlign:'center', fontWeight:600}}>{item.SL}</td>
+                                        <td style={{fontSize:11}}>{item.DVT}</td>
+                                        <td style={{fontSize:11, textAlign:'right'}}>{formatPrice(item.Don_Gia)}</td>
+                                        <td style={{fontSize:11, textAlign:'right', fontWeight:700, color:'var(--accent)'}}>{formatPrice(item.Thanh_Tien)}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                  <tfoot>
+                                    <tr style={{background:'#f8fafc'}}>
+                                      <td colSpan="5" style={{textAlign:'right', fontWeight:700, padding:'10px 15px', fontSize:12}}>TỔNG CỘNG ĐƠN HÀNG:</td>
+                                      <td style={{textAlign:'right', fontWeight:800, color:'var(--accent)', padding:'10px 15px', fontSize:13}}>{formatPrice(order.Tong_Tien)}</td>
+                                    </tr>
+                                  </tfoot>
+                                </table>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
                     ))}
                   </tbody>
                 </table>

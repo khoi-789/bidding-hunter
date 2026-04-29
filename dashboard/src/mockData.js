@@ -2,25 +2,25 @@
 // Dữ liệu ảo phục vụ test app. Sau này sẽ được thay bằng data thật từ Firebase
 
 export const MOCK_CUSTOMERS = [
-  { id: 'KH001', Ma_KH: 'KH001', Ten_Benh_Vien: 'BV Bạch Mai', Phan_Tuyen: 'TUYEN_TW', Du_No_Hien_Tai: 520000000, Han_Muc_No: 400000000, Ten_Lien_He: 'Nguyễn Văn A', SDT: '0901234567', Thoi_Gian_No: '12 tháng - 5 ngày' },
-  { id: 'KH002', Ma_KH: 'KH002', Ten_Benh_Vien: 'BV Việt Đức', Phan_Tuyen: 'TUYEN_TW', Du_No_Hien_Tai: 280000000, Han_Muc_No: 500000000, Ten_Lien_He: 'Trần Thị B', SDT: '0912345678', Thoi_Gian_No: '3 tháng - 12 ngày' },
-  { id: 'KH003', Ma_KH: 'KH003', Ten_Benh_Vien: 'BV Chợ Rẫy', Phan_Tuyen: 'TUYEN_TW', Du_No_Hien_Tai: 610000000, Han_Muc_No: 600000000, Ten_Lien_He: 'Lê Văn C', SDT: '0987654321', Thoi_Gian_No: '15 tháng - 20 ngày' },
-  { id: 'KH005', Ma_KH: 'KH005', Ten_Benh_Vien: 'Bệnh viện Đại học Y Hà Nội', Phan_Tuyen: 'TUYEN_TW', Du_No_Hien_Tai: 90000000, Han_Muc_No: 300000000, Ten_Lien_He: 'Phạm Minh D', SDT: '0977889900', Thoi_Gian_No: '1 tháng - 5 ngày' },
-  { id: 'KH006', Ma_KH: 'KH006', Ten_Benh_Vien: 'Bệnh Viện Đa Khoa Khu Vực Bồng Sơn', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 120000000, Han_Muc_No: 200000000, Ten_Lien_He: 'Vũ Hoàng E', SDT: '0933445566', Thoi_Gian_No: '4 tháng - 10 ngày' },
-  { id: 'KH007', Ma_KH: 'KH007', Ten_Benh_Vien: 'Trung tâm Y tế khu vực Lục Yên', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 45000000, Han_Muc_No: 100000000, Ten_Lien_He: 'Đặng Quốc F', SDT: '0944556677', Thoi_Gian_No: '2 tháng - 15 ngày' },
-  { id: 'KH008', Ma_KH: 'KH008', Ten_Benh_Vien: 'Trạm Y tế xã Bình Xuyên', Phan_Tuyen: 'TUYEN_XA', Du_No_Hien_Tai: 0, Han_Muc_No: 50000000, Ten_Lien_He: 'Bùi Thị G', SDT: '0955667788', Thoi_Gian_No: '0 ngày' }, 
-  { id: 'KH009', Ma_KH: 'KH009', Ten_Benh_Vien: 'BV đa khoa Thanh Liêm', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 310000000, Han_Muc_No: 300000000, Ten_Lien_He: 'Hồ Anh H', SDT: '0966778899', Thoi_Gian_No: '16 tháng - 2 ngày' }, 
-  { id: 'KH010', Ma_KH: 'KH010', Ten_Benh_Vien: 'BỆNH VIỆN ĐA KHOA VŨ THƯ', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 0, Han_Muc_No: 150000000, Ten_Lien_He: 'Ngô Minh I', SDT: '0922334455', Thoi_Gian_No: '0 ngày' },
-  { id: 'KH011', Ma_KH: 'KH011', Ten_Benh_Vien: 'TRUNG TÂM MẮT TỈNH QUẢNG NGÃI', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 180000000, Han_Muc_No: 500000000, Ten_Lien_He: 'Dương Thành K', SDT: '0911223344', Thoi_Gian_No: '6 tháng - 18 ngày' },
-  { id: 'KH012', Ma_KH: 'KH012', Ten_Benh_Vien: 'TRUNG TÂM Y TẾ AN DƯƠNG', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 25000000, Han_Muc_No: 100000000, Ten_Lien_He: 'Lý Kim L', SDT: '0944112233', Thoi_Gian_No: '1 tháng - 12 ngày' },
-  { id: 'KH013', Ma_KH: 'KH013', Ten_Benh_Vien: 'BV đa khoa Đông Anh', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 420000000, Han_Muc_No: 400000000, Ten_Lien_He: 'Trịnh Văn M', SDT: '0977441122', Thoi_Gian_No: '11 tháng - 5 ngày' },
-  { id: 'KH014', Ma_KH: 'KH014', Ten_Benh_Vien: 'BV Đa khoa Từ Sơn', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 15000000, Han_Muc_No: 150000000, Ten_Lien_He: 'Chu Minh N', SDT: '0988552211', Thoi_Gian_No: '25 ngày' },
-  { id: 'KH015', Ma_KH: 'KH015', Ten_Benh_Vien: 'BV Đa khoa Cẩm Phả', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 560000000, Han_Muc_No: 500000000, Ten_Lien_He: 'Đỗ Văn O', SDT: '0999663322', Thoi_Gian_No: '14 tháng - 10 ngày' },
-  { id: 'KH016', Ma_KH: 'KH016', Ten_Benh_Vien: 'BV Đa khoa số 2 tỉnh Lào Cai', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 85000000, Han_Muc_No: 200000000, Ten_Lien_He: 'Lương Minh P', SDT: '0900774411', Thoi_Gian_No: '5 tháng - 2 ngày' },
-  { id: 'KH017', Ma_KH: 'KH017', Ten_Benh_Vien: 'Trung tâm Y tế Khu vực Văn Chấn', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 0, Han_Muc_No: 120000000, Ten_Lien_He: 'Tô Văn Q', SDT: '0911885522', Thoi_Gian_No: '0 ngày' },
-  { id: 'KH018', Ma_KH: 'KH018', Ten_Benh_Vien: 'BV Đa khoa tỉnh Quảng Trị', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 230000000, Han_Muc_No: 300000000, Ten_Lien_He: 'Phan Thị R', SDT: '0922996633', Thoi_Gian_No: '8 tháng - 14 ngày' },
-  { id: 'KH019', Ma_KH: 'KH019', Ten_Benh_Vien: 'BV Phục hồi chức năng Thanh Hóa', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 12000000, Han_Muc_No: 100000000, Ten_Lien_He: 'Khương Văn S', SDT: '0933117744', Thoi_Gian_No: '1 tháng - 3 ngày' },
-  { id: 'KH020', Ma_KH: 'KH020', Ten_Benh_Vien: 'Trạm Y tế xã Xuân Lăng', Phan_Tuyen: 'TUYEN_XA', Du_No_Hien_Tai: 0, Han_Muc_No: 30000000, Ten_Lien_He: 'Tạ Minh T', SDT: '0944228855', Thoi_Gian_No: '0 ngày' },
+  { id: 'KH001', Ma_KH: 'KH001', Ten_Ben_Vien: 'BV Bạch Mai', Phan_Tuyen: 'TUYEN_TW', Du_No_Hien_Tai: 520000000, Han_Muc_No: 400000000, Ten_Lien_He: 'Nguyễn Văn A', SDT: '0901234567', Thoi_Gian_No: '12 tháng - 5 ngày' },
+  { id: 'KH002', Ma_KH: 'KH002', Ten_Ben_Vien: 'BV Việt Đức', Phan_Tuyen: 'TUYEN_TW', Du_No_Hien_Tai: 280000000, Han_Muc_No: 500000000, Ten_Lien_He: 'Trần Thị B', SDT: '0912345678', Thoi_Gian_No: '3 tháng - 12 ngày' },
+  { id: 'KH003', Ma_KH: 'KH003', Ten_Ben_Vien: 'BV Chợ Rẫy', Phan_Tuyen: 'TUYEN_TW', Du_No_Hien_Tai: 610000000, Han_Muc_No: 600000000, Ten_Lien_He: 'Lê Văn C', SDT: '0987654321', Thoi_Gian_No: '15 tháng - 20 ngày' },
+  { id: 'KH005', Ma_KH: 'KH005', Ten_Ben_Vien: 'Bệnh viện Đại học Y Hà Nội', Phan_Tuyen: 'TUYEN_TW', Du_No_Hien_Tai: 90000000, Han_Muc_No: 300000000, Ten_Lien_He: 'Phạm Minh D', SDT: '0977889900', Thoi_Gian_No: '1 tháng - 5 ngày' },
+  { id: 'KH006', Ma_KH: 'KH006', Ten_Ben_Vien: 'Bệnh Viện Đa Khoa Khu Vực Bồng Sơn', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 120000000, Han_Muc_No: 200000000, Ten_Lien_He: 'Vũ Hoàng E', SDT: '0933445566', Thoi_Gian_No: '4 tháng - 10 ngày' },
+  { id: 'KH007', Ma_KH: 'KH007', Ten_Ben_Vien: 'Trung tâm Y tế khu vực Lục Yên', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 45000000, Han_Muc_No: 100000000, Ten_Lien_He: 'Đặng Quốc F', SDT: '0944556677', Thoi_Gian_No: '2 tháng - 15 ngày' },
+  { id: 'KH008', Ma_KH: 'KH008', Ten_Ben_Vien: 'Trạm Y tế xã Bình Xuyên', Phan_Tuyen: 'TUYEN_XA', Du_No_Hien_Tai: 0, Han_Muc_No: 50000000, Ten_Lien_He: 'Bùi Thị G', SDT: '0955667788', Thoi_Gian_No: '0 ngày' }, 
+  { id: 'KH009', Ma_KH: 'KH009', Ten_Ben_Vien: 'BV đa khoa Thanh Liêm', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 310000000, Han_Muc_No: 300000000, Ten_Lien_He: 'Hồ Anh H', SDT: '0966778899', Thoi_Gian_No: '16 tháng - 2 ngày' }, 
+  { id: 'KH010', Ma_KH: 'KH010', Ten_Ben_Vien: 'BỆNH VIỆN ĐA KHOA VŨ THƯ', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 0, Han_Muc_No: 150000000, Ten_Lien_He: 'Ngô Minh I', SDT: '0922334455', Thoi_Gian_No: '0 ngày' },
+  { id: 'KH011', Ma_KH: 'KH011', Ten_Ben_Vien: 'TRUNG TÂM MẮT TỈNH QUẢNG NGÃI', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 180000000, Han_Muc_No: 500000000, Ten_Lien_He: 'Dương Thành K', SDT: '0911223344', Thoi_Gian_No: '6 tháng - 18 ngày' },
+  { id: 'KH012', Ma_KH: 'KH012', Ten_Ben_Vien: 'TRUNG TÂM Y TẾ AN DƯƠNG', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 25000000, Han_Muc_No: 100000000, Ten_Lien_He: 'Lý Kim L', SDT: '0944112233', Thoi_Gian_No: '1 tháng - 12 ngày' },
+  { id: 'KH013', Ma_KH: 'KH013', Ten_Ben_Vien: 'BV đa khoa Đông Anh', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 420000000, Han_Muc_No: 400000000, Ten_Lien_He: 'Trịnh Văn M', SDT: '0977441122', Thoi_Gian_No: '11 tháng - 5 ngày' },
+  { id: 'KH014', Ma_KH: 'KH014', Ten_Ben_Vien: 'BV Đa khoa Từ Sơn', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 15000000, Han_Muc_No: 150000000, Ten_Lien_He: 'Chu Minh N', SDT: '0988552211', Thoi_Gian_No: '25 ngày' },
+  { id: 'KH015', Ma_KH: 'KH015', Ten_Ben_Vien: 'BV Đa khoa Cẩm Phả', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 560000000, Han_Muc_No: 500000000, Ten_Lien_He: 'Đỗ Văn O', SDT: '0999663322', Thoi_Gian_No: '14 tháng - 10 ngày' },
+  { id: 'KH016', Ma_KH: 'KH016', Ten_Ben_Vien: 'BV Đa khoa số 2 tỉnh Lào Cai', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 85000000, Han_Muc_No: 200000000, Ten_Lien_He: 'Lương Minh P', SDT: '0900774411', Thoi_Gian_No: '5 tháng - 2 ngày' },
+  { id: 'KH017', Ma_KH: 'KH017', Ten_Ben_Vien: 'Trung tâm Y tế Khu vực Văn Chấn', Phan_Tuyen: 'TUYEN_HUYEN', Du_No_Hien_Tai: 0, Han_Muc_No: 120000000, Ten_Lien_He: 'Tô Văn Q', SDT: '0911885522', Thoi_Gian_No: '0 ngày' },
+  { id: 'KH018', Ma_KH: 'KH018', Ten_Ben_Vien: 'BV Đa khoa tỉnh Quảng Trị', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 230000000, Han_Muc_No: 300000000, Ten_Lien_He: 'Phan Thị R', SDT: '0922996633', Thoi_Gian_No: '8 tháng - 14 ngày' },
+  { id: 'KH019', Ma_KH: 'KH019', Ten_Ben_Vien: 'BV Phục hồi chức năng Thanh Hóa', Phan_Tuyen: 'TUYEN_TINH', Du_No_Hien_Tai: 12000000, Han_Muc_No: 100000000, Ten_Lien_He: 'Khương Văn S', SDT: '0933117744', Thoi_Gian_No: '1 tháng - 3 ngày' },
+  { id: 'KH020', Ma_KH: 'KH020', Ten_Ben_Vien: 'Trạm Y tế xã Xuân Lăng', Phan_Tuyen: 'TUYEN_XA', Du_No_Hien_Tai: 0, Han_Muc_No: 30000000, Ten_Lien_He: 'Tạ Minh T', SDT: '0944228855', Thoi_Gian_No: '0 ngày' },
 ];
 
 export const MOCK_PRODUCTS = [
@@ -121,4 +121,276 @@ export const MOCK_PRODUCTS = [
   { id: 'SP618', Ma_Hang: 'HD-MEP', Ten_Biet_Duoc: 'Methylprednisolon HD', Hoat_Chat: 'Methylprednisolon (dưới dạng methylprednisolon natri succinat)', Ham_Luong: 'NA', Duong_Dung: 'Tiêm', Dang_Bao_Che: 'Lọ', Nhom_Ky_Thuat: '4', Gia_Niem_Yet: 8000, SL_Ton: 1000000 },
   { id: 'SP619', Ma_Hang: 'HD-PEM', Ten_Biet_Duoc: 'Pembrolizumab HD', Hoat_Chat: 'Pembrolizumab', Ham_Luong: 'NA', Duong_Dung: 'Tiêm truyền', Dang_Bao_Che: 'Lọ', Nhom_Ky_Thuat: '5', Gia_Niem_Yet: 9200000, SL_Ton: 1000000 },
   { id: 'SP620', Ma_Hang: 'HD-PER', Ten_Biet_Duoc: 'Perindopril + Bisoprolol HD', Hoat_Chat: 'Perindopril + Bisoprolol', Ham_Luong: 'NA', Duong_Dung: 'Uống', Dang_Bao_Che: 'Viên', Nhom_Ky_Thuat: '1', Gia_Niem_Yet: 3300, SL_Ton: 1000000 },
+];
+
+export const MOCK_ORDERS = [
+  {
+    id: "DH001",
+    Ma_KH: "KH001",
+    Ten_KH: "BV Bạch Mai",
+    So_Hoa_Don: "HD1001",
+    Ngay_Soan: "2025-03-10",
+    Ngay_Giao: "2025-03-15",
+    Tong_Tien: 8450000,
+    Items: [
+      { Ma_SP: "SP201", Ten_SP: "Atropin", SL: 50, DVT: "Ống", Don_Gia: 220, Thanh_Tien: 11000 },
+      { Ma_SP: "SP202", Ten_SP: "Lidocain + epinephrine", SL: 100, DVT: "Ống", Don_Gia: 550, Thanh_Tien: 55000 },
+      { Ma_SP: "SP208", Ten_SP: "Avelumab", SL: 1, DVT: "Ống", Don_Gia: 5500000, Thanh_Tien: 5500000 },
+      { Ma_SP: "SP401", Ten_SP: "Apitor-Ez", SL: 200, DVT: "Viên", Don_Gia: 4800, Thanh_Tien: 960000 },
+      { Ma_SP: "SP402", Ten_SP: "Augmentin 1g HD", SL: 150, DVT: "Viên", Don_Gia: 12800, Thanh_Tien: 1920000 }
+    ]
+  },
+  {
+    id: "DH002",
+    Ma_KH: "KH002",
+    Ten_KH: "BV Việt Đức",
+    So_Hoa_Don: "HD1002",
+    Ngay_Soan: "2025-05-20",
+    Ngay_Giao: "2025-05-25",
+    Tong_Tien: 12450000,
+    Items: [
+      { Ma_SP: "SP203", Ten_SP: "Morphin", SL: 200, DVT: "Ống", Don_Gia: 850, Thanh_Tien: 170000 },
+      { Ma_SP: "SP311", Ten_SP: "Triamcinolon acetonid", SL: 50, DVT: "Lọ", Don_Gia: 14500, Thanh_Tien: 725000 },
+      { Ma_SP: "SP415", Ten_SP: "Depo-Medrol HD", SL: 100, DVT: "Lọ", Don_Gia: 18500, Thanh_Tien: 1850000 },
+      { Ma_SP: "SP423", Ten_SP: "Lantus HD", SL: 30, DVT: "Lọ", Don_Gia: 255000, Thanh_Tien: 7650000 },
+      { Ma_SP: "SP618", Ten_SP: "Methylprednisolon HD", SL: 200, DVT: "Lọ", Don_Gia: 10275, Thanh_Tien: 2055000 }
+    ]
+  },
+  {
+    id: "DH003",
+    Ma_KH: "KH006",
+    Ten_KH: "Bệnh Viện Đa Khoa Khu Vực Bồng Sơn",
+    So_Hoa_Don: "HD1003",
+    Ngay_Soan: "2025-08-12",
+    Ngay_Giao: "2025-08-18",
+    Tong_Tien: 4235000,
+    Items: [
+      { Ma_SP: "SP008", Ten_SP: "Paracetamol", SL: 1000, DVT: "Viên", Don_Gia: 150, Thanh_Tien: 150000 },
+      { Ma_SP: "SP206", Ten_SP: "Meloxicam", SL: 500, DVT: "Viên", Don_Gia: 350, Thanh_Tien: 175000 },
+      { Ma_SP: "SP409", Ten_SP: "Cefurich 500 HD", SL: 300, DVT: "Viên", Don_Gia: 5200, Thanh_Tien: 1560000 },
+      { Ma_SP: "SP414", Ten_SP: "Crestor 10mg HD", SL: 400, DVT: "Viên", Don_Gia: 5500, Thanh_Tien: 2200000 },
+      { Ma_SP: "SP504", Ten_SP: "Sorbitol HD", SL: 150, DVT: "Gói", Don_Gia: 1000, Thanh_Tien: 150000 }
+    ]
+  },
+  {
+    id: "DH004",
+    Ma_KH: "KH011",
+    Ten_KH: "TRUNG TÂM MẮT TỈNH QUẢNG NGÃI",
+    So_Hoa_Don: "HD1004",
+    Ngay_Soan: "2025-11-05",
+    Ngay_Giao: "2025-11-12",
+    Tong_Tien: 9850000,
+    Items: [
+      { Ma_SP: "SP301", Ten_SP: "HPMC Eye Drop", SL: 100, DVT: "Lọ", Don_Gia: 16500, Thanh_Tien: 1650000 },
+      { Ma_SP: "SP303", Ten_SP: "Moxifloxacin Eye Drop", SL: 100, DVT: "Lọ", Don_Gia: 44000, Thanh_Tien: 4400000 },
+      { Ma_SP: "SP306", Ten_SP: "Ofloxacin Eye Drop", SL: 50, DVT: "Lọ", Don_Gia: 28500, Thanh_Tien: 1425000 },
+      { Ma_SP: "SP309", Ten_SP: "Proparacain hydroclorid", SL: 100, DVT: "Lọ", Don_Gia: 1350, Thanh_Tien: 135000 },
+      { Ma_SP: "SP312", Ten_SP: "Tropicamide + Phenylephrine", SL: 50, DVT: "Lọ", Don_Gia: 44800, Thanh_Tien: 2240000 }
+    ]
+  },
+  {
+    id: "DH005",
+    Ma_KH: "KH003",
+    Ten_KH: "BV Chợ Rẫy",
+    So_Hoa_Don: "HD1005",
+    Ngay_Soan: "2026-01-15",
+    Ngay_Giao: "2026-01-20",
+    Tong_Tien: 45600000,
+    Items: [
+      { Ma_SP: "SP208", Ten_SP: "Avelumab", SL: 5, DVT: "Ống", Don_Gia: 5200000, Thanh_Tien: 26000000 },
+      { Ma_SP: "SP605", Ten_SP: "Cladribin HD", SL: 1, DVT: "Viên", Don_Gia: 15500000, Thanh_Tien: 15500000 },
+      { Ma_SP: "SP613", Ten_SP: "Inclisiran HD", SL: 1, DVT: "Ống", Don_Gia: 1200000, Thanh_Tien: 1200000 },
+      { Ma_SP: "SP614", Ten_SP: "Nirsevimab HD", SL: 1, DVT: "Ống", Don_Gia: 2100000, Thanh_Tien: 2100000 },
+      { Ma_SP: "SP619", Ten_SP: "Pembrolizumab HD", SL: 1, DVT: "Lọ", Don_Gia: 800000, Thanh_Tien: 800000 }
+    ]
+  },
+  {
+    id: "DH006",
+    Ma_KH: "KH015",
+    Ten_KH: "BV Đa khoa Cẩm Phả",
+    So_Hoa_Don: "HD1006",
+    Ngay_Soan: "2025-04-05",
+    Ngay_Giao: "2025-04-10",
+    Tong_Tien: 5400000,
+    Items: [
+      { Ma_SP: "SP212", Ten_SP: "Salbutamol", SL: 100, DVT: "Lọ", Don_Gia: 28000, Thanh_Tien: 2800000 },
+      { Ma_SP: "SP428", Ten_SP: "Novorapid FlexPen HD", SL: 20, DVT: "Bút", Don_Gia: 130000, Thanh_Tien: 2600000 }
+    ]
+  },
+  {
+    id: "DH007",
+    Ma_KH: "KH012",
+    Ten_KH: "TRUNG TÂM Y TẾ AN DƯƠNG",
+    So_Hoa_Don: "HD1007",
+    Ngay_Soan: "2025-06-18",
+    Ngay_Giao: "2025-06-25",
+    Tong_Tien: 3150000,
+    Items: [
+      { Ma_SP: "SP403", Ten_SP: "Augmentin 500mg HD", SL: 200, DVT: "Gói", Don_Gia: 9200, Thanh_Tien: 1840000 },
+      { Ma_SP: "SP408", Ten_SP: "BIOFLORA 100MG HD", SL: 300, DVT: "Gói", Don_Gia: 3100, Thanh_Tien: 930000 },
+      { Ma_SP: "SP504", Ten_SP: "Sorbitol HD", SL: 300, DVT: "Gói", Don_Gia: 1266, Thanh_Tien: 380000 }
+    ]
+  },
+  {
+    id: "DH008",
+    Ma_KH: "KH009",
+    Ten_KH: "BV đa khoa Thanh Liêm",
+    So_Hoa_Don: "HD1008",
+    Ngay_Soan: "2025-09-22",
+    Ngay_Giao: "2025-09-28",
+    Tong_Tien: 7200000,
+    Items: [
+      { Ma_SP: "SP214", Ten_SP: "Pantoprazol", SL: 1000, DVT: "Viên", Don_Gia: 1450, Thanh_Tien: 1450000 },
+      { Ma_SP: "SP419", Ten_SP: "Emanera 40mg HD", SL: 800, DVT: "Viên", Don_Gia: 7187, Thanh_Tien: 5750000 }
+    ]
+  },
+  {
+    id: "DH009",
+    Ma_KH: "KH018",
+    Ten_KH: "BV Đa khoa tỉnh Quảng Trị",
+    So_Hoa_Don: "HD1009",
+    Ngay_Soan: "2025-12-10",
+    Ngay_Giao: "2025-12-16",
+    Tong_Tien: 15400000,
+    Items: [
+      { Ma_SP: "SP208", Ten_SP: "Avelumab", SL: 3, DVT: "Ống", Don_Gia: 5133333, Thanh_Tien: 15400000 }
+    ]
+  },
+  {
+    id: "DH010",
+    Ma_KH: "KH005",
+    Ten_KH: "Bệnh viện Đại học Y Hà Nội",
+    So_Hoa_Don: "HD1010",
+    Ngay_Soan: "2026-02-20",
+    Ngay_Giao: "2026-02-26",
+    Tong_Tien: 8900000,
+    Items: [
+      { Ma_SP: "SP417", Ten_SP: "Diprospan HD", SL: 100, DVT: "Ống", Don_Gia: 42000, Thanh_Tien: 4200000 },
+      { Ma_SP: "SP420", Ten_SP: "Epinosine B Forte HD", SL: 150, DVT: "Ống", Don_Gia: 31333, Thanh_Tien: 4700000 }
+    ]
+  },
+  {
+    id: "DH011",
+    Ma_KH: "KH001",
+    Ten_KH: "BV Bạch Mai",
+    So_Hoa_Don: "HD1011",
+    Ngay_Soan: "2025-07-01",
+    Ngay_Giao: "2025-07-08",
+    Tong_Tien: 12500000,
+    Items: [
+      { Ma_SP: "SP613", Ten_SP: "Inclisiran HD", SL: 1, DVT: "Ống", Don_Gia: 12500000, Thanh_Tien: 12500000 }
+    ]
+  },
+  {
+    id: "DH012",
+    Ma_KH: "KH007",
+    Ten_KH: "Trung tâm Y tế khu vực Lục Yên",
+    So_Hoa_Don: "HD1012",
+    Ngay_Soan: "2025-10-15",
+    Ngay_Giao: "2025-10-22",
+    Tong_Tien: 2450000,
+    Items: [
+      { Ma_SP: "SP001", Ten_SP: "Amoxicillin", SL: 2000, DVT: "Viên", Don_Gia: 550, Thanh_Tien: 1100000 },
+      { Ma_SP: "SP403", Ten_SP: "Augmentin 500mg HD", SL: 150, DVT: "Gói", Don_Gia: 9000, Thanh_Tien: 1350000 }
+    ]
+  },
+  {
+    id: "DH013",
+    Ma_KH: "KH014",
+    Ten_KH: "BV Đa khoa Từ Sơn",
+    So_Hoa_Don: "HD1013",
+    Ngay_Soan: "2026-03-05",
+    Ngay_Giao: "2026-03-12",
+    Tong_Tien: 4800000,
+    Items: [
+      { Ma_SP: "SP410", Ten_SP: "Coveram 10/10mg HD", SL: 500, DVT: "Viên", Don_Gia: 5800, Thanh_Tien: 2900000 },
+      { Ma_SP: "SP412", Ten_SP: "Coversyl 5mg HD", SL: 600, DVT: "Viên", Don_Gia: 3166, Thanh_Tien: 1900000 }
+    ]
+  },
+  {
+    id: "DH014",
+    Ma_KH: "KH019",
+    Ten_KH: "BV Phục hồi chức năng Thanh Hóa",
+    So_Hoa_Don: "HD1014",
+    Ngay_Soan: "2025-05-10",
+    Ngay_Giao: "2025-05-18",
+    Tong_Tien: 6300000,
+    Items: [
+      { Ma_SP: "SP422", Ten_SP: "Ginkomifa HD", SL: 150, DVT: "Ống", Don_Gia: 38000, Thanh_Tien: 5700000 },
+      { Ma_SP: "SP607", Ma_SP: "Diazepam HD", SL: 500, DVT: "Viên", Don_Gia: 1200, Thanh_Tien: 600000 }
+    ]
+  },
+  {
+    id: "DH015",
+    Ma_KH: "KH002",
+    Ten_KH: "BV Việt Đức",
+    So_Hoa_Don: "HD1015",
+    Ngay_Soan: "2025-08-20",
+    Ngay_Giao: "2025-08-28",
+    Tong_Tien: 18500000,
+    Items: [
+      { Ma_SP: "SP512", Ten_SP: "Ethyl ester acid béo iod hóa HD", SL: 5, DVT: "Lọ", Don_Gia: 3700000, Thanh_Tien: 18500000 }
+    ]
+  },
+  {
+    id: "DH016",
+    Ma_KH: "KH016",
+    Ten_KH: "BV Đa khoa số 2 tỉnh Lào Cai",
+    So_Hoa_Don: "HD1016",
+    Ngay_Soan: "2025-11-25",
+    Ngay_Giao: "2025-12-02",
+    Tong_Tien: 3450000,
+    Items: [
+      { Ma_SP: "SP421", Ten_SP: "Fosmicin 500mg HD", SL: 250, DVT: "Viên", Don_Gia: 13800, Thanh_Tien: 3450000 }
+    ]
+  },
+  {
+    id: "DH017",
+    Ma_KH: "KH010",
+    Ten_KH: "BỆNH VIỆN ĐA KHOA VŨ THƯ",
+    So_Hoa_Don: "HD1017",
+    Ngay_Soan: "2026-02-05",
+    Ngay_Giao: "2026-02-12",
+    Tong_Tien: 2100000,
+    Items: [
+      { Ma_SP: "SP213", Ten_SP: "Bromhexin", SL: 5000, DVT: "Viên", Don_Gia: 250, Thanh_Tien: 1250000 },
+      { Ma_SP: "SP216", Ten_SP: "Kali clorid", SL: 2000, DVT: "Viên", Don_Gia: 425, Thanh_Tien: 850000 }
+    ]
+  },
+  {
+    id: "DH018",
+    Ma_KH: "KH013",
+    Ten_KH: "BV đa khoa Đông Anh",
+    So_Hoa_Don: "HD1018",
+    Ngay_Soan: "2025-06-10",
+    Ngay_Giao: "2025-06-18",
+    Tong_Tien: 11500000,
+    Items: [
+      { Ma_SP: "SP429", Ten_SP: "Pulmicort Respules HD", SL: 800, DVT: "Ống", Don_Gia: 14375, Thanh_Tien: 11500000 }
+    ]
+  },
+  {
+    id: "DH019",
+    Ma_KH: "KH006",
+    Ten_KH: "Bệnh Viện Đa Khoa Khu Vực Bồng Sơn",
+    So_Hoa_Don: "HD1019",
+    Ngay_Soan: "2025-09-05",
+    Ngay_Giao: "2025-09-12",
+    Tong_Tien: 2850000,
+    Items: [
+      { Ma_SP: "SP616", Ten_SP: "Lyophilized E.coli HD", SL: 300, DVT: "Viên", Don_Gia: 9500, Thanh_Tien: 2850000 }
+    ]
+  },
+  {
+    id: "DH020",
+    Ma_KH: "KH017",
+    Ten_KH: "Trung tâm Y tế Khu vực Văn Chấn",
+    So_Hoa_Don: "HD1020",
+    Ngay_Soan: "2026-01-05",
+    Ngay_Giao: "2026-01-12",
+    Tong_Tien: 1850000,
+    Items: [
+      { Ma_SP: "SP215", Ten_SP: "Spironolacton", SL: 2000, DVT: "Viên", Don_Gia: 925, Thanh_Tien: 1850000 }
+    ]
+  }
 ];
