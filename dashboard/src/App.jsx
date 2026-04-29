@@ -241,13 +241,16 @@ function App() {
       <div className="main-content">
         <header className="top-bar">
           <div className="top-bar-left">
-            <div className="search-box">
-              <span className="search-icon"><IconSearch size={16} /></span>
-              <input type="text" placeholder="Tìm gói thầu, mã thầu, bệnh viện..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-            </div>
-            <div className="search-box ingredient-search" style={{marginLeft: 12}}>
-              <span className="search-icon"><IconProducts size={16} /></span>
-              <input type="text" placeholder="Lọc theo Hoạt chất..." value={ingredientSearch} onChange={(e) => setIngredientSearch(e.target.value)} />
+            <div className="search-group">
+              <div className="search-box">
+                <span className="search-icon"><IconSearch size={16} /></span>
+                <input type="text" placeholder="Gói thầu, Bệnh viện..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              </div>
+              <div className="search-divider"></div>
+              <div className="search-box ingredient-search">
+                <span className="search-icon"><IconProducts size={16} /></span>
+                <input type="text" placeholder="Lọc theo Hoạt chất..." value={ingredientSearch} onChange={(e) => setIngredientSearch(e.target.value)} />
+              </div>
             </div>
           </div>
           <div className="top-bar-right">
