@@ -307,7 +307,16 @@ export default function PotentialAnalysis({ bids, products }) {
       {/* Modal chi tiết phân tích */}
       {selectedBid && (
         <div className="modal-overlay" onClick={() => setSelectedBidId(null)}>
-          <div className="modal-content large animate-slide-up" onClick={e => e.stopPropagation()} style={{maxWidth: 1000, background: '#ffffff', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'}}>
+          <div className="modal-content large animate-slide-up" onClick={e => e.stopPropagation()} style={{
+            maxWidth: 1000, 
+            maxHeight: '85vh',
+            display: 'flex',
+            flexDirection: 'column',
+            background: '#ffffff', 
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            borderRadius: 16,
+            overflow: 'hidden'
+          }}>
             <div className="modal-header">
               <div style={{display:'flex', alignItems:'center', gap: 12}}>
                 <div className="bps-badge">{selectedBid.bps_score}</div>
@@ -318,7 +327,7 @@ export default function PotentialAnalysis({ bids, products }) {
               </div>
               <button className="close-btn" onClick={() => setSelectedBidId(null)}>&times;</button>
             </div>
-            <div className="modal-body" style={{padding: 25}}>
+            <div className="modal-body" style={{padding: 25, overflowY: 'auto', flex: 1}}>
               <div className="analysis-summary-box" style={{
                 background: selectedBid.strategyColor + '10',
                 border: `1px solid ${selectedBid.strategyColor}40`,
@@ -335,38 +344,39 @@ export default function PotentialAnalysis({ bids, products }) {
                 </p>
               </div>
 
-              <h4 style={{marginBottom: 15}}>Danh mục sản phẩm tiềm năng trong gói:</h4>
-              <table className="inner-table" style={{background: '#fff'}}>
-                <thead>
-                  <tr>
-                    <th>Hoạt chất (Gói thầu)</th>
-                    <th>Sản phẩm của mình</th>
-                    <th style={{textAlign:'right'}}>Giá trần</th>
-                    <th style={{textAlign:'right'}}>Giá NY</th>
-                    <th style={{textAlign:'right'}}>Margin</th>
-                    <th style={{textAlign:'right'}}>Biên (%)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {selectedBid.matchedItems.map((item, idx) => (
-                    <tr key={idx}>
-                      <td style={{fontSize: 12}}>{item['Hoạt chất']}</td>
-                      <td style={{fontSize: 12}}><b>{item.ourProduct.Ten_Biet_Duoc}</b></td>
-                      <td style={{fontSize: 12, textAlign:'right'}}>{formatPrice(item.bidUnitPrice)}</td>
-                      <td style={{fontSize: 12, textAlign:'right'}}>{formatPrice(item.ourProduct.Gia_Niem_Yet)}</td>
-                      <td style={{fontSize: 12, textAlign:'right', color: '#10b981'}}>+{formatPrice(item.margin)}</td>
-                      <td style={{fontSize: 12, textAlign:'right'}}>
-                        <span style={{
-                          fontWeight: 700, 
-                          color: item.marginPercent > 15 ? '#10b981' : '#f59e0b'
-                        }}>
-                          {Math.round(item.marginPercent)}%
-                        </span>
-                      </td>
+              <div style={{overflowX: 'auto', border: '1px solid #eee', borderRadius: 8}}>
+                <table className="inner-table" style={{background: '#fff', border: 'none', marginBottom: 0}}>
+                  <thead style={{position: 'sticky', top: 0, zIndex: 10, background: '#f8fafc'}}>
+                    <tr>
+                      <th>Hoạt chất (Gói thầu)</th>
+                      <th>Sản phẩm của mình</th>
+                      <th style={{textAlign:'right'}}>Giá trần</th>
+                      <th style={{textAlign:'right'}}>Giá NY</th>
+                      <th style={{textAlign:'right'}}>Margin</th>
+                      <th style={{textAlign:'right'}}>Biên (%)</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {selectedBid.matchedItems.map((item, idx) => (
+                      <tr key={idx}>
+                        <td style={{fontSize: 12}}>{item['Hoạt chất']}</td>
+                        <td style={{fontSize: 12}}><b>{item.ourProduct.Ten_Biet_Duoc}</b></td>
+                        <td style={{fontSize: 12, textAlign:'right'}}>{formatPrice(item.bidUnitPrice)}</td>
+                        <td style={{fontSize: 12, textAlign:'right'}}>{formatPrice(item.ourProduct.Gia_Niem_Yet)}</td>
+                        <td style={{fontSize: 12, textAlign:'right', color: '#10b981'}}>+{formatPrice(item.margin)}</td>
+                        <td style={{fontSize: 12, textAlign:'right'}}>
+                          <span style={{
+                            fontWeight: 700, 
+                            color: item.marginPercent > 15 ? '#10b981' : '#f59e0b'
+                          }}>
+                            {Math.round(item.marginPercent)}%
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
