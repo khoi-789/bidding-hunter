@@ -217,6 +217,7 @@ export default function PotentialAnalysis({ bids, products }) {
           </div>
         )}
 
+        {activeTab === 'matrix' && (
           <div className="card" style={{marginBottom: 20}}>
             <div className="card-body" style={{padding: 0}}>
               <table className="data-table" style={{width: '100%', borderCollapse: 'collapse'}}>
