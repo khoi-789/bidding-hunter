@@ -56,36 +56,49 @@ export function computeBPS(bid) {
     }
   });
 
-  // Factor 1: Revenue (35% - Max 3.5) - Logarithmic
-  // Scale: 5 tỷ (5e9) đạt max. Sử dụng Math.log10(1 + x/1e8)
-  const revFactor = 3.5 * Math.log10(1 + revenue / 1e8) / Math.log10(51); 
-  score += Math.min(3.5, revFactor);
+  let score = 0;
+  const weights = getBPSWeights();
+  const w = {
+    rev: weights.revenue / 10,
+    time: weights.time / 10,
+    match: weights.match / 10,
+    debt: weights.debt / 10,
+    base: weights.base / 10
+  };
 
-  // Factor 2: Time (25% - Max 2.5) - Parabolic
-  // Công thức: y = 2.5 * (1 - (1 - t/25)^2). Tại t=14, y ≈ 2.0 (80%)
+  // Factor 1: Revenue (Max w.rev) - Logarithmic
+  // Scale: 5 tỷ (5e9) đạt max. Sử dụng Math.log10(1 + x/1e8)
+  const revFactor = w.rev * Math.log10(1 + revenue / 1e8) / Math.log10(51); 
+  score += Math.min(w.rev, revFactor);
+
+  // Factor 2: Time (Max w.time) - Parabolic
+  // Công thức: y = w.time * (1 - (1 - t/25)^2). Tại t=14, y ≈ 80% max
   const closeTime = bid['Thời điểm đóng thầu'] || bid['thoi_diem_dong_thau'];
   if (closeTime) {
     const t = parseDateTime(closeTime);
     const daysLeft = t ? (t - Date.now()) / 86400000 : 0;
     if (daysLeft > 0) {
       const cappedDays = Math.min(25, daysLeft);
-      const timeFactor = 2.5 * (1 - Math.pow(1 - cappedDays / 25, 2));
+      const timeFactor = w.time * (1 - Math.pow(1 - cappedDays / 25, 2));
       score += timeFactor;
     }
   }
 
-  // Factor 3: Match Rate (20% - Max 2.0) - Linear
+  // Factor 3: Match Rate (Max w.match) - Linear
   const winRatio = items.length > 0 ? (matchedCount / items.length) : 0;
-  score += (winRatio * 2.0);
+  score += (winRatio * w.match);
 
-  // Factor 4: Debt (10% - Max 1.0) - Logarithmic Inverse
+  // Factor 4: Debt (Max w.debt) - Logarithmic Inverse
   // Tìm khách hàng tương ứng
   const hospitalName = bid['Chủ đầu tư'] || bid['chu_dau_tu'] || '';
   const customer = MOCK_CUSTOMERS.find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
   const debt = customer ? (customer.Du_No_Hien_Tai || 0) : 0;
   // Càng nhiều nợ càng ít điểm. Nợ 1 tỷ (1e9) thì điểm về ~0.
-  const debtFactor = 1.0 * (1 - Math.log10(1 + debt / 5e7) / Math.log10(21));
+  const debtFactor = w.debt * (1 - Math.log10(1 + debt / 5e7) / Math.log10(21));
   score += Math.max(0, debtFactor);
+
+  // Factor 5: Base Score (Max w.base)
+  score += w.base;
 
   const bps_score = Math.min(10, parseFloat(score.toFixed(1)));
   
@@ -172,6 +185,32 @@ function normalizeBid(id, data) {
 }
 
 // ─── One-time fetch ────────────────────────────────────────────────────────────
+// BPS Weights Configuration
+const DEFAULT_BPS_WEIGHTS = {
+  revenue: 35,
+  time: 25,
+  match: 20,
+  debt: 10,
+  base: 10
+};
+
+export function getBPSWeights() {
+  const saved = localStorage.getItem('bps_weights');
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch (e) {
+      return DEFAULT_BPS_WEIGHTS;
+    }
+  }
+  return DEFAULT_BPS_WEIGHTS;
+}
+
+export function updateBPSWeights(weights) {
+  localStorage.setItem('bps_weights', JSON.stringify(weights));
+  // Force reload or trigger event if needed, but for now simple storage is fine
+}
+
 export async function getBids() {
   const snap = await getDocs(collection(db, BIDS_COLLECTION));
   return snap.docs.map(d => normalizeBid(d.id, d.data()));

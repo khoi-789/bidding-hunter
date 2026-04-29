@@ -6,10 +6,11 @@ import BulkEmailModal from './components/BulkEmailModal';
 import ChartsView from './components/ChartsView';
 import AIAssistant from './components/AIAssistant';
 import PotentialAnalysis from './components/PotentialAnalysis';
+import BPSConfig from './components/BPSConfig';
 import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND } from './utils';
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
-  IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconCircle
+  IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings
 } from './components/Icons';
 import './index.css';
 
@@ -287,6 +288,9 @@ function App() {
           </div>
           <div className={`nav-item ${activeNav === 'history' ? 'active' : ''}`} onClick={() => setActiveNav('history')}>
             <IconClock className="nav-icon" /> Lịch sử
+          </div>
+          <div className={`nav-item ${activeNav === 'bps_config' ? 'active' : ''}`} onClick={() => setActiveNav('bps_config')}>
+            <IconSettings className="nav-icon" /> Cấu hình BPS
           </div>
         </nav>
       </aside>
@@ -566,6 +570,10 @@ function App() {
                 </div>
               </div>
             </div>
+          )}
+
+          {activeNav === 'bps_config' && (
+            <BPSConfig addToast={addToast} />
           )}
         </main>
       </div>
