@@ -38,6 +38,24 @@ function App() {
   const customers = MOCK_CUSTOMERS;
   const products = MOCK_PRODUCTS;
 
+  const [customerConfigs, setCustomerConfigs] = useState(() => {
+    try {
+      const saved = localStorage.getItem('bh_customer_configs');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) { return {}; }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('bh_customer_configs', JSON.stringify(customerConfigs));
+  }, [customerConfigs]);
+
+  const updateCustomerConfig = (cid, field, value) => {
+    setCustomerConfigs(prev => ({
+      ...prev,
+      [cid]: { ...prev[cid], [field]: value }
+    }));
+  };
+
   useEffect(() => {
     const unsub = subscribeToBids((allBids, { newCount, duplicateCount, isInitial }) => {
       setBids(allBids);
@@ -369,11 +387,14 @@ function App() {
                       <SortHeader label="Phân Tuyến" columnKey="Phan_Tuyen" />
                       <SortHeader label="Dư nợ hiện tại" columnKey="Du_No_Hien_Tai" align="right" />
                       <SortHeader label="Hạn mức" columnKey="Han_Muc_No" align="right" />
+                      <th>Người nhận (To)</th>
+                      <th>Đồng gửi (Cc)</th>
                       <th>Trạng thái</th>
                     </tr>
                   </thead>
                   <tbody>{getSortedData(customers, 'customers').map(c => {
                     const over = c.Du_No_Hien_Tai > c.Han_Muc_No;
+                    const config = customerConfigs[c.id] || {};
                     return (
                       <tr key={c.id}>
                         <td><b>{c.Ma_KH}</b></td>
@@ -381,6 +402,22 @@ function App() {
                         <td><span style={{fontSize:10, background:'#e8f4fd', color:'#2980b9', padding:'2px 6px', borderRadius:4}}>{c.Phan_Tuyen?.replace('TUYEN_','')}</span></td>
                         <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Du_No_Hien_Tai)}</td>
                         <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Han_Muc_No)}</td>
+                        <td style={{width: 180}}>
+                          <input 
+                            className="inline-input" 
+                            placeholder="To: email1, email2..." 
+                            value={config.to || ''} 
+                            onChange={e => updateCustomerConfig(c.id, 'to', e.target.value)} 
+                          />
+                        </td>
+                        <td style={{width: 180}}>
+                          <input 
+                            className="inline-input" 
+                            placeholder="Cc: email1, email2..." 
+                            value={config.cc || ''} 
+                            onChange={e => updateCustomerConfig(c.id, 'cc', e.target.value)} 
+                          />
+                        </td>
                         <td><span style={{fontSize:10, color: over ? '#e74c3c' : '#27ae60', fontWeight:700}}>{over ? '⚠️ Vượt hạn mức' : '✅ OK'}</span></td>
                       </tr>
                     );
