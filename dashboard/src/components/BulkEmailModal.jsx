@@ -16,7 +16,12 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
     const initial = {};
     selectedBids.forEach(b => {
       const hospitalName = b.chu_dau_tu || '';
-      const customer = MOCK_CUSTOMERS.find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+      // Local helper logic since findCustomer isn't defined yet in closure if I move it
+      const normHosp = (hospitalName || '').toLowerCase().replace(/bệnh viện/g, 'bv').trim();
+      const customer = MOCK_CUSTOMERS.find(c => {
+        const normCust = (c.Ten_Benh_Vien || '').toLowerCase().replace(/bệnh viện/g, 'bv').trim();
+        return normHosp.includes(normCust) || normCust.includes(normHosp);
+      });
       const isOver = customer && customer.Du_No_Hien_Tai > customer.Han_Muc_No;
       initial[b.id] = !!isOver; // Default ON if over limit
     });
@@ -25,6 +30,16 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
   const editorRef = useRef(null);
 
   const TARGET_EMAIL = 'leminhkhoi279@gmail.com';
+
+  const normalizeName = (s) => (s || '').toLowerCase().replace(/bệnh viện/g, 'bv').trim();
+  const findCustomer = (hospitalName) => {
+    if (!hospitalName) return null;
+    const normHosp = normalizeName(hospitalName);
+    return MOCK_CUSTOMERS.find(c => {
+      const normCust = normalizeName(c.Ten_Benh_Vien);
+      return normHosp.includes(normCust) || normCust.includes(normHosp);
+    });
+  };
 
   const generateHTML = (bid) => {
     const style  = emailStyles[bid.id] || 'professional';
@@ -123,7 +138,7 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
         
         // Tìm customer để lấy mail config
         const hospitalName = bid.chu_dau_tu || '';
-        const customer = MOCK_CUSTOMERS.find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+        const customer = findCustomer(hospitalName);
         const config = customer ? customerConfigs[customer.id] : null;
         
         const to = config?.to || TARGET_EMAIL;
@@ -273,8 +288,7 @@ Hãy viết lại email theo yêu cầu. Giữ nguyên định dạng HTML. Ch�
                       
                       {(() => {
                         const b = selectedBids[currentIdx];
-                        const hospitalName = b.chu_dau_tu || '';
-                        const customer = MOCK_CUSTOMERS.find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+                        const customer = findCustomer(b.chu_dau_tu);
                         const isOver = customer && customer.Du_No_Hien_Tai > customer.Han_Muc_No;
                         if (!isOver) return null;
                         return (
@@ -358,8 +372,7 @@ Hãy viết lại email theo yêu cầu. Giữ nguyên định dạng HTML. Ch�
                     </thead>
                     <tbody>
                       {selectedBids.map(b => {
-                        const hospitalName = b.chu_dau_tu || '';
-                        const customer = MOCK_CUSTOMERS.find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+                        const customer = findCustomer(b.chu_dau_tu);
                         const config = customer ? customerConfigs[customer.id] : null;
                         return (
                           <tr key={b.id} className={finalSelectedIds.includes(b.id) ? '' : 'row-disabled'}>
