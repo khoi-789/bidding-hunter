@@ -284,22 +284,19 @@ Hãy viết lại email theo yêu cầu. Giữ nguyên định dạng HTML. Ch�
                       ))}
                     </div>
                     <div style={{display:'flex', gap:10, alignItems:'center'}}>
-                      <button className="action-btn" disabled={currentIdx === 0} onClick={() => { saveCurrentEdit(); setCurrentIdx(currentIdx - 1); setIsEditing(false); }}>← Trước</button>
-                      
                       {(() => {
                         const b = selectedBids[currentIdx];
                         const customer = findCustomer(b.chu_dau_tu);
                         const isOver = customer && customer.Du_No_Hien_Tai > customer.Han_Muc_No;
                         if (!isOver) return null;
                         return (
-                          <label style={{display:'flex', alignItems:'center', gap:6, fontSize:12, background:'#fef2f2', padding:'5px 10px', borderRadius:20, border:'1px solid #fecaca', cursor:'pointer', color:'#b91c1c', fontWeight:700}}>
+                          <label style={{display:'flex', alignItems:'center', gap:6, fontSize:12, background:'#fef2f2', padding:'5px 10px', borderRadius:20, border:'1px solid #fecaca', cursor:'pointer', color:'#b91c1c', fontWeight:700, marginRight:10}}>
                             <input 
                               type="checkbox" 
                               checked={!!debtReminders[b.id]} 
                               onChange={(e) => {
                                 const checked = e.target.checked;
                                 setDebtReminders(prev => ({ ...prev, [b.id]: checked }));
-                                // Refresh HTML content if not manually edited yet
                                 setEditedContents(prev => { const n = {...prev}; delete n[b.id]; return n; });
                               }}
                             />
@@ -308,6 +305,7 @@ Hãy viết lại email theo yêu cầu. Giữ nguyên định dạng HTML. Ch�
                         );
                       })()}
 
+                      <button className="action-btn" disabled={currentIdx === 0} onClick={() => { saveCurrentEdit(); setCurrentIdx(currentIdx - 1); setIsEditing(false); }}>← Trước</button>
                       <span style={{fontSize:13, fontWeight:700}}>{currentIdx + 1} / {selectedBids.length}</span>
                       <button className="action-btn" disabled={currentIdx === selectedBids.length - 1} onClick={() => { saveCurrentEdit(); setCurrentIdx(currentIdx + 1); setIsEditing(false); }}>Sau →</button>
                     </div>
