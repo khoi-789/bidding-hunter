@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import ChartsView from './components/ChartsView';
 import AIAssistant from './components/AIAssistant';
 import PotentialAnalysis from './components/PotentialAnalysis';
+import DebtEmailModal from './components/DebtEmailModal';
 import BPSConfig from './components/BPSConfig';
 import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND, formatPhone } from './utils';
 
@@ -33,8 +34,11 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedBids, setSelectedBids] = useState([]);
+  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [deadlineFilter, setDeadlineFilter] = useState(0);
   const [showBulkEmail, setShowBulkEmail] = useState(false);
+  const [showDebtEmailModal, setShowDebtEmailModal] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [spinning, setSpinning] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: 'revenue', direction: 'desc' });
@@ -647,6 +651,19 @@ function App() {
                   <div className="section-meta" style={{fontSize:11, color:'#f39c12', fontWeight:600}}>Quản lý dữ liệu bệnh viện và cấu hình email</div>
                 </div>
                 <div style={{display:'flex', gap: 10}}>
+                  <button 
+                    className="action-btn" 
+                    onClick={() => {
+                      if (selectedCustomerIds.length === 0) {
+                        addToast('⚠️ Vui lòng chọn ít nhất 1 khách hàng', 'warning');
+                        return;
+                      }
+                      setShowDebtEmailModal(true);
+                    }} 
+                    style={{background:'#fff', border:'1px solid var(--accent)', color:'var(--accent)', display:'flex', alignItems:'center', gap:6}}
+                  >
+                    📧 Email Nhắc nợ ({selectedCustomerIds.length})
+                  </button>
                   <button className="action-btn" onClick={() => handleExport('customers')} style={{background:'#f8fafc', border:'1px solid #e2e8f0', color:'#475569'}}>Export 📤</button>
                   <button className="action-btn" onClick={() => setShowImportExport('customers')} style={{background:'var(--accent)', color:'#fff', border:'none'}}>Import 📥</button>
                 </div>
@@ -655,6 +672,13 @@ function App() {
                 <table className="data-table">
                   <thead>
                     <tr>
+                      <th style={{width: 40}}>
+                        <input 
+                          type="checkbox" 
+                          checked={selectedCustomerIds.length === customers.length && customers.length > 0}
+                          onChange={(e) => setSelectedCustomerIds(e.target.checked ? customers.map(c => c.id) : [])}
+                        />
+                      </th>
                       <SortHeader label="Mã KH" columnKey="Ma_KH" />
                       <SortHeader label="Tên Bệnh Viện" columnKey="Ten_Benh_Vien" />
                       <th>Người liên hệ</th>
@@ -672,7 +696,14 @@ function App() {
                     const over = c.Du_No_Hien_Tai > c.Han_Muc_No;
                     const config = customerConfigs[c.id] || {};
                     return (
-                      <tr key={c.id}>
+                      <tr key={c.id} className={selectedCustomerIds.includes(c.id) ? 'row-selected' : ''}>
+                        <td>
+                          <input 
+                            type="checkbox" 
+                            checked={selectedCustomerIds.includes(c.id)}
+                            onChange={() => setSelectedCustomerIds(prev => prev.includes(c.id) ? prev.filter(id => id !== c.id) : [...prev, c.id])}
+                          />
+                        </td>
                         <td><b>{c.Ma_KH}</b></td>
                         <td>{c.Ten_Ben_Vien}</td>
                         <td style={{fontSize: 12, fontWeight: 500}}>{c.Ten_Lien_He || '—'}</td>
