@@ -427,13 +427,14 @@ function App() {
         </main>
       </div>
 
-      {selected && <BidModal bid={selected} products={products} onClose={() => setSelected(null)} addToast={addToast} ingredientSearch={ingredientSearch} />}
+      {selected && <BidModal bid={selected} products={products} onClose={() => setSelected(null)} addToast={addToast} ingredientSearch={ingredientSearch} customerConfigs={customerConfigs} />}
       {showBulkEmail && (
         <BulkEmailModal
           selectedBids={bids.filter(b => selectedIds.includes(b.id))}
           bids={bids}
           customers={customers}
           products={products}
+          customerConfigs={customerConfigs}
           onClose={() => setShowBulkEmail(false)}
           addToast={addToast}
           onSuccess={() => { setSelectedIds([]); setShowBulkEmail(false); }}

@@ -1,6 +1,7 @@
 import { formatPrice, formatDeadline, getDaysLeft, parseVND } from '../utils';
+import { MOCK_CUSTOMERS } from '../mockData';
 
-export default function BidModal({ bid, products = [], onClose, addToast, ingredientSearch = '' }) {
+export default function BidModal({ bid, products = [], onClose, addToast, ingredientSearch = '', customerConfigs = {} }) {
   const TARGET_EMAIL = 'leminhkhoi279@gmail.com';
 
   const flag = bid.flag || 'GRAY';
@@ -22,13 +23,22 @@ export default function BidModal({ bid, products = [], onClose, addToast, ingred
   };
 
   const handleSendEmail = async () => {
-    addToast(`📧 Đang gửi email tới ${TARGET_EMAIL}...`, 'info');
+    // Tìm customer để lấy mail config
+    const hospitalName = bid.chu_dau_tu || '';
+    const customer = Object.values(MOCK_CUSTOMERS).find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+    const config = customer ? customerConfigs[customer.id] : null;
+    
+    const to = config?.to || TARGET_EMAIL;
+    const cc = config?.cc || '';
+
+    addToast(`📧 Đang gửi email tới ${to}...`, 'info');
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          to: TARGET_EMAIL,
+          to,
+          cc,
           subject: `🚀 Chào thầu: ${bid.ten_goi_thau}`,
           html: `
             <div style="font-family: Arial, sans-serif; color: #333;">
@@ -41,7 +51,7 @@ export default function BidModal({ bid, products = [], onClose, addToast, ingred
           `
         })
       });
-      if (response.ok) addToast(`✅ Đã gửi thành công tới ${TARGET_EMAIL}`, 'success');
+      if (response.ok) addToast(`✅ Đã gửi thành công tới ${to}`, 'success');
       else addToast('❌ Lỗi khi gửi mail qua API Vercel', 'error');
     } catch (err) {
       addToast('❌ Lỗi kết nối server', 'error');

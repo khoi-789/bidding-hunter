@@ -1,8 +1,9 @@
 import { useState, useRef } from 'react';
 import { formatPrice } from '../utils';
 import { IconGemini } from './Icons';
+import { MOCK_CUSTOMERS } from '../mockData';
 
-export default function BulkEmailModal({ selectedBids, bids, customers, products, onClose, addToast, onSuccess }) {
+export default function BulkEmailModal({ selectedBids, bids, customers, products, onClose, addToast, onSuccess, customerConfigs = {} }) {
   const [step, setStep] = useState(1);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [sending, setSending] = useState(false);
@@ -95,10 +96,19 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
     try {
       for (const bid of toSend) {
         const html = editedContents[bid.id] || generateHTML(bid);
+        
+        // Tìm customer để lấy mail config
+        const hospitalName = bid.chu_dau_tu || '';
+        const customer = MOCK_CUSTOMERS.find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+        const config = customer ? customerConfigs[customer.id] : null;
+        
+        const to = config?.to || TARGET_EMAIL;
+        const cc = config?.cc || '';
+
         await fetch('/api/send-email', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ to: TARGET_EMAIL, subject: `🚀 Chào thầu: ${bid.ten_goi_thau}`, html })
+          body: JSON.stringify({ to, cc, subject: `🚀 Chào thầu: ${bid.ten_goi_thau}`, html })
         });
       }
       addToast(`🚀 Đã gửi thành công ${toSend.length} email!`, 'success');
@@ -299,15 +309,23 @@ Hãy viết lại email theo yêu cầu. Giữ nguyên định dạng HTML. Ch�
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedBids.map(b => (
-                        <tr key={b.id} className={finalSelectedIds.includes(b.id) ? '' : 'row-disabled'}>
-                          <td><input type="checkbox" checked={finalSelectedIds.includes(b.id)} onChange={() => toggleFinalSelect(b.id)} /></td>
-                          <td style={{fontSize:11}}>{b.ma_goi_thau}</td>
-                          <td>{(b.chu_dau_tu || '').slice(0, 35)}</td>
-                          <td><span className={`bps-badge ${b.flag || 'GRAY'}`}>{b.bps_score ?? 0}</span></td>
-                          <td><span style={{fontSize:10, color: editedContents[b.id] ? 'var(--blue)' : '#999'}}>{editedContents[b.id] ? '📝 Đã sửa' : '📄 Gốc'}</span></td>
-                        </tr>
-                      ))}
+                      {selectedBids.map(b => {
+                        const hospitalName = b.chu_dau_tu || '';
+                        const customer = MOCK_CUSTOMERS.find(c => hospitalName.includes(c.Ten_Benh_Vien) || c.Ten_Benh_Vien.includes(hospitalName));
+                        const config = customer ? customerConfigs[customer.id] : null;
+                        return (
+                          <tr key={b.id} className={finalSelectedIds.includes(b.id) ? '' : 'row-disabled'}>
+                            <td><input type="checkbox" checked={finalSelectedIds.includes(b.id)} onChange={() => toggleFinalSelect(b.id)} /></td>
+                            <td style={{fontSize:11}}>{b.ma_goi_thau}</td>
+                            <td>
+                              <div style={{fontWeight:600}}>{(b.chu_dau_tu || '').slice(0, 30)}</div>
+                              <div style={{fontSize:9, color:'var(--accent)'}}>{config?.to || TARGET_EMAIL}</div>
+                            </td>
+                            <td><span className={`bps-badge ${b.flag || 'GRAY'}`}>{b.bps_score ?? 0}</span></td>
+                            <td><span style={{fontSize:10, color: editedContents[b.id] ? 'var(--blue)' : '#999'}}>{editedContents[b.id] ? '📝 Đã sửa' : '📄 Gốc'}</span></td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
