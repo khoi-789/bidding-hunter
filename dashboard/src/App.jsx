@@ -190,7 +190,14 @@ function App() {
       const ingSearch = ingredientSearch.toLowerCase();
 
       const matchesSearch   = name.includes(search) || code.includes(search) || hospital.includes(search);
-      const matchesIng      = !ingSearch || meds.includes(ingSearch);
+      
+      const matchesIng      = !ingSearch || 
+                              meds.includes(ingSearch) || 
+                              (b.items || []).some(item => {
+                                const hChat = String(item['Hoạt chất'] || '').toLowerCase();
+                                const tThuoc = String(item['Tên thuốc'] || '').toLowerCase();
+                                return hChat.includes(ingSearch) || tThuoc.includes(ingSearch);
+                              });
       
       const daysLeft        = getDaysLeft(b.thoi_diem_dong_thau);
       const matchesDeadline = deadlineFilter === 0 || daysLeft > deadlineFilter;
