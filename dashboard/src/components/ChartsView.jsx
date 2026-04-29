@@ -10,6 +10,24 @@ import { formatPrice } from '../utils';
 const COLORS = ['#1ABB9C', '#3498DB', '#9B59B6', '#E74C3C', '#F39C12', '#34495E', '#16a085', '#2980b9', '#8e44ad', '#c0392b'];
 const BPS_COLORS = { 'GREEN': '#1ABB9C', 'YELLOW': '#F39C12', 'RED': '#E74C3C', 'GRAY': '#95a5a6' };
 
+// Utility để chuẩn hóa tên bệnh viện nhằm khớp dữ liệu chính xác hơn
+const normalizeName = (name) => {
+  if (!name) return '';
+  return name.toLowerCase()
+    .replace(/\s+/g, ' ')
+    .replace(/bệnh viện/g, 'bv')
+    .replace(/đa khoa/g, 'đk')
+    .replace(/trung ương/g, 'tw')
+    .trim();
+};
+
+// Hàm parse giá thầu từ chuỗi
+const parseMoney = (val) => {
+  if (typeof val === 'number') return val;
+  if (!val) return 0;
+  return parseFloat(String(val).replace(/[^\d]/g, '')) || 0;
+};
+
 export default function ChartsView({ bids, customers, products, orders }) {
   const [activeTab, setActiveTab] = useState('sales'); // 'sales', 'bids', 'strategy'
 
@@ -388,17 +406,17 @@ export default function ChartsView({ bids, customers, products, orders }) {
     
     const budgetByCustomer = {};
     bids.forEach(b => {
-      const cvName = (b.chu_dau_tu || '').replace('Bệnh viện', 'BV');
-      const val = typeof b.gia_goi_thau === 'string' ? parseFloat(b.gia_goi_thau.replace(/[^\d]/g, '')) || 0 : b.gia_goi_thau;
+      const cvName = normalizeName(b.chu_dau_tu);
+      const val = parseMoney(b.gia_goi_thau);
       budgetByCustomer[cvName] = (budgetByCustomer[cvName] || 0) + val;
     });
 
     const scatterData = customers.map(c => {
-      const name = (c.Ten_Ben_Vien || c.Ten_Benh_Vien || '').replace('Bệnh viện', 'BV');
-      const rev = revByCustomer[name] || 0;
-      const budget = budgetByCustomer[name] || 0;
+      const normC = normalizeName(c.Ten_Ben_Vien || c.Ten_Benh_Vien);
+      const rev = revByCustomer[c.Ma_KH] || 0; // Dùng mã KH cho chắc chắn
+      const budget = budgetByCustomer[normC] || 0;
       return {
-        name,
+        name: (c.Ten_Ben_Vien || c.Ten_Benh_Vien || '').replace('Bệnh viện', 'BV'),
         'Doanh thu (Tr)': Math.round(rev / 1e6),
         'Ngân sách (Tr)': Math.round(budget / 1e6),
         z: 1
@@ -431,15 +449,22 @@ export default function ChartsView({ bids, customers, products, orders }) {
         (b.items || []).forEach(i => {
           if ((i['Hoạt chất'] || '').toLowerCase() === hc) {
             const qty = parseFloat(String(i['Số lượng']).replace(/[^\d.]/g, '')) || 1;
-            const thTien = parseFloat(String(i['Giá trần (VND)']).replace(/[^\d.]/g, '')) || 0;
+            const thTien = parseMoney(i['Giá trần (VND)']);
             totalGiaTran += (thTien / qty);
             count++;
           }
         });
       });
-      const avgGiaTran = count > 0 ? totalGiaTran / count : p.Gia_Niem_Yet * 1.2;
+      
+      const avgGiaTran = count > 0 ? totalGiaTran / count : p.Gia_Niem_Yet * 1.15;
+      
+      // Chuẩn hóa về thang 100 để Radar không bị lệch scale giữa các thuốc khác giá
+      const maxVal = Math.max(p.Gia_Niem_Yet, avgGiaTran);
       return {
         name: p.Ten_Biet_Duoc,
+        'Giá Niêm Yết Score': (p.Gia_Niem_Yet / maxVal) * 100,
+        'Giá Trần BQ Score': (avgGiaTran / maxVal) * 100,
+        // Giữ giá trị thực để hiển thị tooltip
         'Giá Niêm Yết': p.Gia_Niem_Yet,
         'Giá Trần BQ': Math.round(avgGiaTran)
       };
@@ -454,12 +479,13 @@ export default function ChartsView({ bids, customers, products, orders }) {
           hasMyProd = true;
         }
       });
-      if (hasMyProd) bvCanThuocMinh.add((b.chu_dau_tu || '').replace('Bệnh viện', 'BV'));
+      if (hasMyProd) bvCanThuocMinh.add(normalizeName(b.chu_dau_tu));
     });
     
     const khNgungDong = customers.filter(c => {
-      const name = (c.Ten_Ben_Vien || c.Ten_Benh_Vien || '').replace('Bệnh viện', 'BV');
-      return bvCanThuocMinh.has(name) && (!revByCustomer[name] || revByCustomer[name] === 0);
+      const normC = normalizeName(c.Ten_Ben_Vien || c.Ten_Benh_Vien);
+      const rev = revByCustomer[c.Ma_KH] || 0;
+      return bvCanThuocMinh.has(normC) && rev === 0;
     });
 
     return (
@@ -512,9 +538,9 @@ export default function ChartsView({ bids, customers, products, orders }) {
                 <RadarChart cx="50%" cy="50%" outerRadius="75%" data={priceRadar}>
                   <PolarGrid />
                   <PolarAngleAxis dataKey="name" tick={{fontSize: 11, fontWeight: 600}} />
-                  <PolarRadiusAxis angle={30} domain={[0, 'auto']} tickFormatter={v => (v/1000).toFixed(0)+'k'} />
-                  <Radar name="Giá Niêm Yết" dataKey="Giá Niêm Yết" stroke="#8E44AD" fill="#8E44AD" fillOpacity={0.5} />
-                  <Radar name="Giá Trần BQ" dataKey="Giá Trần BQ" stroke="#3498DB" fill="#3498DB" fillOpacity={0.5} />
+                  <PolarRadiusAxis angle={30} domain={[0, 110]} tick={false} axisLine={false} />
+                  <Radar name="Giá Niêm Yết" dataKey="Giá Niêm Yết Score" stroke="#8E44AD" fill="#8E44AD" fillOpacity={0.5} />
+                  <Radar name="Giá Trần BQ" dataKey="Giá Trần BQ Score" stroke="#3498DB" fill="#3498DB" fillOpacity={0.5} />
                   <Legend />
                   <RechartsTooltip content={<CustomTooltipValue />} />
                 </RadarChart>
