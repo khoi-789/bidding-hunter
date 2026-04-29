@@ -267,13 +267,15 @@ function App() {
           <div className="logo-text">Bidding Hunter<div className="logo-sub">Hoàng Đức Pharma</div></div>
         </div>
         <nav className="nav-menu">
-          <div className="nav-section">GENERAL</div>
+          <div className="nav-section">TỔNG QUAN</div>
           <div className={`nav-item ${activeNav === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveNav('dashboard')}>
             <IconDashboard className="nav-icon" /> Dashboard
           </div>
           <div className={`nav-item ${activeNav === 'charts' ? 'active' : ''}`} onClick={() => setActiveNav('charts')}>
             <IconCharts className="nav-icon" /> Biểu đồ
           </div>
+
+          <div className="nav-section" style={{marginTop: 20}}>QUẢN LÝ</div>
           <div className={`nav-item ${activeNav === 'bids' ? 'active' : ''}`} onClick={() => setActiveNav('bids')}>
             <IconBids className="nav-icon" /> Gói thầu
           </div>
@@ -283,12 +285,16 @@ function App() {
           <div className={`nav-item ${activeNav === 'products' ? 'active' : ''}`} onClick={() => setActiveNav('products')}>
             <IconProducts className="nav-icon" /> Sản phẩm
           </div>
+
+          <div className="nav-section" style={{marginTop: 20}}>CHIẾN LƯỢC</div>
           <div className={`nav-item ${activeNav === 'potential' ? 'active' : ''}`} onClick={() => setActiveNav('potential')}>
             <IconTarget className="nav-icon" /> Phân tích tiềm năng
           </div>
           <div className={`nav-item ${activeNav === 'history' ? 'active' : ''}`} onClick={() => setActiveNav('history')}>
             <IconClock className="nav-icon" /> Lịch sử
           </div>
+
+          <div className="nav-section" style={{marginTop: 20}}>CÀI ĐẶT</div>
           <div className={`nav-item ${activeNav === 'bps_config' ? 'active' : ''}`} onClick={() => setActiveNav('bps_config')}>
             <IconSettings className="nav-icon" /> Cấu hình BPS
           </div>
