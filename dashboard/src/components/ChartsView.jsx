@@ -110,7 +110,10 @@ export default function ChartsView({ bids, customers, products, orders, productM
       <div className="tab-trends-container" style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap: 20}}>
         {/* Card 1: Tổng quan Hiệu suất */}
         <div className="card" style={{borderLeft: '4px solid #1ABB9C'}}>
-          <div className="card-header"><h3 className="card-title">📈 Hiệu suất Kinh doanh</h3></div>
+          <div className="card-header">
+            <h3 className="card-title">📈 Hiệu suất Kinh doanh</h3>
+            <div style={{fontSize:11, color:'#888', fontWeight:500}}>Đánh giá nhịp độ tăng trưởng và mức độ bám đuổi mục tiêu doanh số</div>
+          </div>
           <div className="card-body" style={{padding: 20}}>
             <div style={{marginBottom: 20}}>
               <div style={{fontSize: 12, color: '#64748b', marginBottom: 4}}>Doanh thu tháng này</div>
@@ -131,7 +134,10 @@ export default function ChartsView({ bids, customers, products, orders, productM
 
         {/* Card 2: Cơ hội Thị trường */}
         <div className="card" style={{borderLeft: '4px solid #3498DB'}}>
-          <div className="card-header"><h3 className="card-title">🔍 Cơ hội thầu trọng điểm</h3></div>
+          <div className="card-header">
+            <h3 className="card-title">🔍 Cơ hội thầu trọng điểm</h3>
+            <div style={{fontSize:11, color:'#888', fontWeight:500}}>Hệ thống tự động nhận diện gói thầu phù hợp với danh mục chủ lực</div>
+          </div>
           <div className="card-body" style={{padding: 20}}>
             <div style={{fontSize: 32, fontWeight: 700, color: '#3498DB', marginBottom: 4}}>{upcomingBids.length}</div>
             <div style={{fontSize: 13, color: '#64748b', marginBottom: 15}}>Gói thầu sắp đóng trong 15 ngày tới</div>
@@ -148,7 +154,10 @@ export default function ChartsView({ bids, customers, products, orders, productM
 
         {/* Card 3: Cảnh báo Rủi ro */}
         <div className="card" style={{borderLeft: '4px solid #E74C3C'}}>
-          <div className="card-header"><h3 className="card-title">⚠️ Chỉ số Rủi ro</h3></div>
+          <div className="card-header">
+            <h3 className="card-title">⚠️ Chỉ số Rủi ro</h3>
+            <div style={{fontSize:11, color:'#888', fontWeight:500}}>Cảnh báo sớm các yếu tố ảnh hưởng đến tính bền vững của dòng tiền</div>
+          </div>
           <div className="card-body" style={{padding: 20}}>
             <div style={{display:'flex', gap: 20, marginBottom: 20}}>
               <div>
@@ -169,7 +178,10 @@ export default function ChartsView({ bids, customers, products, orders, productM
 
         {/* Card 4: Định hướng Chiến lược */}
         <div className="card" style={{borderLeft: '4px solid #F39C12', gridColumn: 'span 1'}}>
-          <div className="card-header"><h3 className="card-title">🎯 Top SP Chiến lược (High Margin)</h3></div>
+          <div className="card-header">
+            <h3 className="card-title">🎯 Top SP Chiến lược (High Margin)</h3>
+            <div style={{fontSize:11, color:'#888', fontWeight:500}}>Sản phẩm có lợi thế cạnh tranh về biên lợi nhuận và thị phần</div>
+          </div>
           <div className="card-body" style={{padding: 20}}>
             <table style={{width: '100%', fontSize: 12}}>
               <thead>
@@ -716,18 +728,6 @@ export default function ChartsView({ bids, customers, products, orders, productM
           <IconBids size={16} /> Gói thầu & Cơ hội
         </button>
         <button 
-          onClick={() => setActiveTab('trends')} 
-          className={`chart-tab-btn ${activeTab === 'trends' ? 'active' : ''}`}
-          style={{
-            padding:'10px 20px', borderRadius:8, border:'none', 
-            background: activeTab === 'trends' ? 'var(--accent)' : '#f8fafc', 
-            color: activeTab === 'trends' ? '#fff' : '#64748b', 
-            fontWeight:600, cursor:'pointer', transition:'all 0.3s', 
-            display:'flex', alignItems:'center', gap:8
-          }}>
-          <IconTrendingUp size={16} /> Phân tích Xu hướng & Chiến lược
-        </button>
-        <button 
           onClick={() => setActiveTab('strategy')} 
           className={`chart-tab-btn ${activeTab === 'strategy' ? 'active' : ''}`}
           style={{
@@ -738,6 +738,18 @@ export default function ChartsView({ bids, customers, products, orders, productM
             display:'flex', alignItems:'center', gap:8
           }}>
           <IconTarget size={16} /> Chiến lược Khách hàng & SP
+        </button>
+        <button 
+          onClick={() => setActiveTab('trends')} 
+          className={`chart-tab-btn ${activeTab === 'trends' ? 'active' : ''}`}
+          style={{
+            padding:'10px 20px', borderRadius:8, border:'none', 
+            background: activeTab === 'trends' ? 'var(--accent)' : '#f8fafc', 
+            color: activeTab === 'trends' ? '#fff' : '#64748b', 
+            fontWeight:600, cursor:'pointer', transition:'all 0.3s', 
+            display:'flex', alignItems:'center', gap:8
+          }}>
+          <IconTrendingUp size={16} /> Phân tích Xu hướng & Chiến lược
         </button>
       </div>
 
