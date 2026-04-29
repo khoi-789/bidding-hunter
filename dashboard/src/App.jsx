@@ -5,6 +5,7 @@ import BidModal from './components/BidModal';
 import BulkEmailModal from './components/BulkEmailModal';
 import ChartsView from './components/ChartsView';
 import AIAssistant from './components/AIAssistant';
+import PotentialAnalysis from './components/PotentialAnalysis';
 import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND } from './utils';
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
@@ -280,6 +281,9 @@ function App() {
           <div className={`nav-item ${activeNav === 'products' ? 'active' : ''}`} onClick={() => setActiveNav('products')}>
             <IconProducts className="nav-icon" /> Sản phẩm
           </div>
+          <div className={`nav-item ${activeNav === 'potential' ? 'active' : ''}`} onClick={() => setActiveNav('potential')}>
+            <IconTarget className="nav-icon" /> Phân tích tiềm năng
+          </div>
           <div className={`nav-item ${activeNav === 'history' ? 'active' : ''}`} onClick={() => setActiveNav('history')}>
             <IconClock className="nav-icon" /> Lịch sử
           </div>
@@ -448,36 +452,37 @@ function App() {
           {activeNav === 'products' && (
             <div className="card">
               <div className="card-header">
-                <h3 className="card-title">Danh mục Sản phẩm</h3>
-                <div className="section-meta" style={{fontSize:11, color:'#f39c12', fontWeight:600}}>⚠️ Dữ liệu demo — sẽ cập nhật thật sau</div>
+                <h3 className="card-title">Danh mục Sản phẩm ({products.length})</h3>
               </div>
-              <div className="card-body">
+              <div className="card-body" style={{padding: 0}}>
                 <table className="data-table">
                   <thead>
                     <tr>
-                      <SortHeader label="Mã hàng" columnKey="Ma_Hang" />
-                      <SortHeader label="Tên biệt dược" columnKey="Ten_Biet_Duoc" />
-                      <SortHeader label="Hoạt chất" columnKey="Hoat_Chat" />
-                      <SortHeader label="Hàm lượng" columnKey="Ham_Luong" />
-                      <SortHeader label="Đường dùng" columnKey="Duong_Dung" />
-                      <SortHeader label="Nhóm" columnKey="Nhom_Ky_Thuat" />
-                      <SortHeader label="Giá kê khai" columnKey="Gia_Ke_Khai" align="right" />
+                      <th>Mã SP</th>
+                      <th>Tên Biệt Dược</th>
+                      <th>Hoạt chất</th>
+                      <th>Dạng bào chế</th>
+                      <th style={{textAlign:'right'}}>Giá niêm yết</th>
                     </tr>
                   </thead>
-                  <tbody>{getSortedData(products, 'products').map(p => (
-                    <tr key={p.id}>
-                      <td><b>{p.Ma_Hang}</b></td>
-                      <td>{p.Ten_Biet_Duoc}</td>
-                      <td>{p.Hoat_Chat}</td>
-                      <td>{p.Ham_Luong}</td>
-                      <td>{p.Duong_Dung}</td>
-                      <td><span style={{fontWeight:700, color:'#2980b9'}}>Nhóm {p.Nhom_Ky_Thuat}</span></td>
-                      <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(p.Gia_Ke_Khai)}</td>
-                    </tr>
-                  ))}</tbody>
+                  <tbody>
+                    {products.map(p => (
+                      <tr key={p.id}>
+                        <td><b>{p.id}</b></td>
+                        <td>{p.Ten_Biet_Duoc}</td>
+                        <td>{p.Hoat_Chat}</td>
+                        <td>{p.Dang_Bao_Che}</td>
+                        <td style={{textAlign:'right'}}>{formatPrice(p.Gia_Niem_Yet)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
                 </table>
               </div>
             </div>
+          )}
+
+          {activeNav === 'potential' && (
+            <PotentialAnalysis bids={bids} products={products} />
           )}
 
           {activeNav === 'history' && (
