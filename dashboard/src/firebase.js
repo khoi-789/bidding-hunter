@@ -88,7 +88,12 @@ export function computeBPS(bid) {
   score += Math.max(0, debtFactor);
 
   const bps_score = Math.min(10, parseFloat(score.toFixed(1)));
-  const flag = bps_score >= 8 ? 'GREEN' : bps_score >= 5 ? 'YELLOW' : 'RED';
+  
+  let flag = 'RED';
+  if (bps_score > 7) flag = 'GOLD';
+  else if (bps_score > 5) flag = 'GREEN';
+  else if (bps_score >= 3) flag = 'YELLOW';
+  
   return { bps_score, flag };
 }
 
