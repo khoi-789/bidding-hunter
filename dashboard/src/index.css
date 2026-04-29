@@ -273,11 +273,18 @@ input[type="checkbox"] {
 
 /* ── BPS Badge ─────────────────────────── */
 .bps-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 4px 10px; border-radius: 12px;
-  font-size: 11px; font-weight: 600;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 14px; font-weight: 800; min-width: 48px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
-.bps-badge.GOLD   { background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); color: #fff; box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3); border: 1px solid #e67e22; }
+.bps-badge.GOLD   { 
+  background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); 
+  color: #1e293b; 
+  box-shadow: 0 4px 12px rgba(184, 134, 11, 0.4); 
+  border: 1px solid #996515;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+}
 .bps-badge.GREEN  { background: var(--accent); color: #fff; }
 .bps-badge.YELLOW { background: var(--yellow); color: #fff; }
 .bps-badge.RED    { background: var(--red); color: #fff; }
@@ -420,7 +427,7 @@ input[type="checkbox"] {
 .bps-score-big { font-size: 24px; font-weight: 700; }
 .bps-track { height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; }
 .bps-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
-.bps-fill.GOLD   { background: linear-gradient(90deg, #f1c40f, #f39c12); }
+.bps-fill.GOLD   { background: linear-gradient(90deg, #bf953f, #fcf6ba, #aa771c); }
 .bps-fill.GREEN  { background: var(--accent); }
 .bps-fill.YELLOW { background: var(--yellow); }
 .bps-fill.RED    { background: var(--red); }

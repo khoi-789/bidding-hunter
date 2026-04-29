@@ -246,8 +246,9 @@ function App() {
   };
 
   const allFilteredBids = getFilteredBids(bids);
-  const green  = allFilteredBids.filter(b => b.bps_score >= 8).length;
-  const yellow = allFilteredBids.filter(b => b.bps_score < 8 && b.bps_score >= 5).length;
+  const gold   = allFilteredBids.filter(b => b.bps_score > 7).length;
+  const green  = allFilteredBids.filter(b => b.bps_score > 5 && b.bps_score <= 7).length;
+  const yellow = allFilteredBids.filter(b => b.bps_score >= 3 && b.bps_score <= 5).length;
   const urgent = allFilteredBids.filter(b => getDaysLeft(b.thoi_diem_dong_thau) <= 2).length;
 
   if (loading) return (
@@ -329,16 +330,22 @@ function App() {
                   <div className="stat-sub">Dữ liệu hiển thị</div>
                 </div>
                 <div className="stat-card">
+                  <span className="stat-icon"><IconCircle size={32} color="#D4AF37" /></span>
+                  <div className="stat-label">Ưu tiên thầu (VIP)</div>
+                  <div className="stat-value" style={{color:'#B8860B'}}>{gold}</div>
+                  <div className="stat-sub">BPS > 7.0</div>
+                </div>
+                <div className="stat-card">
                   <span className="stat-icon"><IconCircle size={32} color="var(--green)" /></span>
-                  <div className="stat-label">Ưu tiên thầu</div>
+                  <div className="stat-label">Tiềm năng</div>
                   <div className="stat-value" style={{color:'var(--green)'}}>{green}</div>
-                  <div className="stat-sub">BPS ≥ 8.0</div>
+                  <div className="stat-sub">BPS 5.1 – 7.0</div>
                 </div>
                 <div className="stat-card">
                   <span className="stat-icon"><IconCircle size={32} color="var(--yellow)" /></span>
                   <div className="stat-label">Cần xem xét</div>
                   <div className="stat-value" style={{color:'var(--yellow)'}}>{yellow}</div>
-                  <div className="stat-sub">BPS 5.0 – 7.9</div>
+                  <div className="stat-sub">BPS 3.0 – 5.0</div>
                 </div>
                 <div className="stat-card">
                   <span className="stat-icon"><IconUrgent size={32} color="var(--red)" /></span>
