@@ -286,12 +286,26 @@ function App() {
                   <h3 className="card-title">Gói thầu dược phẩm mới cập nhật</h3>
                   <button className="action-btn" onClick={() => setActiveNav('bids')}>Xem tất cả →</button>
                 </div>
-                {renderTable(
-                  getSortedData(getFilteredBids(bids.slice(0, 10)), 'bids'), 
-                  selectedIds, toggleSelect, handleSelectAll, setSelected, 
-                  () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products,
-                  sortConfig, requestSort, SortHeader, calculateBidStats
-                )}
+                {(() => {
+                  // Lọc bỏ gói hết hạn cho Dashboard
+                  const activeBids = getFilteredBids(bids).filter(b => getDaysLeft(b.thoi_diem_dong_thau) > 0);
+                  
+                  let displayData = [...activeBids];
+                  
+                  // Nếu không có sort thủ công, sort theo Revenue giảm dần
+                  if (!sortConfig.key) {
+                    displayData.sort((a, b) => calculateBidStats(b).revenue - calculateBidStats(a).revenue);
+                  } else {
+                    displayData = getSortedData(displayData, 'bids');
+                  }
+
+                  return renderTable(
+                    displayData.slice(0, 10), 
+                    selectedIds, toggleSelect, handleSelectAll, setSelected, 
+                    () => setShowBulkEmail(true), deadlineFilter, setDeadlineFilter, products,
+                    sortConfig, requestSort, SortHeader, calculateBidStats
+                  );
+                })()}
               </div>
             </>
           )}
