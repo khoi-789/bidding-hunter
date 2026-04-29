@@ -3,7 +3,7 @@ import { formatPrice, parseVND } from '../utils';
 import { IconTarget, IconCharts, IconUrgent, IconClock, IconCircle } from './Icons';
 
 export default function PotentialAnalysis({ bids, products }) {
-  const [activeTab, setActiveTab] = useState('summary');
+  const [activeTab, setActiveTab] = useState('focus');
   const [selectedBidId, setSelectedBidId] = useState(null);
 
   // Phân tích dữ liệu theo góc nhìn "Lão làng"
