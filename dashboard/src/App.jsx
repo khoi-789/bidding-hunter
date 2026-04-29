@@ -321,6 +321,27 @@ function App() {
     }
   }, [loading, orders.length]);
 
+  // Migration: x5 Debt & Credit Limit (User Request)
+  useEffect(() => {
+    if (loading || customers.length === 0) return;
+    const migrationKey = 'bh_customers_x5_v107_final';
+    if (!localStorage.getItem(migrationKey)) {
+      setCustomers(prev => {
+        const next = prev.map(c => ({
+          ...c,
+          Du_No_Hien_Tai: Math.round((c.Du_No_Hien_Tai || 0) * 5),
+          Han_Muc: Math.round((c.Han_Muc || 0) * 5)
+        }));
+        localStorage.setItem('bh_customers', JSON.stringify(next));
+        return next;
+      });
+      localStorage.setItem(migrationKey, 'true');
+      setTimeout(() => {
+        addToastRef.current?.('💸 Đã x5 Dư nợ & Hạn mức tín dụng khách hàng', 'success');
+      }, 4000);
+    }
+  }, [loading, customers.length]);
+
   const addToast = useCallback((msg, type = 'success') => {
     const id = Date.now();
     setToasts(prev => [...prev, { id, msg, type }]);
