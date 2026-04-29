@@ -32,7 +32,7 @@ function App() {
   const [showBulkEmail, setShowBulkEmail] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [spinning, setSpinning] = useState(false);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const [sortConfig, setSortConfig] = useState({ key: 'revenue', direction: 'desc' });
   const [history, setHistory] = useState([]);
   const [expandedHistoryId, setExpandedHistoryId] = useState(null);
   const addToastRef = useRef(null);
