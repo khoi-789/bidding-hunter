@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { to, subject, html } = req.body;
+  const { to, cc, subject, html } = req.body;
 
   // Lấy cấu hình từ biến môi trường Vercel
   const user = process.env.EMAIL_USER;
@@ -29,6 +29,7 @@ export default async function handler(req, res) {
     const mailOptions = {
       from: `"Bidding Hunter AI" <${user}>`,
       to: to || 'leminhkhoi279@gmail.com',
+      cc: cc || '',
       subject: subject || '🚀 Thông báo từ Bidding Hunter',
       html: html || '<p>Nội dung mặc định</p>',
     };
