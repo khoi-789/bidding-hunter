@@ -84,9 +84,9 @@ export default function PotentialAnalysis({ bids, products }) {
   const selectedBid = analysisData.find(b => b.id === selectedBidId);
 
   return (
-    <div className="potential-analysis animate-fade-in" style={{height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column', padding: '0 30px 20px 30px'}}>
-      <div className="analysis-header card" style={{margin: '0 0 20px 0', flexShrink: 0}}>
-        <div className="card-body" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+    <div className="potential-analysis animate-fade-in" style={{height: 'calc(100vh - 120px)', display: 'flex', flexDirection: 'column', padding: '0 40px 20px 40px'}}>
+      <div className="analysis-header card" style={{margin: '0 0 25px 0', flexShrink: 0}}>
+        <div className="card-body" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 30px'}}>
           <div>
             <h2 style={{margin: 0, fontSize: 24, fontWeight: 800, color: 'var(--text-dark)'}}>
               Góc nhìn Chiến lược <span style={{fontSize: 14, fontWeight: 400, color: '#64748b', marginLeft: 10}}>by Bidding Hunter AI</span>
@@ -108,7 +108,7 @@ export default function PotentialAnalysis({ bids, products }) {
         </div>
       </div>
 
-      <div className="tabs-container" style={{flexShrink: 0}}>
+      <div className="tabs-container" style={{flexShrink: 0, paddingLeft: 10}}>
         <div className={`tab-item ${activeTab === 'focus' ? 'active' : ''}`} onClick={() => setActiveTab('focus')}>
           Báo cáo Trọng tâm
         </div>
