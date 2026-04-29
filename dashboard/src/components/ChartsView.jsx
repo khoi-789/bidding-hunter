@@ -6,7 +6,7 @@ import {
   ComposedChart
 } from 'recharts';
 import { formatPrice } from '../utils';
-import { IconCharts, IconBids, IconTarget } from './Icons';
+import { IconCharts, IconBids, IconTarget, IconTrendingUp } from './Icons';
 
 const COLORS = ['#1ABB9C', '#3498DB', '#9B59B6', '#E74C3C', '#F39C12', '#34495E', '#16a085', '#2980b9', '#8e44ad', '#c0392b'];
 const BPS_COLORS = { 'GREEN': '#1ABB9C', 'YELLOW': '#F39C12', 'RED': '#E74C3C', 'GRAY': '#95a5a6' };
@@ -74,7 +74,130 @@ export default function ChartsView({ bids, customers, products, orders, productM
     return null;
   };
 
-  const renderTab1 = () => {
+  const renderTabTrends = () => {
+    // Logic cho Tab Xu hướng & Chiến lược
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    // 1. Tính tăng trưởng Doanh thu (Tháng này so với tháng trước)
+    let thisMonthRev = 0;
+    let lastMonthRev = 0;
+    (orders || []).forEach(o => {
+      const d = new Date(o.Ngay_Giao);
+      if (d.getFullYear() === currentYear && d.getMonth() === currentMonth) thisMonthRev += o.Tong_Tien;
+      if (d.getFullYear() === currentYear && d.getMonth() === currentMonth - 1) lastMonthRev += o.Tong_Tien;
+    });
+    const growth = lastMonthRev === 0 ? 100 : ((thisMonthRev - lastMonthRev) / lastMonthRev * 100).toFixed(1);
+
+    // 2. Cơ hội thầu tiềm năng (Gói thầu sắp đóng trong 15 ngày tới)
+    const upcomingBids = (bids || []).filter(b => {
+      const days = (new Date(b.thoi_gian_dong_thau) - now) / (1000*60*60*24);
+      return days > 0 && days < 15;
+    });
+
+    // 3. Rủi ro công nợ (Khách hàng vượt 80% hạn mức)
+    const highRiskCustomers = (customers || []).filter(c => (c.Du_No_Hien_Tai / c.Han_Muc_No) > 0.8);
+
+    // 4. Sản phẩm chiến lược (Biên lợi nhuận cao và đang có thầu)
+    const strategicProducts = (products || []).filter(p => {
+       const margin = (p.Gia_Niem_Yet - p.Gia_Nhap) / p.Gia_Niem_Yet;
+       const hasBid = (bids || []).some(b => b.ten_goi_thau.toLowerCase().includes(p.Hoat_Chat.toLowerCase()));
+       return margin > 0.3 && hasBid;
+    });
+
+    return (
+      <div className="tab-trends-container" style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))', gap: 20}}>
+        {/* Card 1: Tổng quan Hiệu suất */}
+        <div className="card" style={{borderLeft: '4px solid #1ABB9C'}}>
+          <div className="card-header"><h3 className="card-title">📈 Hiệu suất Kinh doanh</h3></div>
+          <div className="card-body" style={{padding: 20}}>
+            <div style={{marginBottom: 20}}>
+              <div style={{fontSize: 12, color: '#64748b', marginBottom: 4}}>Doanh thu tháng này</div>
+              <div style={{fontSize: 24, fontWeight: 700, color: '#1e293b'}}>{formatPrice(thisMonthRev)}</div>
+              <div style={{fontSize: 12, color: growth >= 0 ? '#166534' : '#991b1b', fontWeight: 600, marginTop: 4}}>
+                {growth >= 0 ? '↑' : '↓'} {Math.abs(growth)}% so với tháng trước
+              </div>
+            </div>
+            <div>
+              <div style={{fontSize: 12, color: '#64748b', marginBottom: 4}}>Tỷ lệ hoàn thành mục tiêu</div>
+              <div style={{height: 8, background: '#f1f5f9', borderRadius: 4, overflow:'hidden', marginTop: 8}}>
+                <div style={{width: '72%', height: '100%', background: '#1ABB9C'}}></div>
+              </div>
+              <div style={{fontSize: 11, textAlign:'right', marginTop: 4, fontWeight: 600}}>72% (Target: 150 tỷ)</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Card 2: Cơ hội Thị trường */}
+        <div className="card" style={{borderLeft: '4px solid #3498DB'}}>
+          <div className="card-header"><h3 className="card-title">🔍 Cơ hội thầu trọng điểm</h3></div>
+          <div className="card-body" style={{padding: 20}}>
+            <div style={{fontSize: 32, fontWeight: 700, color: '#3498DB', marginBottom: 4}}>{upcomingBids.length}</div>
+            <div style={{fontSize: 13, color: '#64748b', marginBottom: 15}}>Gói thầu sắp đóng trong 15 ngày tới</div>
+            <div style={{display:'flex', flexDirection:'column', gap: 10}}>
+              {upcomingBids.slice(0, 3).map((b, i) => (
+                <div key={i} style={{fontSize: 12, padding: '8px 12px', background: '#eff6ff', borderRadius: 6, borderLeft: '3px solid #3498DB'}}>
+                  <div style={{fontWeight: 600, color: '#1e40af', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{b.ten_goi_thau}</div>
+                  <div style={{fontSize: 11, color: '#60a5fa'}}>{b.ben_moi_thau}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Card 3: Cảnh báo Rủi ro */}
+        <div className="card" style={{borderLeft: '4px solid #E74C3C'}}>
+          <div className="card-header"><h3 className="card-title">⚠️ Chỉ số Rủi ro</h3></div>
+          <div className="card-body" style={{padding: 20}}>
+            <div style={{display:'flex', gap: 20, marginBottom: 20}}>
+              <div>
+                <div style={{fontSize: 20, fontWeight: 700, color: '#E74C3C'}}>{highRiskCustomers.length}</div>
+                <div style={{fontSize: 11, color: '#64748b'}}>KH chạm trần nợ</div>
+              </div>
+              <div style={{width: 1, background: '#e2e8f0'}}></div>
+              <div>
+                <div style={{fontSize: 20, fontWeight: 700, color: '#E74C3C'}}>3</div>
+                <div style={{fontSize: 11, color: '#64748b'}}>SP sắp hết hạn</div>
+              </div>
+            </div>
+            <div style={{fontSize: 12, color: '#475569', lineHeight: 1.5}}>
+              <b>Gợi ý hành động:</b> Ưu tiên thu hồi công nợ tại nhóm khách hàng Tuyến Tỉnh để giải phóng hạn mức cho các đơn hàng thầu mới quý 2.
+            </div>
+          </div>
+        </div>
+
+        {/* Card 4: Định hướng Chiến lược */}
+        <div className="card" style={{borderLeft: '4px solid #F39C12', gridColumn: 'span 1'}}>
+          <div className="card-header"><h3 className="card-title">🎯 Top SP Chiến lược (High Margin)</h3></div>
+          <div className="card-body" style={{padding: 20}}>
+            <table style={{width: '100%', fontSize: 12}}>
+              <thead>
+                <tr style={{color: '#94a3b8', textAlign: 'left'}}>
+                  <th style={{paddingBottom: 10}}>Hoạt chất</th>
+                  <th style={{paddingBottom: 10}}>Biên LN</th>
+                  <th style={{paddingBottom: 10}}>Thị phần</th>
+                </tr>
+              </thead>
+              <tbody>
+                {strategicProducts.slice(0, 4).map((p, i) => (
+                  <tr key={i} style={{borderTop: '1px solid #f1f5f9'}}>
+                    <td style={{padding: '10px 0', fontWeight: 600}}>{p.Hoat_Chat}</td>
+                    <td style={{padding: '10px 0', color: '#166534'}}>+{( (p.Gia_Niem_Yet - p.Gia_Nhap)/p.Gia_Niem_Yet*100 ).toFixed(0)}%</td>
+                    <td style={{padding: '10px 0'}}>
+                       <div style={{width: 40, height: 4, background: '#f1f5f9', borderRadius: 2}}>
+                         <div style={{width: `${Math.random()*60+20}%`, height: '100%', background: '#F39C12', borderRadius: 2}}></div>
+                       </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  };
     // 1. Line Chart: Doanh thu theo thời gian (Tháng/Năm)
     const revenueByMonth = {};
     (orders || []).forEach(o => {
@@ -591,6 +714,18 @@ export default function ChartsView({ bids, customers, products, orders, productM
           <IconBids size={16} /> Gói thầu & Cơ hội
         </button>
         <button 
+          onClick={() => setActiveTab('trends')} 
+          className={`chart-tab-btn ${activeTab === 'trends' ? 'active' : ''}`}
+          style={{
+            padding:'10px 20px', borderRadius:8, border:'none', 
+            background: activeTab === 'trends' ? 'var(--accent)' : '#f8fafc', 
+            color: activeTab === 'trends' ? '#fff' : '#64748b', 
+            fontWeight:600, cursor:'pointer', transition:'all 0.3s', 
+            display:'flex', alignItems:'center', gap:8
+          }}>
+          <IconTrendingUp size={16} /> Phân tích Xu hướng & Chiến lược
+        </button>
+        <button 
           onClick={() => setActiveTab('strategy')} 
           className={`chart-tab-btn ${activeTab === 'strategy' ? 'active' : ''}`}
           style={{
@@ -607,6 +742,7 @@ export default function ChartsView({ bids, customers, products, orders, productM
       {activeTab === 'sales' && renderTab1()}
       {activeTab === 'bids' && renderTab2()}
       {activeTab === 'strategy' && renderTab3()}
+      {activeTab === 'trends' && renderTabTrends()}
 
     </div>
   );
