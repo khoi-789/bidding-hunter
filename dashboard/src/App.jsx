@@ -280,6 +280,47 @@ function App() {
     addToast(`Đã xuất ${exportData.length} bản ghi ${type}`, 'success');
   };
 
+  const handleExportMasterData = () => {
+    const fullData = [];
+    orders.forEach(order => {
+      const customer = customers.find(c => c.Ma_KH === order.Ma_KH);
+      order.Items.forEach(item => {
+        const product = products.find(p => p.id === item.Ma_SP);
+        const margin = item.Don_Gia - (product?.Gia_Niem_Yet || 0);
+        
+        fullData.push({
+          'Ngày Giao': order.Ngay_Giao,
+          'Mã Đơn Hàng': order.id,
+          'Số Hóa Đơn': order.So_Hoa_Don,
+          'Mã Khách Hàng': order.Ma_KH,
+          'Tên Bệnh Viện': customer?.Ten_Ben_Vien || order.Ten_KH,
+          'Phân Tuyến': customer?.Phan_Tuyen?.replace('TUYEN_', '') || 'N/A',
+          'Mã Sản Phẩm': item.Ma_SP,
+          'Tên Sản Phẩm': item.Ten_SP,
+          'Số Lượng': item.SL,
+          'Đơn Vị Tính': item.DVT,
+          'Đơn Giá (đ)': item.Don_Gia,
+          'Thành Tiền (đ)': item.Thanh_Tien,
+          'Giá Niêm Yết (đ)': product?.Gia_Niem_Yet || 0,
+          'Lợi Nhuận/SP (đ)': margin,
+          'Tổng Lợi Nhuận (đ)': margin * item.SL,
+          'Nhóm Kỹ Thuật': product?.Nhom_Ky_Thuat || 'N/A'
+        });
+      });
+    });
+
+    if (fullData.length === 0) {
+      addToast('⚠️ Không có dữ liệu đơn hàng để xuất', 'warning');
+      return;
+    }
+
+    const ws = XLSX.utils.json_to_sheet(fullData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "MasterData");
+    XLSX.writeFile(wb, `BiddingHunter_MasterData_${new Date().getTime()}.xlsx`);
+    addToast(`Đã xuất ${fullData.length} dòng dữ liệu Master`, 'success');
+  };
+
   const handleImport = (newData, type) => {
     if (type === 'customers') {
       const merged = [...customers];
@@ -789,8 +830,17 @@ function App() {
           {activeNav === 'orders' && (
             <div className="card">
               <div className="card-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-                <h3 className="card-title">Quản lý Đơn hàng ({orders.length})</h3>
-                <div className="section-meta">Dữ liệu liên thông với Khách hàng & Sản phẩm</div>
+                <div>
+                  <h3 className="card-title">Quản lý Đơn hàng ({orders.length})</h3>
+                  <div className="section-meta">Dữ liệu liên thông với Khách hàng & Sản phẩm</div>
+                </div>
+                <button 
+                  className="action-btn" 
+                  onClick={handleExportMasterData} 
+                  style={{background:'linear-gradient(135deg, #27ae60, #2ecc71)', color:'#fff', border:'none', fontWeight:600, display:'flex', alignItems:'center', gap:8}}
+                >
+                  Xuất Master Data 📊
+                </button>
               </div>
               <div className="card-body" style={{padding: 0}}>
                 <table className="data-table">
