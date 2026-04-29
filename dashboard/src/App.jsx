@@ -42,7 +42,19 @@ function App() {
 
   const [customers, setCustomers] = useState(() => {
     const saved = localStorage.getItem('bh_customers');
-    return saved ? JSON.parse(saved) : MOCK_CUSTOMERS;
+    if (!saved) return MOCK_CUSTOMERS;
+    try {
+      const parsed = JSON.parse(saved);
+      // Migration: Backfill new fields from MOCK if missing
+      return parsed.map(c => {
+        const mock = MOCK_CUSTOMERS.find(m => m.Ma_KH === c.Ma_KH);
+        return {
+          ...c,
+          Ten_Lien_He: c.Ten_Lien_He || mock?.Ten_Lien_He || '',
+          SDT: c.SDT || mock?.SDT || ''
+        };
+      });
+    } catch (e) { return MOCK_CUSTOMERS; }
   });
   const [products, setProducts] = useState(() => {
     const saved = localStorage.getItem('bh_products');
