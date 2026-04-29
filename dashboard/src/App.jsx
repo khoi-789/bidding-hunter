@@ -9,7 +9,7 @@ import ChartsView from './components/ChartsView';
 import AIAssistant from './components/AIAssistant';
 import PotentialAnalysis from './components/PotentialAnalysis';
 import BPSConfig from './components/BPSConfig';
-import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND } from './utils';
+import { formatPrice, formatDeadline, getDeadlineClass, getDaysLeft, parseVND, formatPhone } from './utils';
 import {
   IconDashboard, IconCharts, IconBids, IconCustomers, IconProducts,
   IconSearch, IconRefresh, IconEmail, IconClock, IconUrgent, IconTarget, IconSettings, IconCircle
@@ -529,7 +529,7 @@ function App() {
                         <td><b>{c.Ma_KH}</b></td>
                         <td>{c.Ten_Benh_Vien}</td>
                         <td style={{fontSize: 12, fontWeight: 500}}>{c.Ten_Lien_He || '—'}</td>
-                        <td style={{fontSize: 12, color: '#64748b'}}>{c.SDT || '—'}</td>
+                        <td style={{fontSize: 12, color: '#64748b'}}>{formatPhone(c.SDT)}</td>
                         <td><span style={{fontSize:10, background:'#e8f4fd', color:'#2980b9', padding:'2px 6px', borderRadius:4}}>{c.Phan_Tuyen?.replace('TUYEN_','')}</span></td>
                         <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Du_No_Hien_Tai)}</td>
                         <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Han_Muc_No)}</td>

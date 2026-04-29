@@ -94,14 +94,26 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
         return isNaN(num) ? 0 : num;
       };
 
+      const cleanName = (val) => {
+        if (!val) return '';
+        return String(val).trim().replace(/\s+/g, ' ').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+      };
+
+      const cleanPhone = (val) => {
+        if (!val) return '';
+        let p = String(val).replace(/[^\d]/g, '');
+        if (p.length === 9 && !p.startsWith('0')) p = '0' + p;
+        return p;
+      };
+
       const parsedData = rawData.map(row => {
         if (type === 'customers') {
           return {
             id: row['Mã KH'] || `ID_${Math.random().toString(36).substr(2, 9)}`,
             Ma_KH: row['Mã KH'],
             Ten_Benh_Vien: row['Tên Bệnh Viện'],
-            Ten_Lien_He: row['Người liên hệ'] || '',
-            SDT: row['Số điện thoại'] || '',
+            Ten_Lien_He: cleanName(row['Người liên hệ']),
+            SDT: cleanPhone(row['Số điện thoại']),
             Phan_Tuyen: row['Phân Tuyến'],
             Du_No_Hien_Tai: parseNum(row['Dư nợ hiện tại']),
             Han_Muc_No: parseNum(row['Hạn mức']),

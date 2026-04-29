@@ -51,3 +51,13 @@ export function getDeadlineClass(str) {
   if (days <= 7) return 'deadline-warning';
   return 'deadline-ok';
 }
+
+// Format số điện thoại (4 3 3)
+export function formatPhone(val) {
+  if (!val) return '—';
+  const p = String(val).replace(/[^\d]/g, '');
+  if (p.length === 10) {
+    return `${p.slice(0, 4)} ${p.slice(4, 7)} ${p.slice(7, 10)}`;
+  }
+  return val;
+}
