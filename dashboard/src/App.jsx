@@ -22,6 +22,7 @@ const Toast = ({ msg, type }) => (
 function App() {
   const [activeNav, setActiveNav] = useState('dashboard');
   const [searchTerm, setSearchTerm] = useState('');
+  const [ingredientSearch, setIngredientSearch] = useState('');
   const [bids, setBids] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
@@ -183,11 +184,18 @@ function App() {
       const name     = (b.ten_goi_thau || '').toLowerCase();
       const code     = (b.ma_goi_thau  || '').toLowerCase();
       const hospital = (b.chu_dau_tu   || '').toLowerCase();
+      const meds     = (b.thuoc_tieu_bieu || '').toLowerCase();
+      
       const search   = searchTerm.toLowerCase();
+      const ingSearch = ingredientSearch.toLowerCase();
+
       const matchesSearch   = name.includes(search) || code.includes(search) || hospital.includes(search);
+      const matchesIng      = !ingSearch || meds.includes(ingSearch);
+      
       const daysLeft        = getDaysLeft(b.thoi_diem_dong_thau);
       const matchesDeadline = deadlineFilter === 0 || daysLeft > deadlineFilter;
-      return matchesSearch && matchesDeadline;
+      
+      return matchesSearch && matchesIng && matchesDeadline;
     });
   };
 
@@ -235,7 +243,11 @@ function App() {
           <div className="top-bar-left">
             <div className="search-box">
               <span className="search-icon"><IconSearch size={16} /></span>
-              <input type="text" placeholder="Tìm kiếm gói thầu, chủ đầu tư..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              <input type="text" placeholder="Tìm gói thầu, mã thầu, bệnh viện..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            </div>
+            <div className="search-box ingredient-search" style={{marginLeft: 12}}>
+              <span className="search-icon"><IconProducts size={16} /></span>
+              <input type="text" placeholder="Lọc theo Hoạt chất..." value={ingredientSearch} onChange={(e) => setIngredientSearch(e.target.value)} />
             </div>
           </div>
           <div className="top-bar-right">
