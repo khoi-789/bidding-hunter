@@ -310,7 +310,10 @@ export default function DebtEmailModal({ selectedCustomers, onClose, addToast, o
                           <td><input type="checkbox" checked={finalSelectedIds.includes(c.id)} onChange={(e) => setFinalSelectedIds(e.target.checked ? [...finalSelectedIds, c.id] : finalSelectedIds.filter(id => id !== c.id))} /></td>
                           <td>{c.Ten_Ben_Vien}</td>
                           <td style={{fontSize:11}}>{getTemplate(c).subject}</td>
-                          <td style={{fontSize:11}}>{customerConfigs[c.id]?.to || TARGET_EMAIL}</td>
+                          <td style={{fontSize:11}}>
+                            <div style={{color:'var(--accent)', fontWeight:600}}>To: {customerConfigs[c.id]?.to || TARGET_EMAIL}</div>
+                            {customerConfigs[c.id]?.cc && <div style={{color:'#64748b', marginTop:2}}>Cc: {customerConfigs[c.id]?.cc}</div>}
+                          </td>
                         </tr>
                       ))}
                     </tbody>

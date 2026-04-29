@@ -18,8 +18,8 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
       const hospitalName = b.chu_dau_tu || '';
       // Local helper logic since findCustomer isn't defined yet in closure if I move it
       const normHosp = (hospitalName || '').toLowerCase().replace(/bệnh viện/g, 'bv').trim();
-      const customer = MOCK_CUSTOMERS.find(c => {
-        const custName = String(c.Ten_Benh_Vien || c.Ten_Ben_Vien || '');
+      const customer = customers.find(c => {
+        const custName = String(c.Ten_Ben_Vien || '');
         const normCust = custName.toLowerCase().replace(/bệnh viện/g, 'bv').trim();
         return normHosp.includes(normCust) || normCust.includes(normHosp);
       });
@@ -36,8 +36,8 @@ export default function BulkEmailModal({ selectedBids, bids, customers, products
   const findCustomer = (hospitalName) => {
     if (!hospitalName) return null;
     const normHosp = normalizeName(hospitalName);
-    return MOCK_CUSTOMERS.find(c => {
-      const custName = String(c.Ten_Benh_Vien || c.Ten_Ben_Vien || '');
+    return customers.find(c => {
+      const custName = String(c.Ten_Ben_Vien || '');
       const normCust = normalizeName(custName);
       return normHosp.includes(normCust) || normCust.includes(normHosp);
     });
@@ -425,7 +425,8 @@ Hãy viết lại email theo yêu cầu. Giữ nguyên định dạng HTML. Ch�
                             <td style={{fontSize:11}}>{b.ma_goi_thau}</td>
                             <td>
                               <div style={{fontWeight:600}}>{(b.chu_dau_tu || '').slice(0, 30)}</div>
-                              <div style={{fontSize:9, color:'var(--accent)'}}>{config?.to || TARGET_EMAIL}</div>
+                              <div style={{fontSize:9, color:'var(--accent)'}}>To: {config?.to || TARGET_EMAIL}</div>
+                              {config?.cc && <div style={{fontSize:9, color:'#64748b'}}>Cc: {config.cc}</div>}
                             </td>
                             <td><span className={`bps-badge ${b.flag || 'GRAY'}`}>{b.bps_score ?? 0}</span></td>
                             <td><span style={{fontSize:10, color: editedContents[b.id] ? 'var(--blue)' : '#999'}}>{editedContents[b.id] ? '📝 Đã sửa' : '📄 Gốc'}</span></td>

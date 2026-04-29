@@ -1,7 +1,7 @@
 import { formatPrice, formatDeadline, getDaysLeft, parseVND } from '../utils';
 import { MOCK_CUSTOMERS } from '../mockData';
 
-export default function BidModal({ bid, products = [], onClose, addToast, ingredientSearch = '', customerConfigs = {} }) {
+export default function BidModal({ bid, customers = [], products = [], onClose, addToast, ingredientSearch = '', customerConfigs = {} }) {
   const TARGET_EMAIL = 'leminhkhoi279@gmail.com';
 
   const flag = bid.flag || 'GRAY';
@@ -25,8 +25,8 @@ export default function BidModal({ bid, products = [], onClose, addToast, ingred
   const handleSendEmail = async () => {
     // Tìm customer để lấy mail config
     const hospitalName = bid.chu_dau_tu || '';
-    const customer = Object.values(MOCK_CUSTOMERS).find(c => {
-      const custName = String(c.Ten_Benh_Vien || c.Ten_Ben_Vien || '');
+    const customer = (customers || []).find(c => {
+      const custName = String(c.Ten_Ben_Vien || '');
       return hospitalName.includes(custName) || custName.includes(hospitalName);
     });
     const config = customer ? customerConfigs[customer.id] : null;
@@ -34,7 +34,7 @@ export default function BidModal({ bid, products = [], onClose, addToast, ingred
     const to = config?.to || TARGET_EMAIL;
     const cc = config?.cc || '';
 
-    addToast(`📧 Đang gửi email tới ${to}...`, 'info');
+    addToast(`📧 Đang gửi email tới ${to}${cc ? ` (Cc: ${cc})` : ''}...`, 'info');
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
