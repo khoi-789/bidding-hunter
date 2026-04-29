@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { getBids, subscribeToBids, subscribeToHistory } from './firebase';
+import { getBids, subscribeToBids, subscribeToHistory, parseDateTime } from './firebase';
 import { MOCK_CUSTOMERS, MOCK_PRODUCTS } from './mockData';
 import BidModal from './components/BidModal';
 import BulkEmailModal from './components/BulkEmailModal';
@@ -170,8 +170,8 @@ function App() {
           valA = parseVND(a.gia_goi_thau || '0');
           valB = parseVND(b.gia_goi_thau || '0');
         } else if (sortConfig.key === 'thoi_diem_dong_thau') {
-          valA = new Date(a.thoi_diem_dong_thau).getTime();
-          valB = new Date(b.thoi_diem_dong_thau).getTime();
+          valA = parseDateTime(a.thoi_diem_dong_thau)?.getTime() || 0;
+          valB = parseDateTime(b.thoi_diem_dong_thau)?.getTime() || 0;
         } else if (sortConfig.key === 'bps_score') {
           valA = a.bps_score ?? 0;
           valB = b.bps_score ?? 0;

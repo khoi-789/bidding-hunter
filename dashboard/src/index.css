@@ -319,8 +319,9 @@ input[type="checkbox"] {
 
 .cell-price { font-weight: 600; white-space: nowrap; color: var(--text-primary) !important; }
 .cell-deadline { white-space: nowrap; }
-.deadline-urgent { color: var(--red); font-weight: 600; }
-.deadline-soon   { color: var(--yellow); font-weight: 600; }
+.deadline-expired { color: #cc0000; font-weight: 700; }
+.deadline-urgent  { color: var(--red); font-weight: 600; }
+.deadline-warning { color: var(--yellow); font-weight: 600; }
 .inline-input {
   width: 100%;
   padding: 6px 10px;
