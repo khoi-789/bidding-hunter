@@ -82,6 +82,14 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
       const ws = wb.Sheets[wsname];
       const rawData = XLSX.utils.sheet_to_json(ws);
 
+      const parseNum = (val) => {
+        if (typeof val === 'number') return val;
+        if (!val || val === '-') return 0;
+        const clean = String(val).replace(/[^\d.-]/g, '');
+        const num = parseFloat(clean);
+        return isNaN(num) ? 0 : num;
+      };
+
       const parsedData = rawData.map(row => {
         if (type === 'customers') {
           return {
@@ -89,8 +97,8 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
             Ma_KH: row['Mã KH'],
             Ten_Benh_Vien: row['Tên Bệnh Viện'],
             Phan_Tuyen: row['Phân Tuyến'],
-            Du_No_Hien_Tai: parseFloat(row['Dư nợ hiện tại']) || 0,
-            Han_Muc_No: parseFloat(row['Hạn mức']) || 0,
+            Du_No_Hien_Tai: parseNum(row['Dư nợ hiện tại']),
+            Han_Muc_No: parseNum(row['Hạn mức']),
             to: row['Người nhận (To)'] || '',
             cc: row['Đồng gửi (Cc)'] || ''
           };
@@ -100,7 +108,7 @@ const ImportExportModal = ({ type, data, onImport, onClose }) => {
             Ten_Biet_Duoc: row['Tên Biệt Dược'],
             Hoat_Chat: row['Hoạt chất'],
             Dang_Bao_Che: row['Dạng bào chế'],
-            Gia_Niem_Yet: parseFloat(row['Giá niêm yết']) || 0
+            Gia_Niem_Yet: parseNum(row['Giá niêm yết'])
           };
         }
       });

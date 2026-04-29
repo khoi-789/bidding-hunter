@@ -2,8 +2,12 @@ import { parseDateTime } from './firebase';
 
 // Format giá tiền
 export function formatPrice(val) {
-  if (!val || val === 'NA' || isNaN(Number(String(val).replace(/,/g, '')))) return 'N/A';
-  const num = Number(String(val).replace(/,/g, ''));
+  if (val === undefined || val === null || val === 'NA') return 'N/A';
+  const raw = String(val).replace(/,/g, '');
+  if (raw === '' || isNaN(Number(raw))) return 'N/A';
+  
+  const num = Number(raw);
+  if (num === 0) return '0 đ';
   if (num >= 1e9) return `${(num / 1e9).toFixed(2)} tỷ`;
   if (num >= 1e6) return `${(num / 1e6).toFixed(1)} triệu`;
   if (num >= 1e3) return `${(num / 1e3).toFixed(0)} nghìn`;
