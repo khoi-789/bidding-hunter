@@ -170,7 +170,12 @@ function App() {
       style={{ textAlign: align, cursor: 'pointer', userSelect: 'none' }} 
       onClick={() => requestSort(columnKey)}
     >
-      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: align === 'right' ? 'flex-end' : (align === 'center' ? 'center' : 'flex-start'),
+        gap: 4 
+      }}>
         {label}
         <span style={{ fontSize: 10, color: sortConfig.key === columnKey ? 'var(--accent)' : '#ccc' }}>
           {sortConfig.key === columnKey ? (sortConfig.direction === 'asc' ? '↑' : '↓') : '↕'}
@@ -374,8 +379,8 @@ function App() {
                         <td><b>{c.Ma_KH}</b></td>
                         <td>{c.Ten_Benh_Vien}</td>
                         <td><span style={{fontSize:10, background:'#e8f4fd', color:'#2980b9', padding:'2px 6px', borderRadius:4}}>{c.Phan_Tuyen?.replace('TUYEN_','')}</span></td>
-                        <td className="cell-price">{formatPrice(c.Du_No_Hien_Tai)}</td>
-                        <td className="cell-price">{formatPrice(c.Han_Muc_No)}</td>
+                        <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Du_No_Hien_Tai)}</td>
+                        <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(c.Han_Muc_No)}</td>
                         <td><span style={{fontSize:10, color: over ? '#e74c3c' : '#27ae60', fontWeight:700}}>{over ? '⚠️ Vượt hạn mức' : '✅ OK'}</span></td>
                       </tr>
                     );
@@ -412,7 +417,7 @@ function App() {
                       <td>{p.Ham_Luong}</td>
                       <td>{p.Duong_Dung}</td>
                       <td><span style={{fontWeight:700, color:'#2980b9'}}>Nhóm {p.Nhom_Ky_Thuat}</span></td>
-                      <td className="cell-price">{formatPrice(p.Gia_Ke_Khai)}</td>
+                      <td className="cell-price" style={{textAlign:'right'}}>{formatPrice(p.Gia_Ke_Khai)}</td>
                     </tr>
                   ))}</tbody>
                 </table>
