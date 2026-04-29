@@ -120,7 +120,7 @@ export default function PotentialAnalysis({ bids, products }) {
         </div>
       </div>
 
-      <div className="tab-content" style={{marginTop: 20, overflowY: 'auto', flex: 1, paddingRight: 10, paddingLeft: 5, paddingTop: 5}}>
+      <div className="tab-content" style={{marginTop: 20, overflowY: 'auto', flex: 1, paddingRight: 10, paddingLeft: 5}}>
         {activeTab === 'focus' && (
           <div className="focus-report animate-fade-in">
             <div className="card" style={{borderLeft: '5px solid #ef4444', marginBottom: 25, boxShadow: '0 4px 15px rgba(0,0,0,0.05)'}}>
@@ -267,28 +267,28 @@ export default function PotentialAnalysis({ bids, products }) {
           <div className="card" style={{marginBottom: 20}}>
             <div className="card-body" style={{padding: 0}}>
               <table className="data-table" style={{width: '100%', borderCollapse: 'separate', borderSpacing: 0}}>
-                <thead style={{position: 'sticky', top: -1, zIndex: 10, background: '#ffffff', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'}}>
+                <thead style={{position: 'sticky', top: 0, zIndex: 100, background: '#ffffff', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'}}>
                   <tr>
-                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>Gói thầu</th>
-                    <th style={{textAlign:'right', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>Dự kiến DT</th>
-                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>Khớp thầu</th>
-                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>High Margin</th>
-                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>BPS</th>
-                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0'}}>Lời khuyên</th>
+                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>Gói thầu</th>
+                    <th style={{textAlign:'right', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>Dự kiến DT</th>
+                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>Khớp thầu</th>
+                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>High Margin</th>
+                    <th style={{textAlign:'center', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>BPS</th>
+                    <th style={{textAlign:'left', background: '#f8fafc', borderBottom: '1px solid #e2e8f0', padding: '12px 20px'}}>Lời khuyên</th>
                   </tr>
                 </thead>
                 <tbody>
                   {analysisData.map(bid => (
                     <tr key={bid.id} onClick={() => setSelectedBidId(bid.id)} style={{cursor: 'pointer'}}>
-                      <td style={{padding: '12px 15px', maxWidth: 350}}>
+                      <td style={{padding: '14px 20px', maxWidth: 350}}>
                         <div style={{fontWeight: 700, fontSize: 13, whiteSpace: 'normal', lineHeight: 1.4}}>{bid.ten_goi_thau}</div>
                         <div style={{fontSize: 11, color: '#64748b', marginTop: 4}}>{bid.chu_dau_tu}</div>
                       </td>
-                      <td style={{textAlign:'right', fontWeight: 700, color: 'var(--accent)', padding: '12px 15px'}}>{formatPrice(bid.totalRevenue)}</td>
-                      <td style={{textAlign:'center', padding: '12px 15px'}}><span className="badge blue">{bid.matchedItems.length} SP</span></td>
-                      <td style={{textAlign:'center', padding: '12px 15px'}}><span className="badge green">{bid.highMarginCount} SP</span></td>
-                      <td style={{textAlign:'center', padding: '12px 15px'}}><span className={`bps-circle score-${Math.floor(bid.bps_score)}`}>{bid.bps_score}</span></td>
-                      <td style={{padding: '12px 15px'}}>
+                      <td style={{textAlign:'right', fontWeight: 700, color: 'var(--accent)', padding: '14px 20px'}}>{formatPrice(bid.totalRevenue)}</td>
+                      <td style={{textAlign:'center', padding: '14px 20px'}}><span className="badge blue">{bid.matchedItems.length} SP</span></td>
+                      <td style={{textAlign:'center', padding: '14px 20px'}}><span className="badge green">{bid.highMarginCount} SP</span></td>
+                      <td style={{textAlign:'center', padding: '14px 20px'}}><span className={`bps-circle score-${Math.floor(bid.bps_score)}`}>{bid.bps_score}</span></td>
+                      <td style={{padding: '14px 20px'}}>
                         <div style={{fontSize: 12, fontStyle: 'italic', color: '#475569', lineHeight: 1.4}}>
                           {bid.strategy === 'ĐÁNH MẠNH' ? "🔥 Gói này ngon, phải tập trung nguồn lực để hốt." : 
                            bid.strategy === 'TIỀM NĂNG' ? "🤞 Có thể tham gia nếu rảnh tay, không quá ưu tiên." : 
