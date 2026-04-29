@@ -24,7 +24,8 @@ const normalizeName = (name) => {
 // Hàm parse giá thầu từ chuỗi
 const parseMoney = (val) => {
   if (typeof val === 'number') return val;
-  if (!val) return 0;
+  if (!val || val === 'NA') return 0;
+  // Loại bỏ tất cả ký tự không phải số (bao gồm dấu chấm và phẩy của định dạng VN)
   return parseFloat(String(val).replace(/[^\d]/g, '')) || 0;
 };
 
@@ -464,7 +465,7 @@ export default function ChartsView({ bids, customers, products, orders }) {
       bids.forEach(b => {
         (b.items || []).forEach(i => {
           if ((i['Hoạt chất'] || '').toLowerCase() === hc) {
-            const qty = parseFloat(String(i['Số lượng']).replace(/[^\d.]/g, '')) || 1;
+            const qty = parseMoney(i['Số lượng']) || 1;
             const thTien = parseMoney(i['Giá trần (VND)']);
             totalGiaTran += (thTien / qty);
             count++;
