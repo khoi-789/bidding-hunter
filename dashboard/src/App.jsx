@@ -51,7 +51,7 @@ function App() {
       MOCK_CUSTOMERS.forEach(c => {
         initial[c.id] = {
           to: parsed[c.id]?.to || 'leminhkhoi279@gmail.com',
-          cc: parsed[c.id]?.cc || ''
+          cc: parsed[c.id]?.cc || 'nguyenthuc12@gmail.com, hungnpv95@gmail.com'
         };
       });
       return initial;
