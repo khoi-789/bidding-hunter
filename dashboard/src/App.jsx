@@ -142,44 +142,6 @@ function App() {
     };
   }, []);
 
-  // One-time randomization of prices based on min ceiling (40-120%)
-  // Triggered when bids are loaded and migration flag is missing
-  useEffect(() => {
-    if (loading || bids.length === 0) return;
-    
-    const migrationKey = 'bh_price_randomized_v102';
-    const hasMigrated = localStorage.getItem(migrationKey);
-    
-    // Check if we have enough data to perform migration
-    const minCeilKeys = Object.keys(productMinCeilings);
-    if (!hasMigrated && minCeilKeys.length > 0) {
-      setProducts(prev => {
-        const next = prev.map(p => {
-          const minCeil = productMinCeilings[p.id];
-          if (minCeil && minCeil > 0) {
-            const factor = 0.4 + Math.random() * 0.8;
-            return { ...p, Gia_Niem_Yet: Math.round(minCeil * factor) };
-          }
-          return p;
-        });
-        localStorage.setItem('bh_products', JSON.stringify(next));
-        return next;
-      });
-      localStorage.setItem(migrationKey, 'true');
-      // Delay toast slightly to ensure ref is ready
-      setTimeout(() => {
-        addToastRef.current?.('🎲 Đã cập nhật Giá niêm yết ngẫu nhiên (40-120% giá trần)', 'success');
-      }, 1000);
-    }
-  }, [loading, bids, productMinCeilings]);
-
-  const addToast = useCallback((msg, type = 'success') => {
-    const id = Date.now();
-    setToasts(prev => [...prev, { id, msg, type }]);
-    const duration = type === 'info' ? 6000 : 3000;
-    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), duration);
-  }, []);
-
   const minCeilingMap = React.useMemo(() => {
     const map = {};
     bids.forEach(bid => {
@@ -231,6 +193,45 @@ function App() {
     });
     return results;
   }, [products, minCeilingMap]);
+
+  // One-time randomization of prices based on min ceiling (40-120%)
+  // Triggered when bids are loaded and migration flag is missing
+  useEffect(() => {
+    if (loading || bids.length === 0) return;
+    
+    const migrationKey = 'bh_price_randomized_v102';
+    const hasMigrated = localStorage.getItem(migrationKey);
+    
+    // Check if we have enough data to perform migration
+    const minCeilKeys = Object.keys(productMinCeilings);
+    if (!hasMigrated && minCeilKeys.length > 0) {
+      setProducts(prev => {
+        const next = prev.map(p => {
+          const minCeil = productMinCeilings[p.id];
+          if (minCeil && minCeil > 0) {
+            const factor = 0.4 + Math.random() * 0.8;
+            return { ...p, Gia_Niem_Yet: Math.round(minCeil * factor) };
+          }
+          return p;
+        });
+        localStorage.setItem('bh_products', JSON.stringify(next));
+        return next;
+      });
+      localStorage.setItem(migrationKey, 'true');
+      // Delay toast slightly to ensure ref is ready
+      setTimeout(() => {
+        addToastRef.current?.('🎲 Đã cập nhật Giá niêm yết ngẫu nhiên (40-120% giá trần)', 'success');
+      }, 1000);
+    }
+  }, [loading, bids, productMinCeilings]);
+
+  const addToast = useCallback((msg, type = 'success') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, msg, type }]);
+    const duration = type === 'info' ? 6000 : 3000;
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), duration);
+  }, []);
+
 
   const handleExport = (type) => {
     const dataToExport = type === 'customers' ? customers : products;
